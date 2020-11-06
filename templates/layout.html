@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -23,6 +24,7 @@
 
 </head>
 <body>
+
 <div class="div all-encapsulated">
     <div class=" div header-class">
         <nav class="navbar navbar-expand-sm navbar-dark bg-steel">
@@ -51,7 +53,8 @@
 
 
     <div class="content-class div">
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
 
 </div>

@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
+
+
+<div class="block-class">
+    <div class="image-div-class">
+        <img src="/static/image/car.jpg" alt="img" class="image-class">
+    </div>
+    <div class="block-text-class">
+        <p>Text about the product, this is a very good product, yeah boiiiiiii  very good price. Very much to do here before good program ahh yes si mucho gracias</p>
+    </div>
+
+    <div class="block-add-to-cart-class">
+        <div class="counter-minus-div-class">
+            <button class="counter-minus plusMinusBtn">-</button>
+        </div>
+        <div class="counter-div-class">
+            <h5 class="counter-display">(..)</h5>
+        </div>
+        <div class="counter-plus-div-class">
+            <button class="counter-plus plusMinusBtn">+</button>
+        </div>
+        <div class="buy-button-div-class">
+            <button class="send-to-card-button" onclick="sendToCart()">Add to cart</button>
+        </div>
+
+
+    </div>
+
+    <script>
+    let counterDisplayElem = document.querySelector('.counter-display');
+    let counterMinusElem = document.querySelector('.counter-minus');
+    let counterPlusElem = document.querySelector('.counter-plus');
+
+    let count = 0;
+
+    updateDisplay();
+
+    counterPlusElem.addEventListener("click",()=>{
+        count++;
+        updateDisplay();
+    });
+
+    counterMinusElem.addEventListener("click",()=>{
+        if(count > 0){
+            count--;
+            updateDisplay();
+        }
+    });
+
+    function updateDisplay(){
+        counterDisplayElem.innerHTML = count;
+    };
+
+    function sendToCart() {
+            counterDisplayElem.innerHTML = 10
+    };
+</script>
+
+</div>
+
+
+{% endblock content %}
