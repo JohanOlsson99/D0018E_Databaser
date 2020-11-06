@@ -1,0 +1,62 @@
+
+
+.block-class{
+    width: 400px;
+    height: 400px;
+    background-color: #61b2c9;
+    border: 3px solid black;
+    border-radius: 15px;
+}
+
+.image-div-class {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.image-class{
+    width:95%;
+    margin-left:2.5%;
+    border-radius:5%;
+}
+
+.block-text-class {
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+}
+.plusMinusBtn {
+    width: 25px;
+    height 25px;
+    border-radius: 6px;
+}
+.counter-minus-div-class {
+    float: left;
+    margin-left: 5px;
+}
+.counter-div-class {
+    float:left;
+    width: 20px;
+    margin-left: 5px;
+
+}
+
+.send-to-card-button {
+    border-radius: 6px;
+}
+
+.counter-display {
+    width: 100%;
+}
+
+.counter-plus-div-class{
+    float:left;
+    margin-left: 5px;
+}
+
+.buy-button-div-class {
+    float:left;
+    margin-left: 5px;
+}
+
+.block-add-to-cart-class {
+    margin-left: 24%;
+}

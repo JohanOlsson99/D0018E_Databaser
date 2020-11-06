@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 
 
@@ -8,8 +8,8 @@ app = Flask(__name__)
 
 def homello():
     #dropdown_list = ['Air', 'Land', 'Sea']
-
-    return render_template('home.html')#,dropdown_list=dropdown_list)
+    return render_template('itemBlock.html', title="home")
+    #return render_template('home.html', title="home")#,dropdown_list=dropdown_list)
 
 @app.route("/about")
 def about():
