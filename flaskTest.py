@@ -13,6 +13,8 @@ def homello():
     return render_template('itemBlock.html', title="home")
     #return render_template('home.html', title="home")#,dropdown_list=dropdown_list)
 
+#test
+
 @app.route("/about")
 def about():
     return render_template('about.html', title="about")
