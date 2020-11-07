@@ -17,3 +17,20 @@ class LoginForm(FlaskForm):
     password = PasswordField('Lösenord', validators=[DataRequired()])
     remember = BooleanField('Kom ihåg mig')
     submit = SubmitField('Logga in')
+
+
+class PaymentForm(FlaskForm):
+    name = StringField('Fullständigt namn*', validators=[DataRequired()])
+
+    cardnumber = StringField('Kort', validators=[DataRequired()])
+
+    adress = StringField('Adress', validators=[DataRequired()])
+
+    Postnummer = StringField('Postnummer*', validators=[DataRequired()])
+
+    Stad = StringField('Stad', validators=[DataRequired()])
+
+    Land = StringField('Land', validators=[DataRequired()])
+
+    submit = SubmitField('Skicka bestälning')
+

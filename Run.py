@@ -1,6 +1,6 @@
 from flask import Flask, render_template, flash, request, url_for, redirect
-from forms import RegistrationForm, LoginForm
-from addToCartForm import AddToCart
+from forms import RegistrationForm, LoginForm, PaymentForm
+from addToCartForm import AddToCart 
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -30,6 +30,11 @@ def register():
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route("/betalning", methods=['GET','POST'])
+def betalning():
+    form = PaymentForm()
+    return render_template('betalning.html', title='betalning', form=form)
 
 @app.route("/itemblock", methods=['GET', 'POST'])
 def itemBlockAddToCart():
