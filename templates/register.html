@@ -6,12 +6,12 @@
     <div class="content-section">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
-            <fieldset class="form-group">
+            <fieldset class="form-group" class="container-fluid">
                 <legend class="border-bottom mb-4">Registrering</legend>
                 <div class="form-group">
                     {{ form.username.label(class="form-control-label") }}
 
-                    {% if form.username.errors %}
+                    {% if form.username.errors %}   
                         {{ form.username(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.username.errors %}
@@ -57,7 +57,7 @@
     </div>
     <div class="border-top pt-3">
         <small class="text-muted">
-            Already Have An Account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
+            Har du ett konto? <a class="ml-2" href="{{ url_for('login') }}">Logga in!</a>
         </small>
     </div>
 {% endblock content %}

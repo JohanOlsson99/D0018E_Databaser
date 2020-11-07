@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, request
+from flask import Flask, render_template, flash, request, url_for, redirect
 from forms import RegistrationForm, LoginForm
 from addToCartForm import AddToCart
 
@@ -13,19 +13,23 @@ def home():
     return render_template('home.html', title="home")
 
 
-@app.route("/about")
-def about():
-    return render_template('about.html', title="about")
+@app.route("/varukorg")
+def kundkorg():
+    return render_template('varukorg.html', title="varukorg")
 
 @app.route("/login")
 def login():
     form = LoginForm()
     return render_template('login.html', title="login", form=form)
 
-@app.route("/register")
+@app.route("/register", methods=['GET','POST'])
 def register():
     form = RegistrationForm()
-    return render_template('register.html', title="register", form=form)
+    if form.validate_on_submit():
+
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('home'))
+    return render_template('register.html', title='Register', form=form)
 
 @app.route("/itemblock", methods=['GET', 'POST'])
 def itemBlockAddToCart():

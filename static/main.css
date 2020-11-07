@@ -10,7 +10,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .content-class {
     margin-left: 10px;
-    margin-right: 10px;
     margin-top: 5px;
 }
 
@@ -33,5 +32,7 @@ h1, h2, h3, h4, h5, h6 {
 .co{
 color: #148ffe
 }
+
+
 
 
