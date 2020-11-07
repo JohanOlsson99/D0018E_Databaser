@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
-{% block content %}
+{% block content%}
+{{ super() }}
 
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
-
 
 <div class="block-class">
     <div class="image-div-class">
@@ -13,7 +13,36 @@
         <p>Text about the product, this is a very good product, yeah boiiiiiii  very good price. Very much to do here before good program ahh yes si mucho gracias</p>
     </div>
 
+
+
     <div class="block-add-to-cart-class">
+        <form method="POST" action="">
+            <div class="counter-minus-div-class">
+                <button class="counter-minus plusMinusBtn button" type="button">-</button>
+            </div>
+
+            {{ form.hidden_tag() }}
+
+            <div class="counter-div-class">
+                {{ form.howManyToCart(class="counter-display") }}
+            </div>
+
+            <div class="counter-plus-div-class">
+                <button class="counter-plus plusMinusBtn button" type="button">+</button>
+            </div>
+        <!--<form method="POST" action="">-->
+            <div class="buy-button-div-class">
+                <!--{{ form.addToCart(class="btn btn-outline-info send-to-cart-button") }}-->
+                {{ form.addToCart(class="button send-to-cart-button") }}
+            </div>
+
+        </form>
+    </div>
+
+
+<!--
+    <div class="block-add-to-cart-class">
+
         <div class="counter-minus-div-class">
             <button class="counter-minus plusMinusBtn">-</button>
         </div>
@@ -24,10 +53,10 @@
             <button class="counter-plus plusMinusBtn">+</button>
         </div>
         <div class="buy-button-div-class">
-            <button class="send-to-card-button" onclick="sendToCart()">Add to cart</button>
+            <button class="send-to-cart-button" onclick="sendToCart()">Add to cart</button>
         </div>
 
-
+    -->
     </div>
 
     <script>
@@ -40,11 +69,17 @@
     updateDisplay();
 
     counterPlusElem.addEventListener("click",()=>{
+        if(counterDisplayElem.value != count){
+            count = counterDisplayElem.value
+        }
         count++;
         updateDisplay();
     });
 
     counterMinusElem.addEventListener("click",()=>{
+        if(counterDisplayElem.value != count){
+            count = counterDisplayElem.value
+        }
         if(count > 0){
             count--;
             updateDisplay();
@@ -52,15 +87,15 @@
     });
 
     function updateDisplay(){
-        counterDisplayElem.innerHTML = count;
+        counterDisplayElem.value = count;
     };
 
     function sendToCart() {
-            counterDisplayElem.innerHTML = 10
+            counterDisplayElem.value = 10
     };
 </script>
 
+
 </div>
 
-
-{% endblock content %}
+{% endblock %}

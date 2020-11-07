@@ -27,6 +27,7 @@
     width: 25px;
     height 25px;
     border-radius: 6px;
+    text-align: center;
 }
 .counter-minus-div-class {
     float: left;
@@ -36,20 +37,21 @@
     float:left;
     width: 20px;
     margin-left: 5px;
-
 }
 
-.send-to-card-button {
+.send-to-cart-button {
     border-radius: 6px;
 }
 
 .counter-display {
-    width: 100%;
+    float:left;
+    width: 40px;
+    border-radius: 4px;
 }
 
 .counter-plus-div-class{
     float:left;
-    margin-left: 5px;
+    margin-left: 25px;
 }
 
 .buy-button-div-class {
@@ -58,5 +60,23 @@
 }
 
 .block-add-to-cart-class {
-    margin-left: 24%;
+    margin-left: 20%;
+    color: black;
+}
+
+
+.button {
+  background-color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  color: black;
+  border: 2px solid #4CAF50;
+}
+
+.button:hover {
+  background-color: #4CAF50;
+  color: white;
 }
