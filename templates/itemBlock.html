@@ -1,8 +1,3 @@
-{% extends "layout.html" %}
-{% block content%}
-{{ super() }}
-
-
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
 
 <div class="block-class">
@@ -39,24 +34,6 @@
         </form>
     </div>
 
-
-<!--
-    <div class="block-add-to-cart-class">
-
-        <div class="counter-minus-div-class">
-            <button class="counter-minus plusMinusBtn">-</button>
-        </div>
-        <div class="counter-div-class">
-            <h5 class="counter-display">(..)</h5>
-        </div>
-        <div class="counter-plus-div-class">
-            <button class="counter-plus plusMinusBtn">+</button>
-        </div>
-        <div class="buy-button-div-class">
-            <button class="send-to-cart-button" onclick="sendToCart()">Add to cart</button>
-        </div>
-
-    -->
     </div>
 
     <script>
@@ -98,4 +75,4 @@
 
 </div>
 
-{% endblock %}
+
