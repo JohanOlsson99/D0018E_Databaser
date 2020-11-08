@@ -6,11 +6,20 @@ app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 
-@app.route("/")
-@app.route("/home")
+@app.route("/", methods=['GET', 'POST'])
+@app.route("/home", methods=['GET', 'POST'])
 def home():
-    #return render_template('itemBlock.html', title="homenot")
-    return render_template('home.html', title="home")
+    form = AddToCart()
+    checkIfAddedToCart(form)
+    return render_template('home.html', title="home", form=form)
+
+def checkIfAddedToCart(form):
+    if form.validate_on_submit():
+        flash('Successfully added ' + str(form.howManyToCart.data) + ' of your items to your cart', 'success')
+
+    elif ((form.addToCart.data == True) and (not form.validate_on_submit())):
+        flash('Couldn\'t add your items to your cart. Did you know you can only add 1 to 100 items not more or less',
+              'danger')
 
 
 @app.route("/varukorg")
@@ -36,16 +45,18 @@ def betalning():
     form = PaymentForm()
     return render_template('betalning.html', title='betalning', form=form)
 
-@app.route("/itemblock", methods=['GET', 'POST'])
-def itemBlockAddToCart():
-    form = AddToCart()
 
-    if form.validate_on_submit():
-        flash('Successfully added ' + str(form.howManyToCart.data) + ' of your items to your cart', 'success')
 
-    elif ((form.addToCart.data == True) and (not form.validate_on_submit())):
-        flash('Couldn\'t add your items to your cart. Did you know you can only add 1 to 100 items not more or less', 'danger')
-    return render_template('itemBlock.html', title='block', form=form)
+#@app.route("/itemblock", methods=['GET', 'POST'])
+#def itemBlockAddToCart():
+#    form = AddToCart()
+#
+#    if form.validate_on_submit():
+#        flash('Successfully added ' + str(form.howManyToCart.data) + ' of your items to your cart', 'success')
+#
+#    elif ((form.addToCart.data == True) and (not form.validate_on_submit())):
+#        flash('Couldn\'t add your items to your cart. Did you know you can only add 1 to 100 items not more or less', 'danger')
+#    return render_template('itemBlock.html', title='block', form=form)
 
 
 
