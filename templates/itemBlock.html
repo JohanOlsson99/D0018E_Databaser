@@ -13,17 +13,15 @@
     <div class="block-add-to-cart-class">
         <form method="POST" action="">
             <div class="counter-minus-div-class">
-                <button class="counter-minus plusMinusBtn button" type="button">-</button>
+                <button class="counter-minus-{{id}} plusMinusBtn button" type="button">-</button>
             </div>
-
             {{ form.hidden_tag() }}
-
             <div class="counter-div-class">
                 {{ form.howManyToCart(class="counter-display") }}
             </div>
 
             <div class="counter-plus-div-class">
-                <button class="counter-plus plusMinusBtn button" type="button">+</button>
+                <button class="counter-plus-{{id}} plusMinusBtn button" type="button">+</button>
             </div>
         <!--<form method="POST" action="">-->
             <div class="buy-button-div-class">
@@ -35,7 +33,7 @@
     </div>
 
     </div>
-
+<!--
     <script>
     let counterDisplayElem = document.querySelector('.counter-display');
     let counterMinusElem = document.querySelector('.counter-minus');
@@ -70,7 +68,7 @@
     function sendToCart() {
             counterDisplayElem.value = 10
     };
-</script>
+</script>-->
 
 
 </div>

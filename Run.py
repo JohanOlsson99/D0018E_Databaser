@@ -9,15 +9,19 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    form = AddToCart()
+    form = [AddToCart(), AddToCart()]
     checkIfAddedToCart(form)
-    return render_template('home.html', title="home", form=form)
+    id = ['1', '2']
+    for i in range(len(form)):
+        form[i].howManyToCart.id = 'counter-display-'+str(id[i])
+    return render_template('home.html', title="home", form=form, id = id)
 
 def checkIfAddedToCart(form):
-    if form.validate_on_submit():
-        flash('Successfully added ' + str(form.howManyToCart.data) + ' of your items to your cart', 'success')
+    if ((form[0].validate_on_submit()) and (form[0].addToCart.data == True)):
+        flash('Successfully added ' + str(form[0].howManyToCart.data) + ' of your items to your cart', 'success')
 
-    elif ((form.addToCart.data == True) and (not form.validate_on_submit())):
+
+    elif (form[0].is_submitted() and (not form[0].validate_on_submit())):
         flash('Couldn\'t add your items to your cart. Did you know you can only add 1 to 100 items not more or less',
               'danger')
 
