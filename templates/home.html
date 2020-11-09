@@ -3,9 +3,66 @@
 <div>
     <h1>Home Page</h1>
 
-    {% include 'itemBlock.html' %}
+    <div style="float:left;">
+        {% with form = form[0], id = id[0]%}
+            {% include 'itemBlock.html' %}
+        {% endwith %}
+    </div>
 
+    <div style="float:left;">
+        {% with form = form[1], id = id[1]%}
+            {% include 'itemBlock.html' %}
+        {% endwith %}
+    </div>
 </div>
 
+
+<script>
+    let id = {{ id|safe }}
+    let counterDisplayElem = [];
+    let counterMinusElem = [];
+    let counterPlusElem = [];
+    let count = [];
+    for(let i = 0; i < id.length; i++) {
+
+        counterDisplayElem[i] = document.querySelector(`#counter-display-${id[i]}`);
+        counterMinusElem[i] = document.querySelector(`.counter-minus-${id[i]}`);
+        counterPlusElem[i] = document.querySelector(`.counter-plus-${id[i]}`);
+        count[i] = 0;
+
+        console.log(document.getElementById(`counter-display-${id[i]}`));
+        console.log(counterMinusElem[i]);
+        console.log(counterPlusElem[i]);
+        updateDisplay(i);
+    }
+
+
+
+    for(let i = 0; i < id.length; i++) {
+        counterPlusElem[i].addEventListener("click",()=>{
+            if(counterDisplayElem[i].value != count[i]){
+                count[i] = counterDisplayElem[i].value
+            }
+            count[i]++;
+            updateDisplay(i);
+        });
+
+        counterMinusElem[i].addEventListener("click",()=>{
+            if(counterDisplayElem[i].value != count[i]){
+                count[i] = counterDisplayElem[i].value
+            }
+            if(count[i] > 0){
+                count[i]--;
+                updateDisplay(i);
+            }
+        });
+    }
+
+
+    function updateDisplay(i){
+        counterDisplayElem[i].value = count[i];
+    };
+
+</script>
 
 {% endblock %}
