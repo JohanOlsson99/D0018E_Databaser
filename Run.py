@@ -1,7 +1,5 @@
 from flask import Flask, render_template, flash, request, url_for, redirect
-from forms import RegistrationForm, LoginForm, PaymentForm
-from addToCartForm import AddToCart 
-
+from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart
 
 import sys
 
@@ -12,16 +10,27 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    form = [AddToCart(), AddToCart(), AddToCart(), AddToCart(), AddToCart(), AddToCart(), AddToCart()]
-    id = ['1', '2', '3', '4', '5', '6', '7']
+    url = url_for('static', filename='image/car.jpg')
+    string = "etworkeffects platforms proactive exploit, aggregate partnerships synergies embedded optimize unleash synergize markets. Networks mindshare robust"
+
+    form, id, description, imageLink = getTest(string, url, 30)
     checkIfAddedToCart(form, id)
+
     for i in range(len(form)):
         form[i].howManyToCart.id = 'counter-display-'+str(id[i])
-    string = "Text about the product, this is a very good product, yeah boiiiiiii  very good price. Very much to do here before good program ahh yes si mucho gracias"
-    description = [string, string, string, string, string, string, string]
-    url = url_for('static', filename='image/car.jpg')
-    imageName = [url, url, url, url, url, url, url]
-    return render_template('home.html', title="home", form=form, id = id, description = description, imageName = imageName)
+    return render_template('home.html', title="home", form=form, id = id, description = description, imageLink = imageLink)
+
+def getTest(string, url, length):
+    form = []
+    id = []
+    description = []
+    imageLink = []
+    for i in range(length):
+        form.append(AddToCart())
+        id.append(str(i+1))
+        description.append(string)
+        imageLink.append(url)
+    return form, id, description, imageLink
 
 
 def checkIfAddedToCart(form, id):
@@ -30,7 +39,7 @@ def checkIfAddedToCart(form, id):
         #    print(id[i], file=sys.stderr)
         if ((form[i].validate_on_submit()) and (form[i].addToCart.data == True) and (form[i].howManyToCart.data != 0)
                 and (id[i] in request.form)):
-            print(form[i].howManyToCart.id, file=sys.stderr)
+            #print(form[i].howManyToCart.id, file=sys.stderr)
             flash('Successfully added ' + str(form[i].howManyToCart.data) + ' of your items to your cart with ID ' +
                   str(id[i]), 'success')
 
@@ -80,4 +89,3 @@ def betalning():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
