@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 
 class RegistrationForm(FlaskForm):
     username = StringField('Användarnamn',
@@ -34,3 +34,9 @@ class PaymentForm(FlaskForm):
 
     submit = SubmitField('Skicka bestälning')
 
+
+
+class AddToCart(FlaskForm):
+    howManyToCart = IntegerField('amount',
+                                 validators=[NumberRange(min=1, max=100)])
+    addToCart = SubmitField('Add to cart')
