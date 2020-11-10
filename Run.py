@@ -12,12 +12,17 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    form = [AddToCart(), AddToCart()]
-    id = ['1', '2']
+    form = [AddToCart(), AddToCart(), AddToCart(), AddToCart(), AddToCart(), AddToCart(), AddToCart()]
+    id = ['1', '2', '3', '4', '5', '6', '7']
     checkIfAddedToCart(form, id)
     for i in range(len(form)):
         form[i].howManyToCart.id = 'counter-display-'+str(id[i])
-    return render_template('home.html', title="home", form=form, id = id)
+    string = "Text about the product, this is a very good product, yeah boiiiiiii  very good price. Very much to do here before good program ahh yes si mucho gracias"
+    description = [string, string, string, string, string, string, string]
+    url = url_for('static', filename='image/car.jpg')
+    imageName = [url, url, url, url, url, url, url]
+    return render_template('home.html', title="home", form=form, id = id, description = description, imageName = imageName)
+
 
 def checkIfAddedToCart(form, id):
     for i in range(len(form)):

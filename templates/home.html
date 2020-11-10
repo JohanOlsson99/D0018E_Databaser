@@ -1,19 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+
 <div>
     <h1>Home Page</h1>
 
-    <div style="float:left;">
-        {% with form = form[0], id = id[0]%}
-            {% include 'itemBlock.html' %}
-        {% endwith %}
+    <div class="wrapper">
+    {% for i in range(id | length) %}
+
+        <div class="itemblock-div-class">
+            {% with form = form[i], id = id[i], description = description[i], imageName = imageName[i] %}
+                {% include 'itemBlock.html' %}
+            {% endwith %}
+        </div>
+
+    {% endfor %}
+
     </div>
 
-    <div style="float:left;">
-        {% with form = form[1], id = id[1]%}
-            {% include 'itemBlock.html' %}
-        {% endwith %}
-    </div>
 </div>
 
 
