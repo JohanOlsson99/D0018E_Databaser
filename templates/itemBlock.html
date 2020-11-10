@@ -11,7 +11,8 @@
 
 
     <div class="block-add-to-cart-class">
-        <form method="POST" action="">
+        <form method="POST" name="{{id}}" action="">
+           <input type="hidden" value="{{id}}" name="{{id}}">
             <div class="counter-minus-div-class">
                 <button class="counter-minus-{{id}} plusMinusBtn button" type="button">-</button>
             </div>

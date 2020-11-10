@@ -2,6 +2,9 @@ from flask import Flask, render_template, flash, request, url_for, redirect
 from forms import RegistrationForm, LoginForm, PaymentForm
 from addToCartForm import AddToCart 
 
+
+import sys
+
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
@@ -10,20 +13,26 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 @app.route("/home", methods=['GET', 'POST'])
 def home():
     form = [AddToCart(), AddToCart()]
-    checkIfAddedToCart(form)
     id = ['1', '2']
+    checkIfAddedToCart(form, id)
     for i in range(len(form)):
         form[i].howManyToCart.id = 'counter-display-'+str(id[i])
     return render_template('home.html', title="home", form=form, id = id)
 
-def checkIfAddedToCart(form):
-    if ((form[0].validate_on_submit()) and (form[0].addToCart.data == True)):
-        flash('Successfully added ' + str(form[0].howManyToCart.data) + ' of your items to your cart', 'success')
+def checkIfAddedToCart(form, id):
+    for i in range(len(form)):
+       #if id[i] in request.form:
+        #    print(id[i], file=sys.stderr)
+        if ((form[i].validate_on_submit()) and (form[i].addToCart.data == True) and (form[i].howManyToCart.data != 0)
+                and (id[i] in request.form)):
+            print(form[i].howManyToCart.id, file=sys.stderr)
+            flash('Successfully added ' + str(form[i].howManyToCart.data) + ' of your items to your cart with ID ' +
+                  str(id[i]), 'success')
 
-
-    elif (form[0].is_submitted() and (not form[0].validate_on_submit())):
-        flash('Couldn\'t add your items to your cart. Did you know you can only add 1 to 100 items not more or less',
-              'danger')
+        elif (form[i].is_submitted() and (not form[i].validate_on_submit()) and (id[i] in request.form)):
+            flash('Couldn\'t add your items to your cart. Did you know you can only add 1 to 100 items not more '
+                  'or less with ID ' + str(id[i]),
+                  'danger')
 
 
 @app.route("/varukorg")
