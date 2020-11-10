@@ -37,6 +37,6 @@ class PaymentForm(FlaskForm):
 
 
 class AddToCart(FlaskForm):
-    howManyToCart = IntegerField('amount',
-                                 validators=[NumberRange(min=1, max=100)])
+    howManyToCart = IntegerField('amount', validators=[NumberRange(min=1, max=100)])
     addToCart = SubmitField('Add to cart')
+

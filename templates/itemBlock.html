@@ -16,7 +16,7 @@
 
     <div class="block-add-to-cart-class">
         <form method="POST" name="{{id}}" action="">
-           <input type="hidden" value="{{id}}" name="{{id}}">
+           <input type="hidden" value="{{id}}" name="{{id}}"> <!-- DON'T FUCKING REMOVE THIS BITCH!!!!! -->
             <div class="counter-minus-div-class">
                 <button class="counter-minus-{{id}} plusMinusBtn button" type="button">-</button>
             </div>
@@ -28,7 +28,6 @@
             <div class="counter-plus-div-class">
                 <button class="counter-plus-{{id}} plusMinusBtn button" type="button">+</button>
             </div>
-        <!--<form method="POST" action="">-->
             <div class="buy-button-div-class">
                 <!--{{ form.addToCart(class="btn btn-outline-info send-to-cart-button") }}-->
                 {{ form.addToCart(class="button send-to-cart-button") }}
@@ -38,42 +37,6 @@
     </div>
 
 </div>
-<!--
-    <script>
-    let counterDisplayElem = document.querySelector('.counter-display');
-    let counterMinusElem = document.querySelector('.counter-minus');
-    let counterPlusElem = document.querySelector('.counter-plus');
-
-    let count = 0;
-
-    updateDisplay();
-
-    counterPlusElem.addEventListener("click",()=>{
-        if(counterDisplayElem.value != count){
-            count = counterDisplayElem.value
-        }
-        count++;
-        updateDisplay();
-    });
-
-    counterMinusElem.addEventListener("click",()=>{
-        if(counterDisplayElem.value != count){
-            count = counterDisplayElem.value
-        }
-        if(count > 0){
-            count--;
-            updateDisplay();
-        }
-    });
-
-    function updateDisplay(){
-        counterDisplayElem.value = count;
-    };
-
-    function sendToCart() {
-            counterDisplayElem.value = 10
-    };
-</script>-->
 
 
 
