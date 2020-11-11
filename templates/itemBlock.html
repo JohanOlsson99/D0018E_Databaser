@@ -3,7 +3,7 @@
 <div class="block-class">
     <div class="image-div-class">
         <!--<img src="/static/image/car.jpg" alt="img" class="image-class">-->
-       <!-- <img src="{{ url_for('static', filename='image/imageName') }}" alt="img" class="image-class">-->
+        <!-- <img src="{{ url_for('static', filename='image/imageName') }}" alt="img" class="image-class">-->
         <img src="{{imageLink}}" alt="img" class="image-class">
     </div>
     <div class="block-text-class">
@@ -13,10 +13,9 @@
     </div>
 
 
-
     <div class="block-add-to-cart-class">
         <form method="POST" name="{{id}}" action="">
-           <input type="hidden" value="{{id}}" name="{{id}}"> <!-- DON'T FUCKING REMOVE THIS BITCH!!!!! -->
+            <input type="hidden" value="{{id}}" name="{{id}}"> <!-- DON'T FUCKING REMOVE THIS BITCH!!!!! -->
             <div class="counter-minus-div-class">
                 <button class="counter-minus-{{id}} plusMinusBtn button" type="button">-</button>
             </div>
