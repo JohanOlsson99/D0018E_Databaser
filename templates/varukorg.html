@@ -4,8 +4,101 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
 <!------ Include the above in your HEAD tag ---------->
+<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='varukorg.css') }}">-->
+<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">-->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='varukorg.css') }}">
 
+
+<div>
+    {% for i in range(id | length) %}
+    <div class="itemblock-div-class-{{id[i]}} itemblock-div-class">
+        {% with form = form[i], id = id[i], description = description[i], imageLink = imageLink[i] %}
+        {% include 'itemBlock.html' %}
+        {% endwith %}
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<div class="buttons-class">
+    <div class="button-continue-to-shop-class">
+        <a href="home">
+            <button class="button continue-button">Continue shopping</button>
+        </a>
+    </div>
+
+    <div class="button-purchase-to-store-class">
+        <a href="betalning">
+            <button class="button purchase-button">Payment</button>
+        </a>
+    </div>
+</div>
+
+
+<script>
+    let id = {{ id|safe }}
+    let counterDisplayElem = [];
+    let counterMinusElem = [];
+    let counterPlusElem = [];
+    let btnRemove = []
+    let products = []
+    let count = [];
+    for(let i = 0; i < id.length; i++) {
+		btnRemove[i] = document.querySelector(`#remove-button-${id[i]}`);
+		products[i] = document.querySelector(`.itemblock-div-class-${id[i]}`);
+
+        counterDisplayElem[i] = document.querySelector(`#counter-display-${id[i]}`);
+        counterMinusElem[i] = document.querySelector(`.counter-minus-${id[i]}`);
+        counterPlusElem[i] = document.querySelector(`.counter-plus-${id[i]}`);
+        count[i] = counterDisplayElem[i].value;
+
+        console.log(document.querySelector(`#itemblock-div-class-${id[i]}`));
+		console.log(document.querySelector(`#remove-button-${id[i]}`));
+        console.log(document.getElementById(`counter-display-${id[i]}`));
+        console.log(counterMinusElem[i]);
+        console.log(counterPlusElem[i]);
+        updateDisplay(i);
+    }
+
+
+
+    for(let i = 0; i < id.length; i++) {
+        counterPlusElem[i].addEventListener("click",()=>{
+            if(counterDisplayElem[i].value != count[i]){
+                count[i] = counterDisplayElem[i].value
+            }
+            count[i]++;
+            updateDisplay(i);
+        });
+
+        counterMinusElem[i].addEventListener("click",()=>{
+            if(counterDisplayElem[i].value != count[i]){
+                count[i] = counterDisplayElem[i].value
+            }
+            if(count[i] > 0){
+                count[i]--;
+                updateDisplay(i);
+            }
+        });
+
+        btnRemove[i].addEventListener("click",()=>{
+            alert("Item will get removed, you can add it again in home");
+            products[i].remove();
+        });
+
+    }
+
+
+    function updateDisplay(i){
+        counterDisplayElem[i].value = count[i];
+    };
+
+
+</script>
+
+
+<!--
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container">
 	<table id="cart" class="table table-hover table-condensed">
@@ -35,7 +128,7 @@
 							</td>
 							<td data-th="Subtotal" class="text-center">1.99</td>
 							<td class="actions" data-th="">
-								<button class="btn btn-danger" type="button">Remove</button>									
+								<button class="btn btn-danger" type="button">Remove</button>
 							</td>
 						</tr>
                     </tbody>
@@ -56,7 +149,7 @@
 							</td>
 							<td data-th="Subtotal" class="text-center">1.99</td>
 							<td class="actions" data-th="">
-								<button class="btn btn-danger" type="button">Remove</button>								
+								<button class="btn btn-danger" type="button">Remove</button>
 							</td>
 						</tr>
 					</tbody>
@@ -75,6 +168,10 @@
 </div>
 
 <script>
+
+	var id = {}
+	var btnRemove = document.querySelector(`#remove-button-${id[i]}`);
+
     var products = document.getElementsByClassName('Product')
     console.log(products)
 
@@ -87,10 +184,10 @@
             alert("hihihi")
             var buttonClicked = event.target
             buttonClicked.parentElement.parentElement.remove()
-            //totalPrice()    
+            //totalPrice()
         })
     }
-    
+
     /*
 
     function totalPrice(){
@@ -103,10 +200,10 @@
             console.log(priceTotal, antalprodukter)
     }
     */
-   
-    
+
+
 </script>
-    
-{% endblock content %}
+-->
+{% endblock %}
 
 

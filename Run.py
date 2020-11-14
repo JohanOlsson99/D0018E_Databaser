@@ -1,6 +1,6 @@
 from flask import Flask, render_template, flash, request, url_for, redirect
-from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart
-from addToCartForm import checkIfAddedToCart, getTest
+from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm
+from addToCartForm import checkIfAddedToCart, getTest, getTestCart
 
 import sys
 
@@ -21,9 +21,26 @@ def home():
     return render_template('home.html', title="home", form=form, id=id, description=description, imageLink=imageLink)
 
 
-@app.route("/varukorg")
+@app.route("/varukorg", methods=['GET', 'POST'])
 def kundkorg():
-    return render_template('varukorg.html', title="varukorg")
+    """form = [cartForm(), cartForm()]
+    id = ['1', '2']
+    form[0].howManyToCart.id = 'counter-display-' + str(id[0])
+    form[1].howManyToCart.id = 'counter-display-' + str(id[1])
+    description = ["etworkeffects platforms proactive exploit, aggregate partnerships synergies embedded optimize unleash synergize markets. Networks mindshare robust", "Test"]
+    imageLink = [url_for('static', filename='image/car.jpg'), url_for('static', filename='image/car.jpg')]
+    form[0].addToCart.id = 'remove-button-' + str(id[0])
+    form[1].addToCart.id = 'remove-button-' + str(id[1])"""
+
+    form, id, description, imageLink, startValue = getTestCart(3)
+
+    for i in range(len(form)):
+        form[i].howManyToCart.id = 'counter-display-' + str(id[i])
+        form[i].addToCart.id = 'remove-button-' + str(id[i])
+        form[i].howManyToCart.data = startValue[i]
+
+
+    return render_template('varukorg.html', title="varukorg", form=form, id=id, description=description, imageLink=imageLink)
 
 @app.route("/login")
 def login():
@@ -44,6 +61,10 @@ def betalning():
     form = PaymentForm()
     return render_template('betalning.html', title='betalning', form=form)
 
+
+@app.route("/com")
+def comment():
+    return render_template('commentSection.html', title='comment')
 
 if __name__ == '__main__':
     app.run(debug=True)

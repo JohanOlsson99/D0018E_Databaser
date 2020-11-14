@@ -40,3 +40,6 @@ class AddToCart(FlaskForm):
     howManyToCart = IntegerField('amount', validators=[NumberRange(min=1, max=100)])
     addToCart = SubmitField('Add to cart')
 
+class cartForm(FlaskForm):
+    howManyToCart = IntegerField('amount', validators=[NumberRange(min=1, max=100)])
+    addToCart = SubmitField('Remove')

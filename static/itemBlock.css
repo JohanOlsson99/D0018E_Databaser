@@ -73,10 +73,12 @@
   transition-duration: 0.4s;
   cursor: pointer;
   color: black;
-  border: 2px solid #4CAF50;
+  /*border: 2px solid #4CAF50;*/
+  border: 2px solid #48D941;
 }
 
 .button:hover {
-  background-color: #4CAF50;
+  /*background-color: #4CAF50;*/
+  background-color: #48D941;
   color: white;
 }
