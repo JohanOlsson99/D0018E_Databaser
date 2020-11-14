@@ -3,6 +3,7 @@ from forms import AddToCart, cartForm
 import sys
 import random
 
+
 def checkIfAddedToCart(form, id):
     for i in range(len(form)):
         if id[i] in request.form:
@@ -18,7 +19,6 @@ def checkIfAddedToCart(form, id):
                   'or less with ID ' + str(id[i]), 'danger')
 
 
-
 def getTest(length):
     url = url_for('static', filename='image/car.jpg')
     string = "etworkeffects platforms proactive exploit, aggregate partnerships synergies " \
@@ -29,10 +29,11 @@ def getTest(length):
     imageLink = []
     for i in range(length):
         form.append(AddToCart())
-        id.append(str(i+1))
+        id.append(str(i + 1))
         description.append(string)
         imageLink.append(url)
     return form, id, description, imageLink
+
 
 def getTestCart(length):
     url = url_for('static', filename='image/car.jpg')
@@ -46,7 +47,7 @@ def getTestCart(length):
 
     for i in range(length):
         form.append(cartForm())
-        id.append(str(i+1))
+        id.append(str(i + 1))
         description.append(string)
         imageLink.append(url)
         startValue.append(random.randint(0, 100))
