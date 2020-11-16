@@ -1,24 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
+<!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+<!------ Include the above in your HEAD tag ---------->
+<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='varukorg.css') }}">-->
+<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">-->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='item.css') }}">
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
-
-<div>
-    <div class="wrapper">
-    {% for i in range(id | length) %}
-
-        <div class="itemblock-div-class">
-            {% with form = form[i], id = id[i], description = description[i], imageLink = imageLink[i], price=price[i] %}
-                {% include 'itemBlock.html' %}
-            {% endwith %}
-        </div>
-
-    {% endfor %}
-
-    </div>
-
+<div class="itemblock-div-class-{{id[i]}} itemblock-div-class">
+    {% with form = form[0], id = id[0], description = description[0], imageLink = imageLink[0], price=price[0] %}
+        {% include 'itemBlock.html' %}
+    {% endwith %}
 </div>
+
 
 
 
@@ -69,5 +64,9 @@
     };
 
 </script>
+
+
+
+
 
 {% endblock %}

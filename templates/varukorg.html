@@ -41,12 +41,16 @@
     let counterDisplayElem = [];
     let counterMinusElem = [];
     let counterPlusElem = [];
+    let count = [];
+
     let btnRemove = []
     let products = []
-    let count = [];
+    let form = []
+
     for(let i = 0; i < id.length; i++) {
 		btnRemove[i] = document.querySelector(`#remove-button-${id[i]}`);
 		products[i] = document.querySelector(`.itemblock-div-class-${id[i]}`);
+        form[i] = document.querySelector(`.form-class-${id[i]}`);
 
         counterDisplayElem[i] = document.querySelector(`#counter-display-${id[i]}`);
         counterMinusElem[i] = document.querySelector(`.counter-minus-${id[i]}`);
@@ -83,6 +87,7 @@
         });
 
         btnRemove[i].addEventListener("click",()=>{
+            //form[i].submit()
             alert("Item will get removed, you can add it again in home");
             products[i].remove();
         });

@@ -11,102 +11,112 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 
 
     <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
 
     {% if title %}
-      <title>E-store - {{ title }}</title>
+    <title>E-store - {{ title }}</title>
     {% else %}
-      <title>E-store</title>
+    <title>E-store</title>
     {% endif %}
 
 </head>
 <body>
-  <div class="div all-encapsulated">
-      <div class=" div header-class">
-          <!-- Navbar -->
-          <nav class="navbar navbar-expand-md navbar-light sticky-top">
+<div class="div all-encapsulated">
+    <div class=" div header-class">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-md navbar-light sticky-top">
 
             <a class="navbar-brand" href="/">
-              <img src="https://upload.wikimedia.org/wikipedia/en/8/88/Cars_logo.png" height="100" alt="Home">
+                <img src="https://upload.wikimedia.org/wikipedia/en/8/88/Cars_logo.png" height="100" alt="Home">
             </a>
 
             <!-- Collapse button -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav1"
-              aria-controls="basicExampleNav1" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+                    aria-controls="basicExampleNav1" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- Links -->  
+            <!-- Links -->
             <div class="collapse navbar-collapse" id="basicExampleNav1">
 
-              <!-- Breadcrumbs -->
-              <!--<ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a class="waves-effect" href="/home">Home</a></li>
-                <li class="breadcrumb-item"><a class="waves-effect" href="/">Dennis</a></li>
-                <li class="breadcrumb-item"><a class="waves-effect" href="#!">Johan</a></li>
-                <li class="breadcrumb-item"><a class="waves-effect" href="#!">Philip</a></li>
-              </ol>-->  
-              <!-- Breadcrumbs -->
+                <!-- Breadcrumbs -->
+                <!--<ol class="breadcrumb">
+                  <li class="breadcrumb-item active"><a class="waves-effect" href="/home">Home</a></li>
+                  <li class="breadcrumb-item"><a class="waves-effect" href="/">Dennis</a></li>
+                  <li class="breadcrumb-item"><a class="waves-effect" href="#!">Johan</a></li>
+                  <li class="breadcrumb-item"><a class="waves-effect" href="#!">Philip</a></li>
+                </ol>-->
+                <!-- Breadcrumbs -->
 
-              <!-- Right -->
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a href="/varukorg" class="nav-link navbar-link-2 waves-effect">
-                    <i class="fas fa-shopping-cart pl-0"></i>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="/profile" class="nav-link navbar-link-2 waves-effect">
-                    <i class="fas fa-user"></i>
-                  </a>
-                </li>
-                <li class="nav-item pl-2 mb-2 mb-md-0">
-                  <a href="/login" type="button" class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
-                    Login
-                  </a>
-                </li>
-                <li class="nav-item pl-2 mb-2 mb-md-0">
-                  <a href="/register" type="button" class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
-                    Register
-                  </a>
-                </li>
-              </ul>
+                <!-- Right -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="/varukorg" class="nav-link navbar-link-2 waves-effect">
+                            <i class="fas fa-shopping-cart pl-0"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/profile" class="nav-link navbar-link-2 waves-effect">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item pl-2 mb-2 mb-md-0">
+                        <a href="/login" type="button"
+                           class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
+                            Login
+                        </a>
+                    </li>
+                    <li class="nav-item pl-2 mb-2 mb-md-0">
+                        <a href="/register" type="button"
+                           class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
+                            Register
+                        </a>
+                    </li>
+                </ul>
 
             </div>
             <!-- Links -->
 
-          </nav>
-          <!-- Navbar -->
-      </div>
-    
-
-      <div class="content-class div">
-          {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                  {% for category, message in messages %}
-                      <div class="alert alert-{{ category }}">
-                          {{ message }}
-                      </div>
-                  {% endfor %}
-              {% endif %}
-          {% endwith %}
+        </nav>
+        <!-- Navbar -->
+    </div>
 
 
+    <div class="content-class div">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
-          {% block content %}
-          {% endblock %}
-      </div>
 
-  </div>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</div>
 </body>
 </html>
