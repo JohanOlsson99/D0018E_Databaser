@@ -38,14 +38,16 @@ def kundkorg():
     form[1].addToCart.id = 'remove-button-' + str(id[1])"""
 
     form, id, description, imageLink, startValue = getTestCart(3)
+    price = []
 
     for i in range(len(form)):
         form[i].howManyToCart.id = 'counter-display-' + str(id[i])
         form[i].addToCart.id = 'remove-button-' + str(id[i])
         form[i].howManyToCart.data = startValue[i]
+        price.append(random.randint(1, 9999))
 
     return render_template('varukorg.html', title="varukorg", form=form, id=id, description=description,
-                           imageLink=imageLink)
+                           imageLink=imageLink, price=price)
 
 
 @app.route("/login")

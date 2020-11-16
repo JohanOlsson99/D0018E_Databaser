@@ -62,7 +62,7 @@
     padding-left: 1%;
     padding-right: 1%;
     padding-top: 1%;
-    width: 70%;
+    width: 56%;
 }
 .plusMinusBtn {
     width: 25px;
@@ -103,10 +103,11 @@
 .block-add-to-cart-class {
     display: inline-flex;
     float: right;
-    margin-left: 2px;
+    margin: auto;
+    /*margin-left: 2px;
     margin-top: 50px;
-    margin-bottom: 30px;
-    width: 230px;
+    margin-bottom: 30px;*/
+    /*width: 230px;*/
     color: black;
 }
 
@@ -178,4 +179,11 @@
     background-color: #FFC30B;
     border-radius: 6px;
     color: black;
+}
+
+.price-text {
+    float: left;
+    margin: auto;
+    font-size: large;
+    font-weight: bold;
 }
