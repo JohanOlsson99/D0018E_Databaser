@@ -145,9 +145,12 @@
 
 .purchase-button {
     width: 140px;
-    height 55px;
     border-radius: 6px;
     text-align: center;
+}
+
+.purchase-button:hover {
+    color: black;
 }
 
 .button-purchase-to-store-class {
@@ -174,4 +177,5 @@
 .continue-button:hover {
     background-color: #FFC30B;
     border-radius: 6px;
+    color: black;
 }

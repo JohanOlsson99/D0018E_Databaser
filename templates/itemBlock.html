@@ -1,20 +1,21 @@
 <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">-->
 
+
 <div class="block-class">
+    <a href="/item-{{id}}" class="link-div">
     <div class="image-div-class">
         <!--<img src="/static/image/car.jpg" alt="img" class="image-class">-->
         <!-- <img src="{{ url_for('static', filename='image/imageName') }}" alt="img" class="image-class">-->
         <img src="{{imageLink}}" alt="img" class="image-class">
     </div>
+    </a>
     <div class="block-text-class">
-        <!--<p>Text about the product, this is a very good product, yeah boiiiiiii  very good price. Very much to do here before good program ahh yes si mucho gracias</p>
-        -->
         <p>{{ description }}</p>
     </div>
 
-
+    <p class="price-text">{{price}} kr</p>
     <div class="block-add-to-cart-class">
-        <form method="POST" name="{{id}}" action="">
+        <form method="POST" name="{{id}}" class="form-class-{{id}}" action="">
             <input type="hidden" value="{{id}}" name="{{id}}"> <!-- DON'T FUCKING REMOVE THIS BITCH!!!!! -->
             <div class="counter-minus-div-class">
                 <button class="counter-minus-{{id}} plusMinusBtn button" type="button">-</button>
@@ -36,6 +37,3 @@
     </div>
 
 </div>
-
-
-
