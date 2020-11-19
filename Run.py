@@ -10,12 +10,14 @@ app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User()
+
 
 
 
@@ -100,6 +102,7 @@ def item(id):
     return render_template('item.html', title='item', form=form, id=id, description=description, imageLink=imageLink, price=price)
 
 
+
 @app.route('/logout')
 def logout():
     if current_user.is_authenticated:
@@ -111,6 +114,11 @@ def logout():
         logout_user()
 
     return redirect(url_for('home'))
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 
 
 if __name__ == '__main__':
