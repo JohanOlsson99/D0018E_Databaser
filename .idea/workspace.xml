@@ -23,16 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c21d1fb-4bd1-4741-96b6-8c16aba0130d" name="Default Changelist" comment="clean up">
-      <change afterPath="$PROJECT_DIR$/static/item.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/item.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Run.py" beforeDir="false" afterPath="$PROJECT_DIR$/Run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/addToCartForm.py" beforeDir="false" afterPath="$PROJECT_DIR$/addToCartForm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/itemBlock.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/itemBlock.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/varukorg.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/varukorg.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/itemBlock.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/itemBlock.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/varukorg.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/varukorg.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +55,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Run.py" />
-    <property name="settings.editor.selected.configurable" value="restructured.text.topic" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -78,6 +72,9 @@
       <module name="project" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="C:\Users\Johan\AppData\Local\Programs\Python\Python37-32\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
@@ -116,7 +113,21 @@
       <option name="project" value="LOCAL" />
       <updated>1605365515834</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Fixed one page for each item">
+      <created>1605533142067</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1605533142067</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fixed styling when price was added">
+      <created>1605541133205</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1605541133205</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -137,7 +148,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixed cart" />
     <MESSAGE value="clean up" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean up" />
+    <MESSAGE value="Fixed one page for each item" />
+    <MESSAGE value="fixed styling when price was added" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed styling when price was added" />
   </component>
   <component name="WindowStateProjectService">
     <state x="223" y="67" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605111304412">
@@ -180,14 +193,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1515" height="154" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1605274487501" />
-    <state x="37" y="30" key="SettingsEditor" timestamp="1605457655066">
+    <state x="37" y="30" key="SettingsEditor" timestamp="1605551952869">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="37" y="30" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1605457655066" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1605365526125">
+    <state x="37" y="30" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1605551952869" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1605541136102">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605365526125" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1605541136102" />
     <state x="586" y="326" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1605273366641">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

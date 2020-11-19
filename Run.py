@@ -1,13 +1,25 @@
 from flask import Flask, render_template, flash, request, url_for, redirect
-from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm
+from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User
 from addToCartForm import checkIfAddedToCart, getTest, getTestCart, checkIfAddedToCartItem
 import sys
 import random
+from flask_login import login_user, logout_user, LoginManager, current_user
 
 
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
+
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User()
+
+
+
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
@@ -37,19 +49,22 @@ def kundkorg():
     form[1].addToCart.id = 'remove-button-' + str(id[1])"""
 
     form, id, description, imageLink, startValue = getTestCart(3)
+    price = []
 
     for i in range(len(form)):
         form[i].howManyToCart.id = 'counter-display-' + str(id[i])
         form[i].addToCart.id = 'remove-button-' + str(id[i])
         form[i].howManyToCart.data = startValue[i]
+        price.append(random.randint(1, 9999))
 
     return render_template('varukorg.html', title="varukorg", form=form, id=id, description=description,
-                           imageLink=imageLink)
+                           imageLink=imageLink, price=price)
 
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    login_user(User())
     return render_template('login.html', title="login", form=form)
 
 
@@ -87,10 +102,23 @@ def item(id):
     return render_template('item.html', title='item', form=form, id=id, description=description, imageLink=imageLink, price=price)
 
 
-@app.route('/profile')
 
+@app.route('/logout')
+def logout():
+    if current_user.is_authenticated:
+        print('TEST', file=sys.stderr)
+
+        print(current_user.get_id(), file=sys.stderr)
+        print(current_user.getIsAdmin())
+
+        logout_user()
+
+    return redirect(url_for('home'))
+
+@app.route('/profile')
 def profile():
     return render_template('profile.html')
+
 
 
 if __name__ == '__main__':
