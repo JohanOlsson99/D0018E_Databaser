@@ -9,7 +9,6 @@ app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 
-
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
@@ -87,6 +86,11 @@ def item(id):
 
     return render_template('item.html', title='item', form=form, id=id, description=description, imageLink=imageLink, price=price)
 
+
+@app.route('/profile')
+
+def profile():
+    return render_template('profile.html')
 
 
 if __name__ == '__main__':
