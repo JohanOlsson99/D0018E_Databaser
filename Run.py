@@ -1,13 +1,22 @@
 from flask import Flask, render_template, flash, request, url_for, redirect
-from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm
+from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User
 from addToCartForm import checkIfAddedToCart, getTest, getTestCart, checkIfAddedToCartItem
 import sys
 import random
+from flask_login import login_user, logout_user, LoginManager, current_user
 
 
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User()
+
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -50,9 +59,10 @@ def kundkorg():
                            imageLink=imageLink, price=price)
 
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    login_user(User())
     return render_template('login.html', title="login", form=form)
 
 
@@ -89,6 +99,18 @@ def item(id):
 
     return render_template('item.html', title='item', form=form, id=id, description=description, imageLink=imageLink, price=price)
 
+
+@app.route('/logout')
+def logout():
+    if current_user.is_authenticated:
+        print('TEST', file=sys.stderr)
+
+        print(current_user.get_id(), file=sys.stderr)
+        print(current_user.getIsAdmin())
+
+        logout_user()
+
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':
