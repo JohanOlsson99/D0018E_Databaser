@@ -11,10 +11,10 @@ app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'ojaolo-8'
-app.config['MYSQL_PASSWORD'] = '123456789'
-app.config['MYSQL_DB'] = 'db990715'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_DB'] = 'db990715'
 
 mysql = MySQL(app)
 
@@ -136,4 +136,4 @@ def profile():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
