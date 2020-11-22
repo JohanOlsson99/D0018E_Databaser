@@ -75,7 +75,7 @@ def login():
     login_user(User())
     if form.validate_on_submit():
         cur = mysql.connect().cursor()
-        cur.execute("INSERT INTO Customer (Customer ID, First name, Last name, Username, Email, Password) VALUES (%d, %s, %s, %s, %s, %d)", (0, 'Johan', 'Olsson', 'johols', 'ojaolo-8@gmail.com', 123))
+        cur.execute("INSERT INTO Customer (Customer_ID, First_name, Last_name, Username, Email, Password) VALUES (%d, %s, %s, %s, %s, %d)", (random.randint(1,99999), 'Johan', 'Olsson', 'johols', 'ojaolo-8@gmail.com', '123'))
         mysql.connect.commit()
         cur.close()
 
