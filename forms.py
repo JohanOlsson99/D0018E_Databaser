@@ -6,37 +6,37 @@ from flask_login import UserMixin
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Användarnamn',
+    username = StringField('Username',
                            validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
-    password = PasswordField('Lösenord', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
 
-    submit = SubmitField('Registrera dig')
+    submit = SubmitField('Register')
 
 
 class LoginForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
-    password = PasswordField('Lösenord', validators=[DataRequired()])
-    remember = BooleanField('Kom ihåg mig')
-    submit = SubmitField('Logga in')
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember')
+    submit = SubmitField('Login')
 
 
 class PaymentForm(FlaskForm):
-    name = StringField('Fullständigt namn*', validators=[DataRequired()])
+    name = StringField('Full Name*', validators=[DataRequired()])
 
-    cardnumber = StringField('Kort', validators=[DataRequired()])
+    cardnumber = StringField('Card', validators=[DataRequired()])
 
     adress = StringField('Adress', validators=[DataRequired()])
 
-    Postnummer = StringField('Postnummer*', validators=[DataRequired()])
+    Postnummer = StringField('Postal Number*', validators=[DataRequired()])
 
-    Stad = StringField('Stad', validators=[DataRequired()])
+    Stad = StringField('City', validators=[DataRequired()])
 
-    Land = StringField('Land', validators=[DataRequired()])
+    Land = StringField('Country', validators=[DataRequired()])
 
-    submit = SubmitField('Skicka bestälning')
+    submit = SubmitField('Send Order')
 
 
 class AddToCart(FlaskForm):
