@@ -138,7 +138,7 @@ ALTER TABLE `Customer`
 --
 -- Index för tabell `Order details`
 --
-ALTER TABLE `Order details`
+ALTER TABLE `Order_details`
   ADD PRIMARY KEY (`Order_details_ID`),
   ADD KEY `Customer_ID` (`Customer_ID`);
 
@@ -166,7 +166,7 @@ ALTER TABLE `Products`
 ALTER TABLE `Comments`
   ADD CONSTRAINT `Comments_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `Customer` (`Customer_ID`),
   ADD CONSTRAINT `Comments_ibfk_2` FOREIGN KEY (`Product_ID`) REFERENCES `Products` (`Products_ID`),
-  ADD CONSTRAINT `Comments_ibfk_3` FOREIGN KEY (`Admin-ID`) REFERENCES `Admin` (`Admin_ID`);
+  ADD CONSTRAINT `Comments_ibfk_3` FOREIGN KEY (`Admin_ID`) REFERENCES `Admin` (`Admin_ID`);
 
 --
 -- Restriktioner för tabell `Order details`
