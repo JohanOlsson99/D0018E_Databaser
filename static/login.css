@@ -1,10 +1,70 @@
-.form-control-lg{  
-padding: .5rem 1rem;
-font-size: 1.25rem;
-line-height: 1.5;
-border-radius: 15rem; 
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,900|Montserrat|Roboto");
+
+.container {
+    background: rgb(255, 255, 255);
+    width: 540px;
+    height: 400px;
+    margin: 0 auto; 
+    position: relative; 
+    margin-top: 2%; 
+    box-shadow: 2px 5px 20px rgba(119,119,119,.5);
 }
 
-.form-control{
-    width: 43%;
+.mb-4 {
+    font-family: "Montserrat", sans-serif;
+    color: #2484fb;
+    font-size: 2rem;
+    margin-top: 40px;
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+.form-control-label {
+    color:  #777;
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-left: 2px;
+    margin-top: 10px; 
+}
+
+.form-control-lg {  
+    color:  #777;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-left: 2px;
+    margin-top: 10px; 
+}
+
+.form-control {
+    border: 0; 
+    border-bottom: 1px solid #2484fb;
+    width: 80%;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1em;
+    padding: 7px 0;
+    color: #070707;
+    outline: none; 
+    text-align: justify;
+    margin: auto
+}
+
+.btn-login {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    font-size: 15px;
+    border: 0; 
+    color: #fff;
+    background: #2484fb;
+    padding: 7px 15px;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, .2);
+    cursor: pointer;
+    margin-top: 15px; 
+    float: right; 
+}
+
+.btn-login:hover {
+    color: #095abd !important;
 }
