@@ -4,11 +4,19 @@ from addToCartForm import checkIfAddedToCart, getTest, getTestCart, checkIfAdded
 import sys
 import random
 from flask_login import login_user, logout_user, LoginManager, current_user
+from flaskext.mysql import MySQL
 
 
 app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'ojaolo-8'
+app.config['MYSQL_PASSWORD'] = '123456789'
+app.config['MYSQL_DB'] = 'db990715'
+
+mysql = MySQL(app)
 
 
 login_manager = LoginManager()
@@ -65,6 +73,12 @@ def kundkorg():
 def login():
     form = LoginForm()
     login_user(User())
+    if form.validate_on_submit():
+        cur = mysql.connect().cursor()
+        cur.execute("INSERT INTO Customer (Customer ID, First name, Last name, Username, Email, Password) VALUES (%d, %s, %s, %s, %s, %d)", (0, 'Johan', 'Olsson', 'johols', 'ojaolo-8@gmail.com', 123))
+        mysql.connect.commit()
+        cur.close()
+
     return render_template('login.html', title="login", form=form)
 
 
