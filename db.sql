@@ -70,10 +70,10 @@ CREATE TABLE `Customer` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `Order details`
+-- Tabellstruktur `Order_details`
 --
 
-CREATE TABLE `Order details` (
+CREATE TABLE `Order_details` (
   `Order_details_ID` int(11) NOT NULL,
   `Customer_ID` int(11) NOT NULL,
   `status` linestring NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE `Order details` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `Ordered products list`
+-- Tabellstruktur `Ordered_products_list`
 --
 
 CREATE TABLE `Ordered_products_list` (
@@ -136,14 +136,14 @@ ALTER TABLE `Customer`
   ADD PRIMARY KEY (`Customer_ID`);
 
 --
--- Index för tabell `Order details`
+-- Index för tabell `Order_details`
 --
 ALTER TABLE `Order_details`
   ADD PRIMARY KEY (`Order_details_ID`),
   ADD KEY `Customer_ID` (`Customer_ID`);
 
 --
--- Index för tabell `Ordered products list`
+-- Index för tabell `Ordered_products_list`
 --
 ALTER TABLE `Ordered_products_list`
   ADD PRIMARY KEY (`ordered_products_list_ID`),
@@ -169,10 +169,10 @@ ALTER TABLE `Comments`
   ADD CONSTRAINT `Comments_ibfk_3` FOREIGN KEY (`Admin_ID`) REFERENCES `Admin` (`Admin_ID`);
 
 --
--- Restriktioner för tabell `Order details`
+-- Restriktioner för tabell `Order_details`
 --
-ALTER TABLE `Order details`
-  ADD CONSTRAINT `Order details_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `Customer` (`Customer_ID`);
+ALTER TABLE `Order_details`
+  ADD CONSTRAINT `Order_details_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `Customer` (`Customer_ID`);
 
 --
 -- Restriktioner för tabell `Ordered products list`
