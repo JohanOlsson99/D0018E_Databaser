@@ -11,13 +11,14 @@ app = Flask(__name__, static_url_path='/static')
 
 app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 
+mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
+mysql.init_app(app)
 
-mysql = MySQL(app)
-
+con = mysql.connect()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -74,9 +75,9 @@ def login():
     form = LoginForm()
     login_user(User())
     if form.validate_on_submit():
-        cur = mysql.connect().cursor()
-        cur.execute("INSERT INTO Customer (Customer_ID, First_name, Last_name, Username, Email, Password) VALUES (%d, %s, %s, %s, %s, %d)", (random.randint(1,99999), 'Johan', 'Olsson', 'johols', 'ojaolo-8@gmail.com', '123'))
-        mysql.connect.commit()
+        cur = con.cursor()
+        cur.execute("INSERT INTO Customer (Customer_ID, First_name, Last_name, Username, Email, Password) VALUES (%s, %s, %s, %s, %s, %s);", (random.randint(1,99999), 'Johan', 'Olsson', 'johols', 'ojaolo-8@gmail.com', '123'))
+        con.commit()
         cur.close()
 
     return render_template('login.html', title="login", form=form)
