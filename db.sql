@@ -30,10 +30,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `Admin` (
   `Admin_ID` int(11) NOT NULL,
-  `Name` linestring NOT NULL,
-  `Username` linestring NOT NULL,
-  `Email` linestring NOT NULL,
-  `Password` linestring NOT NULL
+  `Name` VARCHAR(255) NOT NULL,
+  `Username` VARCHAR(255) NOT NULL,
+  `Email` VARCHAR(255) NOT NULL,
+  `Password` VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------
@@ -47,7 +47,7 @@ CREATE TABLE `Comments` (
   `Customer_ID` int(11) DEFAULT NULL,
   `Admin_ID` int(11) DEFAULT NULL,
   `Product_ID` int(11) NOT NULL,
-  `Comment` linestring NOT NULL
+  `Comment` VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------
@@ -58,11 +58,11 @@ CREATE TABLE `Comments` (
 
 CREATE TABLE `Customer` (
   `Customer_ID` int(11) NOT NULL,
-  `First_name` linestring NOT NULL,
-  `Last_name` linestring NOT NULL,
-  `Username` linestring NOT NULL,
-  `Email` linestring NOT NULL,
-  `Password` linestring NOT NULL,
+  `First_name` VARCHAR(255) NOT NULL,
+  `Last_name` VARCHAR(255) NOT NULL,
+  `Username` VARCHAR(255) NOT NULL,
+  `Email` VARCHAR(255) NOT NULL,
+  `Password` VARCHAR(255) NOT NULL,
   `Phone_number` int(11) DEFAULT NULL,
   `Birthday` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
@@ -76,9 +76,9 @@ CREATE TABLE `Customer` (
 CREATE TABLE `Order_details` (
   `Order_details_ID` int(11) NOT NULL,
   `Customer_ID` int(11) NOT NULL,
-  `status` linestring NOT NULL,
+  `status` VARCHAR(255) NOT NULL,
   `date` date NOT NULL,
-  `name` linestring NOT NULL
+  `name` VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------
@@ -102,9 +102,9 @@ CREATE TABLE `Ordered_products_list` (
 
 CREATE TABLE `Products` (
   `Products_ID` int(11) NOT NULL,
-  `Product_name` linestring NOT NULL,
+  `Product_name` VARCHAR(255) NOT NULL,
   `Product_price` double NOT NULL,
-  `Product_description` linestring NOT NULL,
+  `Product_description` VARCHAR(255) NOT NULL,
   `Products left in stock` int(11) NOT NULL,
   `Rating` int(11) DEFAULT NULL,
   `HowManyHaveRated` int(11) DEFAULT NULL
