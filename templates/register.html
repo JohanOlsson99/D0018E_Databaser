@@ -6,11 +6,10 @@
     <div class="content-section">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
-            <fieldset class="form-group" class="container-fluid">
+            <!--<fieldset class="form-group" class="container-fluid">-->
                 <legend class="border-bottom mb-4">Registrering</legend>
                 <div class="form-group">
                     {{ form.username.label(class="form-control-label") }}
-
                     {% if form.username.errors %}   
                         {{ form.username(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -48,8 +47,86 @@
                         {{ form.password(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-            
-            </fieldset>
+                <div class="form-group">
+                    {{ form.firstName.label(class="form-control-label") }}
+                    {% if form.firstName.errors %}
+                        {{ form.firstName(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.firstName.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.firstName(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                        {{ form.surName.label(class="form-control-label") }}
+                        {% if form.surName.errors %}
+                            {{ form.surName(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.surName.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.surName(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.phone.label(class="form-control-label") }}
+                        {% if form.phone.errors %}
+                            {{ form.phone(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.phone.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.phone(class="form-control form-control-lg") }}
+                        {% endif %}
+                </div>
+                <div class='date-form'>
+                    <div class="date-form-day">
+                        {{ form.birthdayDay.label(class="form-control-label") }}
+                        {% if form.birthdayDay.errors %}
+                            {{ form.birthdayDay(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.birthdayDay.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.birthdayDay(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="date-form-month">
+                        {{ form.birthdayMonth.label(class="form-control-label") }}
+                        {% if form.birthdayMonth.errors %}
+                            {{ form.birthdayMonth(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.birthdayMonth.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.birthdayMonth(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    <div class="date-form-year">
+                        {{ form.birthdayYear.label(class="form-control-label") }}
+                        {% if form.birthdayYear.errors %}
+                            {{ form.birthdayYear(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.birthdayYear.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.birthdayYear(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                </div>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>

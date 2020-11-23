@@ -38,3 +38,37 @@
     background-color: #4CAF50;
     color: white;
   }
+
+  .date-form {
+    height: 100px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.date-form-day {
+    float:left;
+}
+
+.date-form-month {
+    float:left;
+    margin-left: 10px;
+}
+.date-form-year {
+    float:left;
+    margin-left: 10px;
+}
+
+#birthdayDay {
+    width: 80px;
+
+}
+
+#birthdayMonth {
+    width: 80px;
+
+}
+
+#birthdayYear {
+    width: 120px;
+    margin-bottom: 2%;
+}
