@@ -25,27 +25,12 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `Admin`
---
-
-CREATE TABLE `Admin` (
-  `Admin_ID` int(11) NOT NULL,
-  `Name` VARCHAR(255) NOT NULL,
-  `Username` VARCHAR(255) NOT NULL,
-  `Email` VARCHAR(255) NOT NULL,
-  `Password` VARCHAR(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-
--- --------------------------------------------------------
-
---
 -- Tabellstruktur `Comments`
 --
 
 CREATE TABLE `Comments` (
   `Comments_ID` int(11) NOT NULL,
   `Customer_ID` int(11) DEFAULT NULL,
-  `Admin_ID` int(11) DEFAULT NULL,
   `Product_ID` int(11) NOT NULL,
   `Comment` VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
@@ -115,20 +100,12 @@ CREATE TABLE `Products` (
 --
 
 --
--- Index för tabell `Admin`
---
-ALTER TABLE `Admin`
-  ADD PRIMARY KEY (`Admin_ID`);
-
---
 -- Index för tabell `Comments`
 --
 ALTER TABLE `Comments`
   ADD PRIMARY KEY (`Comments_ID`),
   ADD KEY `Customer_ID` (`Customer_ID`),
-  ADD KEY `Product_ID` (`Product_ID`),
-  ADD KEY `Admin_ID` (`Admin_ID`);
-
+  ADD KEY `Product_ID` (`Product_ID`);
 --
 -- Index för tabell `Customer`
 --
@@ -165,9 +142,7 @@ ALTER TABLE `Products`
 --
 ALTER TABLE `Comments`
   ADD CONSTRAINT `Comments_ibfk_1` FOREIGN KEY (`Customer_ID`) REFERENCES `Customer` (`Customer_ID`),
-  ADD CONSTRAINT `Comments_ibfk_2` FOREIGN KEY (`Product_ID`) REFERENCES `Products` (`Products_ID`),
-  ADD CONSTRAINT `Comments_ibfk_3` FOREIGN KEY (`Admin_ID`) REFERENCES `Admin` (`Admin_ID`);
-
+  ADD CONSTRAINT `Comments_ibfk_2` FOREIGN KEY (`Product_ID`) REFERENCES `Products` (`Products_ID`);
 --
 -- Restriktioner för tabell `Order_details`
 --
@@ -181,6 +156,7 @@ ALTER TABLE `Ordered_products_list`
   ADD CONSTRAINT `Ordered_products_list_ibfk_1` FOREIGN KEY (`Product_ID`) REFERENCES `Products` (`Products_ID`),
   ADD CONSTRAINT `Ordered_products_list_ibfk_2` FOREIGN KEY (`Order_details_ID`) REFERENCES `Order_details` (`Order_details_ID`);
 
+INSERT INTO `Customer` (`Customer_ID`, `First_name`,  `Last_name`, `Username`, `Email`, `Password`) VALUES (0, 'Admin', 'Admin', 'Admin', 'Admin@gmail.com', '123');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
