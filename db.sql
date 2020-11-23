@@ -103,7 +103,7 @@ CREATE TABLE `Ordered_products_list` (
 CREATE TABLE `Products` (
   `Products_ID` int(11) NOT NULL,
   `Product_name` VARCHAR(255) NOT NULL,
-  `Product_price` double NOT NULL,
+  `Product_price` double(9,2) NOT NULL,
   `Product_description` VARCHAR(255) NOT NULL,
   `Products left in stock` int(11) NOT NULL,
   `Rating` int(11) DEFAULT NULL,
@@ -118,7 +118,9 @@ CREATE TABLE `Products` (
 -- Index för tabell `Admin`
 --
 ALTER TABLE `Admin`
-  ADD PRIMARY KEY (`Admin_ID`);
+  ADD PRIMARY KEY (`Admin_ID`),
+  ADD KEY `Username` (`Username`),
+  ADD KEY `Email` (`Email`);
 
 --
 -- Index för tabell `Comments`
@@ -133,7 +135,10 @@ ALTER TABLE `Comments`
 -- Index för tabell `Customer`
 --
 ALTER TABLE `Customer`
-  ADD PRIMARY KEY (`Customer_ID`);
+  ADD PRIMARY KEY (`Customer_ID`),
+  ADD KEY `Email` (`Email`),
+  ADD KEY `Username` (`Username`);
+
 
 --
 -- Index för tabell `Order_details`
@@ -180,6 +185,15 @@ ALTER TABLE `Order_details`
 ALTER TABLE `Ordered_products_list`
   ADD CONSTRAINT `Ordered_products_list_ibfk_1` FOREIGN KEY (`Product_ID`) REFERENCES `Products` (`Products_ID`),
   ADD CONSTRAINT `Ordered_products_list_ibfk_2` FOREIGN KEY (`Order_details_ID`) REFERENCES `Order_details` (`Order_details_ID`);
+
+ALTER TABLE `Customer`
+  ADD CONSTRAINT `Email_unique` UNIQUE KEY (`Email`),
+  ADD CONSTRAINT `Username_unique` UNIQUE KEY (`Username`);
+
+ALTER TABLE `Admin`
+  ADD CONSTRAINT `Email_unique` UNIQUE KEY (`Email`),
+  ADD CONSTRAINT `Username_unique` UNIQUE KEY (`Username`);
+
 
 COMMIT;
 
