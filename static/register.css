@@ -7,8 +7,12 @@
 
 }   
 .form-control{
-        width: 43%;
-    }
+    width: 43%;
+}
+
+.form-control-label {
+    margin-left: 30%;
+}
 
 .checkbox {
     width: 20%;
@@ -39,10 +43,11 @@
     color: white;
   }
 
-  .date-form {
+.date-form {
     height: 100px;
     margin-top: 10px;
     margin-bottom: 10px;
+    margin-left: 38%;
 }
 
 .date-form-day {
@@ -71,4 +76,8 @@
 #birthdayYear {
     width: 120px;
     margin-bottom: 2%;
+}
+
+.submit-btn {
+    margin-left: 59%;
 }

@@ -1,10 +1,10 @@
 from flask import Flask, render_template, flash, request, url_for, redirect
 from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User
-from addToCartForm import checkIfAddedToCart, getTest, getTestCart, checkIfAddedToCartItem
-import sys
-import random
+from addToCartForm import *
+import sys, random
 from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
+from SendToDB import *
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -80,6 +80,7 @@ def login():
         con.commit()
         cur.close()
 
+
     return render_template('login.html', title="login", form=form)
 
 
@@ -87,8 +88,14 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('home'))
+        if not customerAlreadyInDB(form, mysql, con):
+            if addCustomerInDB(form, mysql, con):
+                flash(f'Account created for {form.username.data}!', 'success')
+                return redirect(url_for('home'))
+            else:
+                flash(f'Something went wrong with your registration', 'danger')
+        else:
+            flash(f'User already exists', 'danger')
     return render_template('register.html', title='Register', form=form)
 
 
