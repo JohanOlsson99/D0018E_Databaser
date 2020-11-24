@@ -47,8 +47,8 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Registrera dig')
 
 class LoginForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
+    email = StringField('Email or username',
+                        validators=[DataRequired()])
     password = PasswordField('Lösenord', validators=[DataRequired()])
     remember = BooleanField('Kom ihåg mig')
     submit = SubmitField('Logga in')
