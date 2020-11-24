@@ -73,12 +73,17 @@ def kundkorg():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    login_user(User())
     if form.validate_on_submit():
-        cur = con.cursor()
-        cur.execute("INSERT INTO Customer (Customer_ID, First_name, Last_name, Username, Email, Password) VALUES (%s, %s, %s, %s, %s, %s);", (random.randint(1,99999), 'Johan', 'Olsson', 'johols', 'ojaolo-8@gmail.com', '123'))
-        con.commit()
-        cur.close()
+        if customerUsernameAndPasswordCorrect(form, con):
+            login_user(User())
+            flash('logged in', 'success')
+            return redirect(url_for('home'))
+        elif customerEmailAndPasswordCorrect(form, con):
+            login_user(User())
+            flash('logged in', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Wrong sign in credits', 'danger')
 
 
     return render_template('login.html', title="login", form=form)
@@ -88,10 +93,10 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if not customerAlreadyInDB(form, mysql, con):
-            if addCustomerInDB(form, mysql, con):
+        if not customerAlreadyInDB(form, con):
+            if addCustomerInDB(form, con):
                 flash(f'Account created for {form.username.data}!', 'success')
-                return redirect(url_for('home'))
+                return redirect(url_for('login'))
             else:
                 flash(f'Something went wrong with your registration', 'danger')
         else:
@@ -128,7 +133,7 @@ def item(id):
 @app.route('/logout')
 def logout():
     if current_user.is_authenticated:
-        print('TEST', file=sys.stderr)
+        print('logout', file=sys.stderr)
 
         print(current_user.get_id(), file=sys.stderr)
         print(current_user.getIsAdmin())

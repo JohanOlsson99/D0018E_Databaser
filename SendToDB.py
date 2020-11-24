@@ -2,7 +2,7 @@ from Run import MySQL
 from forms import *
 import sys
 
-def addCustomerInDB(form, mysql, con):
+def addCustomerInDB(form, con):
     try:
         cur = con.cursor()
         cur.execute("SELECT MAX(Customer_ID) FROM Customer")
@@ -28,7 +28,7 @@ def addCustomerInDB(form, mysql, con):
         return False
 
 
-def customerAlreadyInDB(form, mysql, con):
+def customerAlreadyInDB(form, con):
     try:
         value = []
         cur = con.cursor()
@@ -37,6 +37,7 @@ def customerAlreadyInDB(form, mysql, con):
         value.append(cur.fetchall())
         cur.execute("SELECT * FROM customer WHERE Email=%s", (form.email.data))
         value.append(cur.fetchall())
+        cur.close()
 
         print(value, file=sys.stderr)
         for i in range(len(value)):
@@ -45,3 +46,30 @@ def customerAlreadyInDB(form, mysql, con):
         return False
     except:
         return True
+
+def customerUsernameAndPasswordCorrect(form, con):
+    cur = con.cursor()
+
+    cur.execute("SELECT Password FROM customer WHERE Username=%s", (form.email.data))
+    password = cur.fetchall()
+    cur.close()
+    if password != ():
+        password = password[0][0]
+    if password == form.password.data:
+        return True
+    else:
+        return False
+
+def customerEmailAndPasswordCorrect(form, con):
+    cur = con.cursor()
+    cur.execute("SELECT Password FROM customer WHERE Email=%s", (form.email.data))
+    password = cur.fetchall()
+    cur.close()
+    if password != ():
+        password = password[0][0]
+    else:
+        return False
+    if password == form.password.data:
+        return True
+    else:
+        return False
