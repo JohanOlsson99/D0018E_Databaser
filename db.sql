@@ -105,7 +105,7 @@ CREATE TABLE `Products` (
   `Product_name` VARCHAR(255) NOT NULL,
   `Product_price` double(9,2) NOT NULL,
   `Product_description` VARCHAR(255) NOT NULL,
-  `Products left in stock` int(11) NOT NULL,
+  `Products_left_in_stock` int(11) NOT NULL,
   `Rating` int(11) DEFAULT NULL,
   `HowManyHaveRated` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
