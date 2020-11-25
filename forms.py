@@ -80,7 +80,6 @@ class cartForm(FlaskForm):
     addToCart = SubmitField('Remove')
 
 class User():
-
     def __init__(self, list):
         self.id = list[0]
         self.firstname = list[1]
@@ -89,14 +88,45 @@ class User():
         self.email = list[4]
         self.phone = list[5]
         self.birthday = list[6]
-        self.isAdmin = list[7]
-        self.isAuthenticated = True
 
     def getId(self):
         return self.id
 
-    def getIsAdmin(self):
-        return self.isAdmin
+    def getFirstname(self):
+        return self.firstname
 
-    def getIsAuthenticated(self):
-        return self.isAuthenticated
+    def getLastname(self):
+        return self.lastname
+
+    def getUsername(self):
+        return self.username
+
+    def getEmail(self):
+        return self.email
+
+    def getPhone(self):
+        return self.phone
+
+    def getBirthday(self):
+        return self.birthday
+
+
+class Admin():
+    def __init__(self, list):
+        self.id = list[0]
+        self.name = list[1]
+        self.username = list[2]
+        self.Email = list[3]
+
+    def getId(self):
+        return self.id
+
+    def getName(self):
+        return self.name
+
+    def getUsername(self):
+        return self.username
+
+    def getEmail(self):
+        return self.email
+

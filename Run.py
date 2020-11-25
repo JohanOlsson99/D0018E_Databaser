@@ -75,27 +75,42 @@ def kundkorg():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if customerUsernameAndPasswordCorrect(form, con):
+        if adminUsernameAndPasswordCorrect(form, con):
+            temp = getAdmin(form, con, USERNAMELOGIN)
+            signedInUsers[str(temp.getId())] = temp
+            res = make_response(redirect(url_for('home')))
+            res.set_cookie('ID', value=str(temp.getId()), max_age=60*60*24)
+            res.set_cookie('ADMIN', value='True', max_age=60*60*24)
+            flash('logged in', 'success')
+            print("IS ADMIN", file=sys.stderr)
+            return res
+        elif adminEmailAndPasswordCorrect(form, con):
+            temp = getAdmin(form, con, EMAILLOGIN)
+            signedInUsers[str(temp.getId())] = temp
+            res = make_response(redirect(url_for('home')))
+            res.set_cookie('ID', value=str(temp.getId()), max_age=60*60*24)
+            res.set_cookie('ADMIN', value='True', max_age=60*60*24)
+            flash('logged in', 'success')
+            print("IS ADMIN", file=sys.stderr)
+            return res
+        elif customerUsernameAndPasswordCorrect(form, con):
             temp = getUser(form, con, USERNAMELOGIN)
             signedInUsers[str(temp.getId())] = temp
-
             res = make_response(redirect(url_for('home')))
-            res.set_cookie('ID', value=str(temp.getId()), max_age=None)
-
+            res.set_cookie('ID', str(temp.getId()), max_age=60*60*24)
             flash('logged in', 'success')
+            print("IS CUSTOMER", file=sys.stderr)
             return res
         elif customerEmailAndPasswordCorrect(form, con):
             temp = getUser(form, con, EMAILLOGIN)
             signedInUsers[str(temp.getId())] = temp
-
             res = make_response(redirect(url_for('home')))
-            res.set_cookie('ID', str(temp.getId()), max_age=None)
-            print(request.cookies, file=sys.stderr)
+            res.set_cookie('ID', value=str(temp.getId()), max_age=60*60*24)
             flash('logged in', 'success')
+            print("IS CUSTOMER", file=sys.stderr)
             return res
         else:
             flash('Wrong sign in credits', 'danger')
-
 
     return render_template('login.html', title="login", form=form)
 
@@ -146,12 +161,21 @@ def item(id):
 
 @app.route('/logout')
 def logout():
-    if signedInUsers.get(request.cookies.get('ID')):
+    if request.cookies.get('ADMIN') == 'True':
         id = request.cookies.get('ID')
         signedInUsers.pop(id)
         res = make_response(redirect(url_for('home')))
         res.set_cookie('ID', id, max_age=0)
-        flash(f'logedout', 'success')
+        res.set_cookie('ADMIN', id, max_age=0)
+        flash(f'logged out', 'success')
+        return res
+
+    elif signedInUsers.get(request.cookies.get('ID')):
+        id = request.cookies.get('ID')
+        signedInUsers.pop(id)
+        res = make_response(redirect(url_for('home')))
+        res.set_cookie('ID', id, max_age=0)
+        flash(f'logged out', 'success')
         return res
 
     return redirect(url_for('home'))
