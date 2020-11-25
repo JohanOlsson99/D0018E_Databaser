@@ -79,11 +79,24 @@ class cartForm(FlaskForm):
     howManyToCart = IntegerField('amount', validators=[NumberRange(min=1, max=100)])
     addToCart = SubmitField('Remove')
 
-class User(UserMixin):
-    id = 1
-    username = 'Johan'
-    email = 'johan@gmail.com'
-    password = '123'
-    isAdmin = True
+class User():
+
+    def __init__(self, list):
+        self.id = list[0]
+        self.firstname = list[1]
+        self.lastname = list[2]
+        self.username = list[3]
+        self.email = list[4]
+        self.phone = list[5]
+        self.birthday = list[6]
+        self.isAdmin = list[7]
+        self.isAuthenticated = True
+
+    def getId(self):
+        return self.id
+
     def getIsAdmin(self):
         return self.isAdmin
+
+    def getIsAuthenticated(self):
+        return self.isAuthenticated

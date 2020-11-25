@@ -1,10 +1,11 @@
-from flask import Flask, render_template, flash, request, url_for, redirect
+
 from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User
 from addToCartForm import *
 import sys, random
 from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
 from SendToDB import *
+from flask import Flask, render_template, flash, request, url_for, redirect, make_response
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -20,14 +21,14 @@ mysql.init_app(app)
 
 con = mysql.connect()
 
-login_manager = LoginManager()
-login_manager.init_app(app)
+#login_manager = LoginManager()
+#login_manager.init_app(app)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User()
+USERNAMELOGIN = 0
+EMAILLOGIN = 1
+signedInUsers = {}
 
-
+#signedInUsers[0] = (User([0, 'johan', 'olsson', 'johols', 'a@gmail.com', '0000000000', '2020-01-01', True]))
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -75,13 +76,23 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         if customerUsernameAndPasswordCorrect(form, con):
-            login_user(User())
+            temp = getUser(form, con, USERNAMELOGIN)
+            signedInUsers[str(temp.getId())] = temp
+
+            res = make_response(redirect(url_for('home')))
+            res.set_cookie('ID', value=str(temp.getId()), max_age=None)
+
             flash('logged in', 'success')
-            return redirect(url_for('home'))
+            return res
         elif customerEmailAndPasswordCorrect(form, con):
-            login_user(User())
+            temp = getUser(form, con, EMAILLOGIN)
+            signedInUsers[str(temp.getId())] = temp
+
+            res = make_response(redirect(url_for('home')))
+            res.set_cookie('ID', str(temp.getId()), max_age=None)
+            print(request.cookies, file=sys.stderr)
             flash('logged in', 'success')
-            return redirect(url_for('home'))
+            return res
         else:
             flash('Wrong sign in credits', 'danger')
 
@@ -135,13 +146,13 @@ def item(id):
 
 @app.route('/logout')
 def logout():
-    if current_user.is_authenticated:
-        print('logout', file=sys.stderr)
-
-        print(current_user.get_id(), file=sys.stderr)
-        print(current_user.getIsAdmin())
-
-        logout_user()
+    if signedInUsers.get(request.cookies.get('ID')):
+        id = request.cookies.get('ID')
+        signedInUsers.pop(id)
+        res = make_response(redirect(url_for('home')))
+        res.set_cookie('ID', id, max_age=0)
+        flash(f'logedout', 'success')
+        return res
 
     return redirect(url_for('home'))
 

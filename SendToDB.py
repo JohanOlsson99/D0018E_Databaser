@@ -1,4 +1,4 @@
-from Run import MySQL
+from Run import MySQL, USERNAMELOGIN, EMAILLOGIN
 from forms import *
 import sys
 
@@ -84,3 +84,30 @@ def customerEmailAndPasswordCorrect(form, con):
             return False
     except:
         return False
+
+
+def getUser(form, con, value):
+    cur = con.cursor()
+    if value == USERNAMELOGIN:
+        cur.execute("SELECT * FROM Customer WHERE Username=%s", (form.email.data))
+        data = cur.fetchall()
+        cur.close()
+        return User(dataFormating(data))
+    elif value == EMAILLOGIN:
+        cur.execute("SELECT * FROM Customer WHERE Email=%s", (form.email.data))
+        data = cur.fetchall()
+        cur.close()
+        return User(dataFormating(data))
+
+
+def dataFormating(data):
+    print(data, file=sys.stderr)
+    list = []
+
+    for i in range(len(data[0])):
+        list.append(data[0][i])
+    list.append(False)
+    return list
+
+
+
