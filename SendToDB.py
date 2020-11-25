@@ -3,6 +3,43 @@ from forms import *
 import sys
 
 
+def customerAlreadyInDB(form, con):
+    try:
+        if isAdmin(form, con):
+            return True
+        value = []
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Customer WHERE Username=%s", (form.username.data))
+        value.append(cur.fetchall())
+        cur.execute("SELECT * FROM Customer WHERE Email=%s", (form.email.data))
+        value.append(cur.fetchall())
+        cur.close()
+
+        print(value, file=sys.stderr)
+        for i in range(len(value)):
+            if (value[i] != ()):
+                return True
+        return False
+    except:
+        return True
+
+def isAdmin(form, con):
+    try:
+        cur = con.cursor()
+        value = []
+        cur.execute("SELECT * FROM Admin WHERE Username=%s", (form.username.data))
+        value.append(cur.fetchall())
+        cur.execute("SELECT * FROM Admin WHERE Email=%s", (form.email.data))
+        value.append(cur.fetchall())
+        cur.close()
+
+        for i in range(len(value)):
+            if (value[i] != ()):
+                return True
+        return False
+    except:
+        return True
+
 def addCustomerInDB(form, con):
     try:
         cur = con.cursor()
@@ -31,24 +68,39 @@ def addCustomerInDB(form, con):
         return False
 
 
-def customerAlreadyInDB(form, con):
+def adminUsernameAndPasswordCorrect(form, con):
     try:
-        value = []
         cur = con.cursor()
 
-        cur.execute("SELECT * FROM Customer WHERE Username=%s", (form.username.data))
-        value.append(cur.fetchall())
-        cur.execute("SELECT * FROM Customer WHERE Email=%s", (form.email.data))
-        value.append(cur.fetchall())
+        cur.execute("SELECT Password FROM Admin WHERE Username=%s", (form.email.data))
+        password = cur.fetchall()
         cur.close()
-
-        print(value, file=sys.stderr)
-        for i in range(len(value)):
-            if (value[i] != ()):
-                return True
-        return False
+        if password != ():
+            password = password[0][0]
+        if password == form.password.data:
+            return True
+        else:
+            return False
     except:
-        return True
+        return False
+
+
+def adminEmailAndPasswordCorrect(form, con):
+    try:
+        cur = con.cursor()
+        cur.execute("SELECT Password FROM Admin WHERE Email=%s", (form.email.data))
+        password = cur.fetchall()
+        cur.close()
+        if password != ():
+            password = password[0][0]
+        else:
+            return False
+        if password == form.password.data:
+            return True
+        else:
+            return False
+    except:
+        return False
 
 
 def customerUsernameAndPasswordCorrect(form, con):
@@ -92,22 +144,34 @@ def getUser(form, con, value):
         cur.execute("SELECT * FROM Customer WHERE Username=%s", (form.email.data))
         data = cur.fetchall()
         cur.close()
-        return User(dataFormating(data))
+        return User(dataFormating(data, 5))
     elif value == EMAILLOGIN:
         cur.execute("SELECT * FROM Customer WHERE Email=%s", (form.email.data))
         data = cur.fetchall()
         cur.close()
-        return User(dataFormating(data))
+        return User(dataFormating(data, 5))
+
+def getAdmin(form, con, value):
+    cur = con.cursor()
+    if value == USERNAMELOGIN:
+        cur.execute("SELECT * FROM Admin WHERE Username=%s", (form.email.data))
+        data = cur.fetchall()
+        cur.close()
+        return Admin(dataFormating(data, 4))
+    elif value == EMAILLOGIN:
+        cur.execute("SELECT * FROM Admin WHERE Email=%s", (form.email.data))
+        data = cur.fetchall()
+        cur.close()
+        return Admin(dataFormating(data, 4))
 
 
-def dataFormating(data):
+
+def dataFormating(data, removeIndex):
     print(data, file=sys.stderr)
     list = []
 
     for i in range(len(data[0])):
+        if i == removeIndex:
+            continue
         list.append(data[0][i])
-    list.append(False)
     return list
-
-
-
