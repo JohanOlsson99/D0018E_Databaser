@@ -19,6 +19,7 @@ app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
 mysql.init_app(app)
 
+
 con = mysql.connect()
 
 #login_manager = LoginManager()
@@ -29,6 +30,21 @@ EMAILLOGIN = 1
 signedInUsers = {}
 
 #signedInUsers[0] = (User([0, 'johan', 'olsson', 'johols', 'a@gmail.com', '0000000000', '2020-01-01', True]))
+
+
+def getIsSignedInAndIsAdmin():
+    temp = signedInUsers.get(request.cookies.get('ID'))
+    if temp:
+        if isinstance(temp, User):
+            signedIn = True
+            isAdmin = False
+        elif isinstance(temp, Admin):
+            signedIn = True
+            isAdmin = True
+    else:
+        signedIn = False
+        isAdmin = False
+    return signedIn, isAdmin
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -43,8 +59,9 @@ def home():
         form[i].howManyToCart.id = 'counter-display-' + str(
             id[i])  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
         price.append(random.randint(1,9999))
-
-    return render_template('home.html', title="home", form=form, id=id, description=description, imageLink=imageLink, price=price)
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    return render_template('home.html', title="home", form=form, id=id, description=description,
+                           imageLink=imageLink, price=price, signedIn=signedIn, isAdmin=isAdmin)
 
 
 @app.route("/varukorg", methods=['GET', 'POST'])
@@ -67,8 +84,9 @@ def kundkorg():
         form[i].howManyToCart.data = startValue[i]
         price.append(random.randint(1, 9999))
 
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('varukorg.html', title="varukorg", form=form, id=id, description=description,
-                           imageLink=imageLink, price=price)
+                           imageLink=imageLink, price=price, signedIn=signedIn, isAdmin=isAdmin)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -77,42 +95,32 @@ def login():
     if form.validate_on_submit():
         if adminUsernameAndPasswordCorrect(form, con):
             temp = getAdmin(form, con, USERNAMELOGIN)
-            signedInUsers[str(temp.getId())] = temp
-            res = make_response(redirect(url_for('home')))
-            res.set_cookie('ID', value=str(temp.getId()), max_age=60*60*24)
-            res.set_cookie('ADMIN', value='True', max_age=60*60*24)
-            flash('logged in', 'success')
             print("IS ADMIN", file=sys.stderr)
-            return res
+            return setCookieAndReturnAddress(temp)
         elif adminEmailAndPasswordCorrect(form, con):
             temp = getAdmin(form, con, EMAILLOGIN)
-            signedInUsers[str(temp.getId())] = temp
-            res = make_response(redirect(url_for('home')))
-            res.set_cookie('ID', value=str(temp.getId()), max_age=60*60*24)
-            res.set_cookie('ADMIN', value='True', max_age=60*60*24)
-            flash('logged in', 'success')
             print("IS ADMIN", file=sys.stderr)
-            return res
+            return setCookieAndReturnAddress(temp)
         elif customerUsernameAndPasswordCorrect(form, con):
             temp = getUser(form, con, USERNAMELOGIN)
-            signedInUsers[str(temp.getId())] = temp
-            res = make_response(redirect(url_for('home')))
-            res.set_cookie('ID', str(temp.getId()), max_age=60*60*24)
-            flash('logged in', 'success')
             print("IS CUSTOMER", file=sys.stderr)
-            return res
+            return setCookieAndReturnAddress(temp)
         elif customerEmailAndPasswordCorrect(form, con):
             temp = getUser(form, con, EMAILLOGIN)
-            signedInUsers[str(temp.getId())] = temp
-            res = make_response(redirect(url_for('home')))
-            res.set_cookie('ID', value=str(temp.getId()), max_age=60*60*24)
-            flash('logged in', 'success')
             print("IS CUSTOMER", file=sys.stderr)
-            return res
+            return setCookieAndReturnAddress(temp)
         else:
             flash('Wrong sign in credits', 'danger')
 
-    return render_template('login.html', title="login", form=form)
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    return render_template('login.html', title="login", form=form, signedIn=signedIn, isAdmin=isAdmin)
+
+def setCookieAndReturnAddress(temp):
+    signedInUsers[str(temp.getId())] = temp
+    res = make_response(redirect(url_for('home')))
+    res.set_cookie('ID', value=str(temp.getId()), max_age=60 * 60 * 24)
+    flash('logged in', 'success')
+    return res
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -130,18 +138,22 @@ def register():
                     flash(f'Something went wrong with your registration', 'danger')
             else:
                 flash(f'User already exists', 'danger')
-    return render_template('register.html', title='Register', form=form)
+
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    return render_template('register.html', title='Register', form=form, signedIn=signedIn, isAdmin=isAdmin)
 
 
 @app.route("/betalning", methods=['GET', 'POST'])
 def betalning():
     form = PaymentForm()
-    return render_template('betalning.html', title='betalning', form=form)
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    return render_template('betalning.html', title='betalning', form=form, signedIn=signedIn, isAdmin=isAdmin)
 
 
 @app.route("/com")
 def comment():
-    return render_template('commentSection.html', title='comment')
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    return render_template('commentSection.html', title='comment', signedIn=signedIn, isAdmin=isAdmin)
 
 
 @app.route('/item-<int:id>', methods=['GET', 'POST'])
@@ -155,22 +167,15 @@ def item(id):
     price = []
     price.append(random.randint(1, 9999))
 
-    return render_template('item.html', title='item', form=form, id=id, description=description, imageLink=imageLink, price=price)
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    return render_template('item.html', title='item', form=form, id=id, description=description, imageLink=imageLink,
+                           price=price, signedIn=signedIn, isAdmin=isAdmin)
 
 
 
 @app.route('/logout')
 def logout():
-    if request.cookies.get('ADMIN') == 'True':
-        id = request.cookies.get('ID')
-        signedInUsers.pop(id)
-        res = make_response(redirect(url_for('home')))
-        res.set_cookie('ID', id, max_age=0)
-        res.set_cookie('ADMIN', id, max_age=0)
-        flash(f'logged out', 'success')
-        return res
-
-    elif signedInUsers.get(request.cookies.get('ID')):
+    if signedInUsers.get(request.cookies.get('ID')):
         id = request.cookies.get('ID')
         signedInUsers.pop(id)
         res = make_response(redirect(url_for('home')))
@@ -182,7 +187,8 @@ def logout():
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html')
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    return render_template('profile.html', title='profile', signedIn=signedIn, isAdmin=isAdmin)
 
 
 
