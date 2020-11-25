@@ -33,9 +33,9 @@ def customerAlreadyInDB(form, con):
         value = []
         cur = con.cursor()
 
-        cur.execute("SELECT * FROM customer WHERE Username=%s", (form.username.data))
+        cur.execute("SELECT * FROM Customer WHERE Username=%s", (form.username.data))
         value.append(cur.fetchall())
-        cur.execute("SELECT * FROM customer WHERE Email=%s", (form.email.data))
+        cur.execute("SELECT * FROM Customer WHERE Email=%s", (form.email.data))
         value.append(cur.fetchall())
         cur.close()
 
@@ -50,7 +50,7 @@ def customerAlreadyInDB(form, con):
 def customerUsernameAndPasswordCorrect(form, con):
     cur = con.cursor()
 
-    cur.execute("SELECT Password FROM customer WHERE Username=%s", (form.email.data))
+    cur.execute("SELECT Password FROM Customer WHERE Username=%s", (form.email.data))
     password = cur.fetchall()
     cur.close()
     if password != ():
@@ -62,7 +62,7 @@ def customerUsernameAndPasswordCorrect(form, con):
 
 def customerEmailAndPasswordCorrect(form, con):
     cur = con.cursor()
-    cur.execute("SELECT Password FROM customer WHERE Email=%s", (form.email.data))
+    cur.execute("SELECT Password FROM Customer WHERE Email=%s", (form.email.data))
     password = cur.fetchall()
     cur.close()
     if password != ():
