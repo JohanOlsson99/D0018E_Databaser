@@ -93,14 +93,17 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if not customerAlreadyInDB(form, con):
-            if addCustomerInDB(form, con):
-                flash(f'Account created for {form.username.data}!', 'success')
-                return redirect(url_for('login'))
-            else:
-                flash(f'Something went wrong with your registration', 'danger')
+        if int(form.phone.data) > 2147483648:
+            flash(f'Wrong phonenumber type', 'danger')
         else:
-            flash(f'User already exists', 'danger')
+            if not customerAlreadyInDB(form, con):
+                if addCustomerInDB(form, con):
+                    flash(f'Account created for {form.username.data}!', 'success')
+                    return redirect(url_for('login'))
+                else:
+                    flash(f'Something went wrong with your registration', 'danger')
+            else:
+                flash(f'User already exists', 'danger')
     return render_template('register.html', title='Register', form=form)
 
 
