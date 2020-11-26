@@ -2,7 +2,7 @@
 
 .block-class{
     width: 400px;
-    height: 400px;
+    height: 510px;
     background-color: #61b2c9;
     border: 3px solid black;
     border-radius: 15px;
@@ -14,9 +14,10 @@
 }
 
 .image-class{
-    width:95%;
-    margin-left:2.5%;
-    border-radius:5%;
+    width: 95%;
+    height: 250px;
+    margin-left: 2.5%;
+    border-radius: 5%;
 }
 
 .block-text-class {
@@ -60,7 +61,8 @@
 }
 
 .block-add-to-cart-class {
-    margin-left: 20%;
+    /*margin-left: 20%;*/
+    margin: auto;
     color: black;
 }
 
@@ -85,7 +87,27 @@
 
 .price-text {
     float: left;
-    margin-left: 4px;
+    margin-left: 2.5%;
     font-size: large;
     font-weight: bold;
+}
+
+.title-div {
+    margin-left: 2.5%;
+    margin-top: 1.5%;
+    /*padding-left: 2.5%;
+    padding-right: 2.5%;*/
+}
+
+.product-left-text {
+    float: right;
+    margin-right: 2.5%;
+    font-size: large;
+    font-weight: bold;
+}
+
+.price-form-left-div {
+    /*width: 670px;*/
+    margin: auto;
+    display: inline-flex;
 }

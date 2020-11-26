@@ -9,11 +9,16 @@
         <img src="{{imageLink}}" alt="img" class="image-class">
     </div>
     </a>
-    <div class="block-text-class">
-        <p>{{ description }}</p>
+    <div class="text-and-title-div">
+        <div class="title-div">
+            <h4>{{ name }}</h4>
+        </div>
+        <div class="block-text-class">
+            <p>{{ description }}</p>
+        </div>
     </div>
-
-    <p class="price-text">{{price}} kr</p>
+    <div class="price-form-left-div">
+    <p class="price-text">{{price}} $</p>
     <div class="block-add-to-cart-class">
         <form method="POST" name="{{id}}" class="form-class-{{id}}" action="">
             <input type="hidden" value="{{id}}" name="{{id}}"> <!-- DON'T FUCKING REMOVE THIS BITCH!!!!! -->
@@ -32,8 +37,8 @@
                 <!--{{ form.addToCart(class="btn btn-outline-info send-to-cart-button") }}-->
                 {{ form.addToCart(class="button send-to-cart-button") }}
             </div>
-
         </form>
     </div>
-
+    <p class="product-left-text">{{ prodLeft }} left</p>
+    </div>
 </div>

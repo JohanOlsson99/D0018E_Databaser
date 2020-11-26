@@ -1,4 +1,4 @@
-from Run import MySQL, USERNAMELOGIN, EMAILLOGIN
+from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, url_for
 from forms import *
 import sys
 
@@ -9,9 +9,9 @@ def customerAlreadyInDB(form, con):
             return True
         value = []
         cur = con.cursor()
-        cur.execute("SELECT * FROM Customer WHERE Username=%s", (form.username.data))
+        cur.execute("SELECT * FROM Customer WHERE Username=%s;", (form.username.data))
         value.append(cur.fetchall())
-        cur.execute("SELECT * FROM Customer WHERE Email=%s", (form.email.data))
+        cur.execute("SELECT * FROM Customer WHERE Email=%s;", (form.email.data))
         value.append(cur.fetchall())
         cur.close()
 
@@ -27,9 +27,9 @@ def isAdmin(form, con):
     try:
         cur = con.cursor()
         value = []
-        cur.execute("SELECT * FROM Admin WHERE Username=%s", (form.username.data))
+        cur.execute("SELECT * FROM Admin WHERE Username=%s;", (form.username.data))
         value.append(cur.fetchall())
-        cur.execute("SELECT * FROM Admin WHERE Email=%s", (form.email.data))
+        cur.execute("SELECT * FROM Admin WHERE Email=%s;", (form.email.data))
         value.append(cur.fetchall())
         cur.close()
 
@@ -43,7 +43,7 @@ def isAdmin(form, con):
 def addCustomerInDB(form, con):
     try:
         cur = con.cursor()
-        cur.execute("SELECT MAX(Customer_ID) FROM Customer")
+        cur.execute("SELECT MAX(Customer_ID) FROM Customer;")
         highestID = cur.fetchall()
         if highestID[0][0] != None:
             print(highestID[0][0], file=sys.stderr)
@@ -72,7 +72,7 @@ def adminUsernameAndPasswordCorrect(form, con):
     try:
         cur = con.cursor()
 
-        cur.execute("SELECT Password FROM Admin WHERE Username=%s", (form.email.data))
+        cur.execute("SELECT Password FROM Admin WHERE Username=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
         if password != ():
@@ -88,7 +88,7 @@ def adminUsernameAndPasswordCorrect(form, con):
 def adminEmailAndPasswordCorrect(form, con):
     try:
         cur = con.cursor()
-        cur.execute("SELECT Password FROM Admin WHERE Email=%s", (form.email.data))
+        cur.execute("SELECT Password FROM Admin WHERE Email=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
         if password != ():
@@ -107,7 +107,7 @@ def customerUsernameAndPasswordCorrect(form, con):
     try:
         cur = con.cursor()
 
-        cur.execute("SELECT Password FROM Customer WHERE Username=%s", (form.email.data))
+        cur.execute("SELECT Password FROM Customer WHERE Username=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
         if password != ():
@@ -123,7 +123,7 @@ def customerUsernameAndPasswordCorrect(form, con):
 def customerEmailAndPasswordCorrect(form, con):
     try:
         cur = con.cursor()
-        cur.execute("SELECT Password FROM Customer WHERE Email=%s", (form.email.data))
+        cur.execute("SELECT Password FROM Customer WHERE Email=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
         if password != ():
@@ -141,32 +141,32 @@ def customerEmailAndPasswordCorrect(form, con):
 def getUser(form, con, value):
     cur = con.cursor()
     if value == USERNAMELOGIN:
-        cur.execute("SELECT * FROM Customer WHERE Username=%s", (form.email.data))
+        cur.execute("SELECT * FROM Customer WHERE Username=%s;", (form.email.data))
         data = cur.fetchall()
         cur.close()
-        return User(dataFormating(data, 5))
+        return User(dataUserFormating(data, 5))
     elif value == EMAILLOGIN:
-        cur.execute("SELECT * FROM Customer WHERE Email=%s", (form.email.data))
+        cur.execute("SELECT * FROM Customer WHERE Email=%s;", (form.email.data))
         data = cur.fetchall()
         cur.close()
-        return User(dataFormating(data, 5))
+        return User(dataUserFormating(data, 5))
 
 def getAdmin(form, con, value):
     cur = con.cursor()
     if value == USERNAMELOGIN:
-        cur.execute("SELECT * FROM Admin WHERE Username=%s", (form.email.data))
+        cur.execute("SELECT * FROM Admin WHERE Username=%s;", (form.email.data))
         data = cur.fetchall()
         cur.close()
-        return Admin(dataFormating(data, 4))
+        return Admin(dataUserFormating(data, 4))
     elif value == EMAILLOGIN:
-        cur.execute("SELECT * FROM Admin WHERE Email=%s", (form.email.data))
+        cur.execute("SELECT * FROM Admin WHERE Email=%s;", (form.email.data))
         data = cur.fetchall()
         cur.close()
-        return Admin(dataFormating(data, 4))
+        return Admin(dataUserFormating(data, 4))
 
 
 
-def dataFormating(data, removeIndex):
+def dataUserFormating(data, removeIndex):
     print(data, file=sys.stderr)
     list = []
 
@@ -177,4 +177,26 @@ def dataFormating(data, removeIndex):
     return list
 
 def getProducts(con):
+    cur = con.cursor()
+    cur.execute("SELECT * FROM Products;")
+    data = cur.fetchall()
+    #print(data)
+    cur.close()
+    return dataProductFormating(data)
 
+def dataProductFormating(data):
+    idList = []
+    nameList = []
+    priceList = []
+    descList = []
+    prodLeftList = []
+    imageLinkList = []
+
+    for i in range(len(data)):
+        idList.append(data[i][0])
+        nameList.append(data[i][1])
+        priceList.append(data[i][2])
+        descList.append(data[i][3])
+        prodLeftList.append(data[i][4])
+        imageLinkList.append(url_for('static', filename=('image/' + str(idList[i]) + '.jpg')))
+    return idList, nameList, priceList, descList, prodLeftList, imageLinkList

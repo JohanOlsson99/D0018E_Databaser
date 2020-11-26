@@ -1,35 +1,3 @@
-@media screen and (max-width: 600px) {
-    table#cart tbody td .form-control{
-		width:20%;
-		display: inline !important;
-	}
-	.actions .btn{
-		width:36%;
-		margin:1.5em 0;
-	}
-
-	.actions .btn-info{
-		float:left;
-	}
-	.actions .btn-danger{
-		float:right;
-	}
-
-	table#cart thead { display: none; }
-	table#cart tbody td { display: block; padding: .6rem; min-width:320px;}
-	table#cart tbody tr td:first-child { background: #333; color: #fff; }
-	table#cart tbody td:before {
-		content: attr(data-th); font-weight: bold;
-		display: inline-block; width: 8rem;
-	}
-
-
-
-	table#cart tfoot td{display:block; }
-	table#cart tfoot td .btn{display:block;}
-
-}
-
 .block-class{
     display: inline-flex;
     width: 100%;
@@ -59,7 +27,7 @@
     padding-left: 1%;
     padding-right: 1%;
     padding-top: 1%;
-    width: 67%;
+    width: 100%;
 }
 .plusMinusBtn {
     width: 25px;
@@ -99,13 +67,13 @@
 
 .block-add-to-cart-class {
     display: inline-flex;
-    float: right;
+    /*float: right;*/
     margin-top: auto;
     margin-bottom: auto;
     /*margin-left: 2px;
     margin-top: 50px;
     margin-bottom: 30px;*/
-    width: 190px;
+    width: 185px;
     color: black;
 }
 
@@ -180,9 +148,34 @@
 }
 
 .price-text {
+    width: 75px;
     float: left;
     margin-top: auto;
     margin-bottom: auto;
     font-size: large;
     font-weight: bold;
+}
+.product-left-text {
+    width: 85px;
+    float: right;
+    padding-left: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: large;
+    font-weight: bold;
+}
+
+.title-div {
+    margin-left: 0.5%;
+    margin-top: 0.5%;
+    width: 100%;
+    height: 40px;
+    /*padding-left: 2.5%;
+    padding-right: 2.5%;*/
+}
+
+.price-form-left-div {
+    /*width: 670px;*/
+    margin: auto;
+    display: inline-flex;
 }

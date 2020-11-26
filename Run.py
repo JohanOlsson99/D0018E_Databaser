@@ -20,7 +20,7 @@ app.config['MYSQL_DATABASE_DB'] = 'db990715'
 mysql.init_app(app)
 
 
-con = mysql.connect()
+#con = mysql.connect()
 
 #login_manager = LoginManager()
 #login_manager.init_app(app)
@@ -54,18 +54,28 @@ def getIsSignedInAndIsAdmin():
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    form, id, description, imageLink = getTest(30)  # get test data
-    checkIfAddedToCart(form, id)  # if the form was send and is correct
+    #form, id, description, imageLink = getTest(30)  # get test data
+    #checkIfAddedToCart(form, id)  # if the form was send and is correct
 
-    price = []
+    #price = []
 
-    for i in range(len(form)):
+    # for i in range(len(form)):
+    #    form[i].howManyToCart.id = 'counter-display-' + str(
+    #        id[i])  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
+    #    price.append(random.randint(1,9999))
+    con = mysql.connect()
+    idList, nameList, priceList, descList, prodLeftList, imageLinkList = getProducts(con)
+    form = []
+    for i in range(len(idList)):
+        form.append(AddToCart())
         form[i].howManyToCart.id = 'counter-display-' + str(
-            id[i])  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
-        price.append(random.randint(1,9999))
+            idList[i])  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
+    checkIfAddedToCart(form, idList)  # if the form was send and is correct
+
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('home.html', title="home", form=form, id=id, description=description,
-                           imageLink=imageLink, price=price, signedIn=signedIn, isAdmin=isAdmin)
+    return render_template('home.html', title="home", form=form, id=idList, name=nameList, price=priceList,
+                           description=descList, prodLeft=prodLeftList,
+                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
 
 
 @app.route("/varukorg", methods=['GET', 'POST'])
@@ -79,24 +89,25 @@ def kundkorg():
     form[0].addToCart.id = 'remove-button-' + str(id[0])
     form[1].addToCart.id = 'remove-button-' + str(id[1])"""
 
-    form, id, description, imageLink, startValue = getTestCart(3)
-    price = []
+    form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
+
 
     for i in range(len(form)):
-        form[i].howManyToCart.id = 'counter-display-' + str(id[i])
-        form[i].addToCart.id = 'remove-button-' + str(id[i])
-        form[i].howManyToCart.data = startValue[i]
-        price.append(random.randint(1, 9999))
+        form[i].howManyToCart.id = 'counter-display-' + str(idList[i])
+        form[i].addToCart.id = 'remove-button-' + str(idList[i])
+        form[i].howManyToCart.data = itemsInCart[i]
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('varukorg.html', title="varukorg", form=form, id=id, description=description,
-                           imageLink=imageLink, price=price, signedIn=signedIn, isAdmin=isAdmin)
+    return render_template('varukorg.html', title="varukorg", form=form, id=idList, name=nameList, price=priceList,
+                           description=descList, prodLeft=prodLeftList,
+                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        con = mysql.connect()
         if adminUsernameAndPasswordCorrect(form, con):
             temp = getAdmin(form, con, USERNAMELOGIN)
             print("IS ADMIN", file=sys.stderr)
@@ -132,9 +143,11 @@ def setCookieAndReturnAddress(temp, adminOrCustomer):
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if int(form.phone.data) > 2147483648:
-            flash(f'Wrong phonenumber type', 'danger')
+        if form.phone.data is not None:
+            if int(form.phone.data ) > 2147483648:
+                flash(f'Wrong phonenumber type', 'danger')
         else:
+            con = mysql.connect()
             if not customerAlreadyInDB(form, con):
                 if addCustomerInDB(form, con):
                     flash(f'Account created for {form.username.data}!', 'success')
@@ -163,7 +176,7 @@ def comment():
 
 @app.route('/item-<int:id>', methods=['GET', 'POST'])
 def item(id):
-    form, idTest, description, imageLink = getTest(1)  # get test data
+    form, idList, descList, imageLinkList, prodLeftList, nameList, priceList  = getTest(1)  # get test data
     id = [id]
     checkIfAddedToCartItem(form[0], id[0])  # if the form was send and is correct
 
@@ -173,21 +186,24 @@ def item(id):
     price.append(random.randint(1, 9999))
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('item.html', title='item', form=form, id=id, description=description, imageLink=imageLink,
-                           price=price, signedIn=signedIn, isAdmin=isAdmin)
+    return render_template('item.html', title='item', form=form, id=idList, name=nameList, price=priceList,
+                           description=descList, prodLeft=prodLeftList,
+                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
 
 
 
 @app.route('/logout')
 def logout():
-    if signedInUsers.get(request.cookies.get('ID')[0:-1]):
-        id = request.cookies.get('ID')
-        signedInUsers.pop(id[0:-1])
-        res = make_response(redirect(url_for('home')))
-        res.set_cookie('ID', id, max_age=0)
-        flash(f'logged out', 'success')
-        return res
-
+    try:
+        if signedInUsers.get(request.cookies.get('ID')[0:-1]):
+            id = request.cookies.get('ID')
+            signedInUsers.pop(id[0:-1])
+            res = make_response(redirect(url_for('home')))
+            res.set_cookie('ID', id, max_age=0)
+            flash(f'logged out', 'success')
+            return res
+    except:
+        pass
     return redirect(url_for('home'))
 
 @app.route('/profile')
