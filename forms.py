@@ -71,12 +71,18 @@ class PaymentForm(FlaskForm):
 
 
 class AddToCart(FlaskForm):
-    howManyToCart = IntegerField('amount', validators=[NumberRange(min=1, max=100)])
+    howManyToCart = IntegerField('amount', validators=[NumberRange(min=0, max=100)])
     addToCart = SubmitField('Add to cart')
+
+    def defineMaxMin(self, min=0, max=100):
+        self.howManyToCart.validators = [NumberRange(min=min, max=max)]
+
+    def defineHowManyToCartId(self, id):
+        self.howManyToCart.id = 'counter-display-' + str(id)
 
 
 class cartForm(FlaskForm):
-    howManyToCart = IntegerField('amount', validators=[NumberRange(min=1, max=100)])
+    howManyToCart = IntegerField('amount', validators=[NumberRange(min=0, max=100)])
     addToCart = SubmitField('Remove')
 
 class User():

@@ -70,6 +70,7 @@ def home():
         form.append(AddToCart())
         form[i].howManyToCart.id = 'counter-display-' + str(
             idList[i])  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
+        form[i].defineMaxMin(max=int(prodLeftList[i]))
     checkIfAddedToCart(form, idList)  # if the form was send and is correct
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
@@ -144,7 +145,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         if form.phone.data is not None:
-            if int(form.phone.data ) > 2147483648:
+            if int(form.phone.data) > 2147483648:
                 flash(f'Wrong phonenumber type', 'danger')
         else:
             con = mysql.connect()
@@ -176,19 +177,33 @@ def comment():
 
 @app.route('/item-<int:id>', methods=['GET', 'POST'])
 def item(id):
-    form, idList, descList, imageLinkList, prodLeftList, nameList, priceList  = getTest(1)  # get test data
-    id = [id]
-    checkIfAddedToCartItem(form[0], id[0])  # if the form was send and is correct
+    con = mysql.connect()
+    bool, data = getProductFromId(con, id)
+    if bool:
+        id = data[0]
+        name = data[1]
+        price = data[2]
+        desc = data[3]
+        prodLeft = data[4]
+        rating = data[5]
+        howManyRated = data[6]
+        imageLink = url_for('static', filename=('image/' + str(id) + '.jpg'))
+    else:
+        return redirect(url_for('error.html'))
 
-    form[0].howManyToCart.id = 'counter-display-' + str(
-        id[0])  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
-    price = []
-    price.append(random.randint(1, 9999))
+    form = AddToCart()
+    form.defineHowManyToCartId(id)
+    form.defineMaxMin(max=int(prodLeft))
+    checkIfAddedToCartItem(form, id)  # if the form was send and is correct
+
+    #form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
+    #price = []
+    #price.append(random.randint(1, 9999))
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('item.html', title='item', form=form, id=idList, name=nameList, price=priceList,
-                           description=descList, prodLeft=prodLeftList,
-                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
+    return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
+                           description=desc, prodLeft=prodLeft,
+                           imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin)
 
 
 
