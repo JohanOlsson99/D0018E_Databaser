@@ -71,14 +71,13 @@ def addCustomerInDB(form, con):
 def adminUsernameAndPasswordCorrect(form, con):
     try:
         cur = con.cursor()
-
         cur.execute("SELECT Password FROM Admin WHERE Username=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
         if password != ():
             password = password[0][0]
-        if password == form.password.data:
-            return True
+            if password == form.password.data:
+                return True
         else:
             return False
     except:
@@ -93,10 +92,8 @@ def adminEmailAndPasswordCorrect(form, con):
         cur.close()
         if password != ():
             password = password[0][0]
-        else:
-            return False
-        if password == form.password.data:
-            return True
+            if password == form.password.data:
+                return True
         else:
             return False
     except:
@@ -112,8 +109,8 @@ def customerUsernameAndPasswordCorrect(form, con):
         cur.close()
         if password != ():
             password = password[0][0]
-        if password == form.password.data:
-            return True
+            if password == form.password.data:
+                return True
         else:
             return False
     except:
@@ -128,10 +125,8 @@ def customerEmailAndPasswordCorrect(form, con):
         cur.close()
         if password != ():
             password = password[0][0]
-        else:
-            return False
-        if password == form.password.data:
-            return True
+            if password == form.password.data:
+                return True
         else:
             return False
     except:

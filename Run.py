@@ -1,4 +1,3 @@
-
 from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User
 from addToCartForm import *
 import sys, random
@@ -36,10 +35,10 @@ signedInUsers = {}
 
 def getIsSignedInAndIsAdmin():
     try:
-        if (request.cookies.get('ID')[-1] == str(ISADMIN)) and (signedInUsers.get(request.cookies.get('ID')[0:-1])):
+        if (request.cookies.get('ID')[-1] == str(ISADMIN)) and (signedInUsers.get(request.cookies.get('ID')[0:-1], False)):
             signedIn = True
             isAdmin = True
-        elif (request.cookies.get('ID')[-1] == str(ISCUSTOMER)) and (signedInUsers.get(request.cookies.get('ID')[0:-1])):
+        elif (request.cookies.get('ID')[-1] == str(ISCUSTOMER)) and (signedInUsers.get(request.cookies.get('ID')[0:-1], False)):
             signedIn = True
             isAdmin = False
         else:
@@ -134,7 +133,6 @@ def login():
 def setCookieAndReturnAddress(temp, adminOrCustomer):
     signedInUsers[str(temp.getId())] = temp
     res = make_response(redirect(url_for('home')))
-
     res.set_cookie('ID', value=str(str(temp.getId()) + str(adminOrCustomer)), max_age=60 * 60 * 24)
     flash('logged in', 'success')
     return res
@@ -147,16 +145,16 @@ def register():
         if form.phone.data is not None:
             if int(form.phone.data) > 2147483648:
                 flash(f'Wrong phonenumber type', 'danger')
-        else:
-            con = mysql.connect()
-            if not customerAlreadyInDB(form, con):
-                if addCustomerInDB(form, con):
-                    flash(f'Account created for {form.username.data}!', 'success')
-                    return redirect(url_for('login'))
-                else:
-                    flash(f'Something went wrong with your registration', 'danger')
+
+        con = mysql.connect()
+        if not customerAlreadyInDB(form, con):
+            if addCustomerInDB(form, con):
+                flash(f'Account created for {form.username.data}!', 'success')
+                return redirect(url_for('login'))
             else:
-                flash(f'User already exists', 'danger')
+                flash(f'Something went wrong with your registration', 'danger')
+        else:
+            flash(f'User already exists', 'danger')
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('register.html', title='Register', form=form, signedIn=signedIn, isAdmin=isAdmin)
@@ -210,7 +208,7 @@ def item(id):
 @app.route('/logout')
 def logout():
     try:
-        if signedInUsers.get(request.cookies.get('ID')[0:-1]):
+        if signedInUsers.get(request.cookies.get('ID')[0:-1], False):
             id = request.cookies.get('ID')
             signedInUsers.pop(id[0:-1])
             res = make_response(redirect(url_for('home')))
