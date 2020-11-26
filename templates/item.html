@@ -9,7 +9,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='item.css') }}">
 
 <div class="itemblock-div-class-{{id[i]}} itemblock-div-class">
-    {% with form = form[0], id = id[0], description = description[0], imageLink = imageLink[0], price=price[0] %}
+    {% with form = form[0], id = id[0], name = name[0], description = description[0], imageLink = imageLink[0], price=price[0], prodLeft=prodLeft[0]  %}
         {% include 'itemBlock.html' %}
     {% endwith %}
 </div>

@@ -61,11 +61,12 @@
 
 .block-add-to-cart-class {
     width: 206px;
-    margin: auto;
+    /*margin: auto;*/
     color: black;
-    height: 30px;
-}
+    height: 50px;
+    display: inline;
 
+}
 
 .button {
   background-color: white;
@@ -92,4 +93,27 @@
     font-weight: bold;
     padding-left: 2.5%;
     padding-right: 2.5%;
+}
+
+.product-left-text {
+    width: 85px;
+    float: right;
+    /*margin-top: auto;
+    margin-bottom: auto;*/
+    font-size: large;
+    font-weight: bold;
+    margin-left: 2.5%;
+}
+.price-form-left-div {
+    width: 100%;
+    margin: auto;
+    margin-left: 18%;
+    display: inline-flex;
+}
+
+.title-div {
+    margin-left: 2.5%;
+    margin-top: 1%;
+    /*padding-left: 2.5%;
+    padding-right: 2.5%;*/
 }

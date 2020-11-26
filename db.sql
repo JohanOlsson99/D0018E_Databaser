@@ -193,6 +193,9 @@ ALTER TABLE `Customer`
 ALTER TABLE `Admin`
   ADD CONSTRAINT `Email_unique` UNIQUE KEY (`Email`),
   ADD CONSTRAINT `Username_unique` UNIQUE KEY (`Username`);
+
+INSERT INTO `Admin`(`Admin_ID`, `Name`, `Username`, `Email`, `Password`) VALUES (0, 'Admin', 'Admin', 'Admin@gmail.com', '123');
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
