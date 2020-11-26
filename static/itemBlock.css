@@ -108,6 +108,7 @@
 
 .price-form-left-div {
     /*width: 670px;*/
+    width: 100%;
     margin: auto;
-    display: inline-flex;
+    display: inline;
 }
