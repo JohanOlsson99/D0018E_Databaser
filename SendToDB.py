@@ -200,3 +200,14 @@ def dataProductFormating(data):
         prodLeftList.append(data[i][4])
         imageLinkList.append(url_for('static', filename=('image/' + str(idList[i]) + '.jpg')))
     return idList, nameList, priceList, descList, prodLeftList, imageLinkList
+
+def getProductFromId(con, id):
+    try:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Products WHERE Products_ID=%s", id)
+        data = cur.fetchall()
+        cur.close()
+        return True, data[0]
+    except:
+        return False, None
+
