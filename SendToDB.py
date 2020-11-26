@@ -175,3 +175,6 @@ def dataFormating(data, removeIndex):
             continue
         list.append(data[0][i])
     return list
+
+def getProducts(con):
+

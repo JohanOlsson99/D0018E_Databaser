@@ -27,21 +27,25 @@ con = mysql.connect()
 
 USERNAMELOGIN = 0
 EMAILLOGIN = 1
+ISADMIN = 0
+ISCUSTOMER = 1
 signedInUsers = {}
 
 #signedInUsers[0] = (User([0, 'johan', 'olsson', 'johols', 'a@gmail.com', '0000000000', '2020-01-01', True]))
 
 
 def getIsSignedInAndIsAdmin():
-    temp = signedInUsers.get(request.cookies.get('ID'))
-    if temp:
-        if isinstance(temp, User):
-            signedIn = True
-            isAdmin = False
-        elif isinstance(temp, Admin):
+    try:
+        if (request.cookies.get('ID')[-1] == str(ISADMIN)) and (signedInUsers.get(request.cookies.get('ID')[0:-1])):
             signedIn = True
             isAdmin = True
-    else:
+        elif (request.cookies.get('ID')[-1] == str(ISCUSTOMER)) and (signedInUsers.get(request.cookies.get('ID')[0:-1])):
+            signedIn = True
+            isAdmin = False
+        else:
+            signedIn = False
+            isAdmin = False
+    except:
         signedIn = False
         isAdmin = False
     return signedIn, isAdmin
@@ -96,29 +100,30 @@ def login():
         if adminUsernameAndPasswordCorrect(form, con):
             temp = getAdmin(form, con, USERNAMELOGIN)
             print("IS ADMIN", file=sys.stderr)
-            return setCookieAndReturnAddress(temp)
+            return setCookieAndReturnAddress(temp, ISADMIN)
         elif adminEmailAndPasswordCorrect(form, con):
             temp = getAdmin(form, con, EMAILLOGIN)
             print("IS ADMIN", file=sys.stderr)
-            return setCookieAndReturnAddress(temp)
+            return setCookieAndReturnAddress(temp, ISADMIN)
         elif customerUsernameAndPasswordCorrect(form, con):
             temp = getUser(form, con, USERNAMELOGIN)
             print("IS CUSTOMER", file=sys.stderr)
-            return setCookieAndReturnAddress(temp)
+            return setCookieAndReturnAddress(temp, ISCUSTOMER)
         elif customerEmailAndPasswordCorrect(form, con):
             temp = getUser(form, con, EMAILLOGIN)
             print("IS CUSTOMER", file=sys.stderr)
-            return setCookieAndReturnAddress(temp)
+            return setCookieAndReturnAddress(temp, ISCUSTOMER)
         else:
             flash('Wrong sign in credits', 'danger')
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('login.html', title="login", form=form, signedIn=signedIn, isAdmin=isAdmin)
 
-def setCookieAndReturnAddress(temp):
+def setCookieAndReturnAddress(temp, adminOrCustomer):
     signedInUsers[str(temp.getId())] = temp
     res = make_response(redirect(url_for('home')))
-    res.set_cookie('ID', value=str(temp.getId()), max_age=60 * 60 * 24)
+
+    res.set_cookie('ID', value=str(str(temp.getId()) + str(adminOrCustomer)), max_age=60 * 60 * 24)
     flash('logged in', 'success')
     return res
 
@@ -175,9 +180,9 @@ def item(id):
 
 @app.route('/logout')
 def logout():
-    if signedInUsers.get(request.cookies.get('ID')):
+    if signedInUsers.get(request.cookies.get('ID')[0:-1]):
         id = request.cookies.get('ID')
-        signedInUsers.pop(id)
+        signedInUsers.pop(id[0:-1])
         res = make_response(redirect(url_for('home')))
         res.set_cookie('ID', id, max_age=0)
         flash(f'logged out', 'success')
