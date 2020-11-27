@@ -128,5 +128,5 @@ class Admin():
         return self.username
 
     def getEmail(self):
-        return self.email
+        return self.Email
 
