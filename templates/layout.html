@@ -46,7 +46,7 @@
         <nav class="navbar navbar-expand-md navbar-light sticky-top">
 
             <a class="navbar-brand" href="/">
-                <img src="https://upload.wikimedia.org/wikipedia/en/8/88/Cars_logo.png" height="100" alt="Home">
+                <img style="width: 280px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/799px-F1.svg.png" height="100" alt="Home">
             </a>
 
             <!-- Collapse button -->
@@ -79,6 +79,25 @@
                             <i class="fas fa-user"></i>
                         </a>
                     </li>
+                    {% if isAdmin %}
+                    <li class="nav-item pl-2 mb-2 mb-md-0">
+                        <a href="/adminPage" type="button"
+                           class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
+                            Admin page
+                        </a>
+                        <a href="/logout" type="button"
+                           class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
+                            Logout
+                        </a>
+                    </li>
+                    {% elif signedIn %}
+                    <li class="nav-item pl-2 mb-2 mb-md-0">
+                        <a href="/logout" type="button"
+                           class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
+                            Logout
+                        </a>
+                    </li>
+                    {% else %}
                     <li class="nav-item pl-2 mb-2 mb-md-0">
                         <a href="/login" type="button"
                            class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
@@ -91,6 +110,7 @@
                             Register
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
 
             </div>

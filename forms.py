@@ -1,31 +1,31 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, DateField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, DateField, SelectField, validators
 from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 from flask_login import UserMixin
 
 class RegistrationForm(FlaskForm):
     username = StringField('Användarnamn',
-                           validators=[DataRequired(), Length(min=2, max=20)])
+                           validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
     password = PasswordField('Lösenord', validators=[DataRequired()])
     firstName = StringField('Förnamn', validators=[DataRequired(), Length(max=20)])
     surName = StringField('Efternamn', validators=[DataRequired(), Length(max=20)])
-    phone = IntegerField('Telefonnummer', validators=[])
+    phone = IntegerField('Telefonnummer', validators=[validators.optional()])
     birthdayDay = SelectField(
         'Dag',
-        choices=[(1, '01'),(2, '02'),(3, '03'),(4, '04'),(5, '05'),(6, '06'),(7, '07'),(8, '08'),(9, '09'),(10, '10'),
+        choices=[('-', '-'), (1, '01'),(2, '02'),(3, '03'),(4, '04'),(5, '05'),(6, '06'),(7, '07'),(8, '08'),(9, '09'),(10, '10'),
         (11, '11'),(12, '12'),(13, '13'),(14, '14'),(15, '15'),(16, '16'),(17, '17'),(18, '18'),(19, '19'),(20, '20'),(21, '21'),
         (22, '22'),(23, '23'),(24, '24'),(25, '25'),(26, '26'),(27, '27'),(28, '28'),(29, '29'),(30, '30'),(31, '31')]
     )
     birthdayMonth = SelectField(
         'Månad',
-        choices=[(1, '01'),(2, '02'),(3, '03'),(4, '04'),(5, '05'),(6, '06'),(7, '07'),(8, '08'),(9, '09'),(10, '10'),
+        choices=[('-', '-'), (1, '01'),(2, '02'),(3, '03'),(4, '04'),(5, '05'),(6, '06'),(7, '07'),(8, '08'),(9, '09'),(10, '10'),
         (11, '11'),(12, '12')]
     )
     birthdayYear = SelectField(
         'År',
-        choices=[(2020, '2020'),(2019, '2019'),(2018, '2018'),(2017, '2017'),(2016, '2016'),(2015, '2015'),
+        choices=[('-', '-'),(2020, '2020'),(2019, '2019'),(2018, '2018'),(2017, '2017'),(2016, '2016'),(2015, '2015'),
         (2014, '2014'),(2013, '2013'),(2012, '2012'),(2011, '2011'),(2010, '2010'),(2009, '2009'),(2008, '2008'),
         (2007, '2007'),(2006, '2006'),(2005, '2005'),(2004, '2004'),(2003, '2003'),(2002, '2002'),(2001, '2001'),
         (2000, '2000'),(1999, '1999'),(1998, '1998'),(1997, '1997'),(1996, '1996'),(1995, '1995'),(1994, '1994'),
@@ -46,10 +46,9 @@ class RegistrationForm(FlaskForm):
     )
     submit = SubmitField('Registrera dig')
 
-
 class LoginForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
+    email = StringField('Email or username',
+                        validators=[DataRequired()])
     password = PasswordField('Lösenord', validators=[DataRequired()])
     remember = BooleanField('Kom ihåg mig')
     submit = SubmitField('Logga in')
@@ -72,19 +71,68 @@ class PaymentForm(FlaskForm):
 
 
 class AddToCart(FlaskForm):
-    howManyToCart = IntegerField('amount', validators=[NumberRange(min=1, max=100)])
+    howManyToCart = IntegerField('amount', validators=[NumberRange(min=0, max=100)])
     addToCart = SubmitField('Add to cart')
+
+    def defineMaxMin(self, min=0, max=100):
+        self.howManyToCart.validators = [NumberRange(min=min, max=max)]
+
+    def defineHowManyToCartId(self, id):
+        self.howManyToCart.id = 'counter-display-' + str(id)
 
 
 class cartForm(FlaskForm):
-    howManyToCart = IntegerField('amount', validators=[NumberRange(min=1, max=100)])
+    howManyToCart = IntegerField('amount', validators=[NumberRange(min=0, max=100)])
     addToCart = SubmitField('Remove')
 
-class User(UserMixin):
-    id = 1
-    username = 'Johan'
-    email = 'johan@gmail.com'
-    password = '123'
-    isAdmin = True
-    def getIsAdmin(self):
-        return self.isAdmin
+class User():
+    def __init__(self, list):
+        self.id = list[0]
+        self.firstname = list[1]
+        self.lastname = list[2]
+        self.username = list[3]
+        self.email = list[4]
+        self.phone = list[5]
+        self.birthday = list[6]
+
+    def getId(self):
+        return self.id
+
+    def getFirstname(self):
+        return self.firstname
+
+    def getLastname(self):
+        return self.lastname
+
+    def getUsername(self):
+        return self.username
+
+    def getEmail(self):
+        return self.email
+
+    def getPhone(self):
+        return self.phone
+
+    def getBirthday(self):
+        return self.birthday
+
+
+class Admin():
+    def __init__(self, list):
+        self.id = list[0]
+        self.name = list[1]
+        self.username = list[2]
+        self.Email = list[3]
+
+    def getId(self):
+        return self.id
+
+    def getName(self):
+        return self.name
+
+    def getUsername(self):
+        return self.username
+
+    def getEmail(self):
+        return self.email
+

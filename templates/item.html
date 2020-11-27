@@ -8,59 +8,47 @@
 <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">-->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='item.css') }}">
 
-<div class="itemblock-div-class-{{id[i]}} itemblock-div-class">
-    {% with form = form[0], id = id[0], description = description[0], imageLink = imageLink[0], price=price[0] %}
+<div class="itemblock-div-class-{{id}} itemblock-div-class">
+    {% with form = form, id = id, name = name, description = description, imageLink = imageLink, price=price, prodLeft=prodLeft  %}
         {% include 'itemBlock.html' %}
     {% endwith %}
 </div>
 
 
-
-
 <script>
-    let id = {{ id|safe }}
-    let counterDisplayElem = [];
-    let counterMinusElem = [];
-    let counterPlusElem = [];
-    let count = [];
-    for(let i = 0; i < id.length; i++) {
+    let id = {{ id }};
+    let counterDisplayElem = document.querySelector(`#counter-display-${id}`);
+    counterMinusElem = document.querySelector(`.counter-minus-${id}`);
+    counterPlusElem = document.querySelector(`.counter-plus-${id}`);
+    count = 0;
 
-        counterDisplayElem[i] = document.querySelector(`#counter-display-${id[i]}`);
-        counterMinusElem[i] = document.querySelector(`.counter-minus-${id[i]}`);
-        counterPlusElem[i] = document.querySelector(`.counter-plus-${id[i]}`);
-        count[i] = 0;
-
-        console.log(document.getElementById(`counter-display-${id[i]}`));
-        console.log(counterMinusElem[i]);
-        console.log(counterPlusElem[i]);
-        updateDisplay(i);
-    }
+    console.log(document.getElementById(`counter-display-${id}`));
+    console.log(counterMinusElem);
+    console.log(counterPlusElem);
+    updateDisplay();
 
 
+    counterPlusElem.addEventListener("click",()=>{
+        if(counterDisplayElem.value != count){
+            count = counterDisplayElem.value
+        }
+        count++;
+        updateDisplay();
+    });
 
-    for(let i = 0; i < id.length; i++) {
-        counterPlusElem[i].addEventListener("click",()=>{
-            if(counterDisplayElem[i].value != count[i]){
-                count[i] = counterDisplayElem[i].value
-            }
-            count[i]++;
-            updateDisplay(i);
-        });
-
-        counterMinusElem[i].addEventListener("click",()=>{
-            if(counterDisplayElem[i].value != count[i]){
-                count[i] = counterDisplayElem[i].value
-            }
-            if(count[i] > 0){
-                count[i]--;
-                updateDisplay(i);
-            }
-        });
-    }
+    counterMinusElem.addEventListener("click",()=>{
+        if(counterDisplayElem.value != count){
+            count = counterDisplayElem.value
+        }
+        if(count > 0){
+            count--;
+            updateDisplay();
+        }
+    });
 
 
-    function updateDisplay(i){
-        counterDisplayElem[i].value = count[i];
+    function updateDisplay(){
+        counterDisplayElem.value = count;
     };
 
 </script>
