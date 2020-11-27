@@ -71,14 +71,13 @@ def addCustomerInDB(form, con):
 def adminUsernameAndPasswordCorrect(form, con):
     try:
         cur = con.cursor()
-
         cur.execute("SELECT Password FROM Admin WHERE Username=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
         if password != ():
             password = password[0][0]
-        if password == form.password.data:
-            return True
+            if password == form.password.data:
+                return True
         else:
             return False
     except:
@@ -93,10 +92,8 @@ def adminEmailAndPasswordCorrect(form, con):
         cur.close()
         if password != ():
             password = password[0][0]
-        else:
-            return False
-        if password == form.password.data:
-            return True
+            if password == form.password.data:
+                return True
         else:
             return False
     except:
@@ -112,8 +109,8 @@ def customerUsernameAndPasswordCorrect(form, con):
         cur.close()
         if password != ():
             password = password[0][0]
-        if password == form.password.data:
-            return True
+            if password == form.password.data:
+                return True
         else:
             return False
     except:
@@ -128,10 +125,8 @@ def customerEmailAndPasswordCorrect(form, con):
         cur.close()
         if password != ():
             password = password[0][0]
-        else:
-            return False
-        if password == form.password.data:
-            return True
+            if password == form.password.data:
+                return True
         else:
             return False
     except:
@@ -200,3 +195,14 @@ def dataProductFormating(data):
         prodLeftList.append(data[i][4])
         imageLinkList.append(url_for('static', filename=('image/' + str(idList[i]) + '.jpg')))
     return idList, nameList, priceList, descList, prodLeftList, imageLinkList
+
+def getProductFromId(con, id):
+    try:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Products WHERE Products_ID=%s", id)
+        data = cur.fetchall()
+        cur.close()
+        return True, data[0]
+    except:
+        return False, None
+
