@@ -1,87 +1,37 @@
 {% extends "layout.html" %}
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
-    <script src="https://kit.fontawesome.com/b50b0ebbf9.js" crossorigin="anonymous"></script>
-    <div class="container"> 
-        <div class="leftbox">
-            <div class="icons">
-                <nav>
-                    <a onclick="tabs(0)" class="tab active">
-                        <i class="fa fa-user"></i>
-                    </a>
-                    <a onclick="tabs(1)" class="tab">
-                        <i class="fa fa-credit-card"></i>
-                    </a>
-                    <a onclick="tabs(2)" class="tab">
-                        <i class="fa fa-tv"></i>
-                    </a>
-                    <a onclick="tabs(3)" class="tab">
-                        <i class="fa fa-tasks"></i>
-                    </a>
-                    <a onclick="tabs(4)" class="tab">
-                        <i class="fa fa-cog"></i>
-                    </a>
-                </nav>
-            </div>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+<script src="https://kit.fontawesome.com/b50b0ebbf9.js" crossorigin="anonymous"></script>
+
+<div class="container"> 
+
+    <div class="box">
+        <div class="profile tabShow">
+            <legend class="border-bottom mb-4">Profile</legend>
+
+            <h2>Full Name</h2>
+            <input type="text" class="input" value="Johan Minion Olsson">
+
+            <h2>Username</h2>
+            <input type="text" class="input" value="MinionBoy99">
+
+            <h2>Email</h2>
+            <input type="text" class="input" value="johols-8@student.ltu.se">
+
+            <h2>Phone Number</h2>
+            <input type="text" class="input" value="123192719123">
+
+            <h2>Birthday</h2>
+            <input type="text" class="input" value="2020-07-15">
+
+            <h2>Password</h2>
+            <input type="password" class="input" value="Minions2!">
+            <button class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">Update</button>
         </div>
-
-        <div class="rightbox">
-            <div class="profile tabShow">
-                <h1>Personal Info</h1>
-
-                <h2>Full Name</h2>
-                <input type="text" class="input" value="Johan Minion Olsson">
-
-                <h2>Username</h2>
-                <input type="text" class="input" value="MinionBoy99">
-
-                <h2>Email</h2>
-                <input type="text" class="input" value="johols-8@student.ltu.se">
-
-                <h2>Phone Number</h2>
-                <input type="text" class="input" value="123192719123">
-
-                <h2>Birthday</h2>
-                <input type="text" class="input" value="2020-07-15">
-
-                <h2>Password</h2>
-                <input type="password" class="input" value="Minions2!">
-                <button class="btnProfile">Update</button>
-            </div>
-            <div class="payment tabShow">
-                <h1>Payment Info</h1>
-            </div>
-            <div class="subscription tabShow">
-                <h1>Subscription Info</h1>
-            </div>
-            <div class="privacy tabShow">
-                <h1>Privacy Settings</h1>
-            </div>
-            <div class="settings tabShow">
-                <h1>Settings</h1>
-            </div>
-        </div>
-
     </div>
 
-    <script>
-        const tabBtn = document.querySelectorAll(".tab")
-        const tab = document.querySelectorAll(".tabShow")
-
-        function tabs(panelIndex) {
-            tab.forEach(function(node){
-                node.style.display = "none"
-            });
-            tab[panelIndex].style.display = "block";
-        }
-        tabs(0);
-    </script>
-
-    <script>
-        $(".tab").click(function(){
-            $(this).addClass("active").siblings().removeClass("active");
-        })
-    </script>
+</div>
 
 {% endblock content %}
 
