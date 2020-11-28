@@ -4,27 +4,27 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 from flask_login import UserMixin
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Användarnamn',
+    username = StringField('Username',
                            validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
-    password = PasswordField('Lösenord', validators=[DataRequired()])
-    firstName = StringField('Förnamn', validators=[DataRequired(), Length(max=20)])
-    surName = StringField('Efternamn', validators=[DataRequired(), Length(max=20)])
-    phone = IntegerField('Telefonnummer', validators=[validators.optional()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    firstName = StringField('First Name', validators=[DataRequired(), Length(max=20)])
+    surName = StringField('Last Name', validators=[DataRequired(), Length(max=20)])
+    phone = IntegerField('Phone Number', validators=[validators.optional()])
     birthdayDay = SelectField(
-        'Dag',
+        'Day',
         choices=[('-', '-'), (1, '01'),(2, '02'),(3, '03'),(4, '04'),(5, '05'),(6, '06'),(7, '07'),(8, '08'),(9, '09'),(10, '10'),
         (11, '11'),(12, '12'),(13, '13'),(14, '14'),(15, '15'),(16, '16'),(17, '17'),(18, '18'),(19, '19'),(20, '20'),(21, '21'),
         (22, '22'),(23, '23'),(24, '24'),(25, '25'),(26, '26'),(27, '27'),(28, '28'),(29, '29'),(30, '30'),(31, '31')]
     )
     birthdayMonth = SelectField(
-        'Månad',
+        'Month',
         choices=[('-', '-'), (1, '01'),(2, '02'),(3, '03'),(4, '04'),(5, '05'),(6, '06'),(7, '07'),(8, '08'),(9, '09'),(10, '10'),
         (11, '11'),(12, '12')]
     )
     birthdayYear = SelectField(
-        'År',
+        'Year',
         choices=[('-', '-'),(2020, '2020'),(2019, '2019'),(2018, '2018'),(2017, '2017'),(2016, '2016'),(2015, '2015'),
         (2014, '2014'),(2013, '2013'),(2012, '2012'),(2011, '2011'),(2010, '2010'),(2009, '2009'),(2008, '2008'),
         (2007, '2007'),(2006, '2006'),(2005, '2005'),(2004, '2004'),(2003, '2003'),(2002, '2002'),(2001, '2001'),
@@ -44,30 +44,30 @@ class RegistrationForm(FlaskForm):
         (1909, '1909'),(1908, '1908'),(1907, '1907'),(1906, '1906'),(1905, '1905'),(1904, '1904'),(1903, '1903'),
         (1902, '1902'),(1901, '1901'),(1900, '1900')]
     )
-    submit = SubmitField('Registrera dig')
+    submit = SubmitField('Register')
 
 class LoginForm(FlaskForm):
     email = StringField('Email or username',
                         validators=[DataRequired()])
-    password = PasswordField('Lösenord', validators=[DataRequired()])
-    remember = BooleanField('Kom ihåg mig')
-    submit = SubmitField('Logga in')
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Login')
 
 
 class PaymentForm(FlaskForm):
-    name = StringField('Fullständigt namn*', validators=[DataRequired()])
+    name = StringField('Full Name*', validators=[DataRequired()])
 
-    cardnumber = StringField('Kort', validators=[DataRequired()])
+    cardnumber = StringField('Card', validators=[DataRequired()])
 
     adress = StringField('Adress', validators=[DataRequired()])
 
-    Postnummer = StringField('Postnummer*', validators=[DataRequired()])
+    Postnummer = StringField('Postal Number*', validators=[DataRequired()])
 
-    Stad = StringField('Stad', validators=[DataRequired()])
+    Stad = StringField('City', validators=[DataRequired()])
 
-    Land = StringField('Land', validators=[DataRequired()])
+    Land = StringField('Country', validators=[DataRequired()])
 
-    submit = SubmitField('Skicka bestälning')
+    submit = SubmitField('Send Order')
 
 
 class AddToCart(FlaskForm):
