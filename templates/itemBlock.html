@@ -23,7 +23,7 @@
         <form method="POST" name="{{id}}" class="form-class-{{id}}" action="">
             <input type="hidden" value="{{id}}" name="{{id}}"> <!-- DON'T FUCKING REMOVE THIS BITCH!!!!! -->
             <div class="counter-minus-div-class">
-                <button class="counter-minus-{{id}} plusMinusBtn button" type="button">-</button>
+                <button class="btn-minus counter-minus-{{id}} plusMinusBtn button" type="button">-</button>
             </div>
             {{ form.hidden_tag() }}
             <div class="counter-div-class">
@@ -31,7 +31,7 @@
             </div>
 
             <div class="counter-plus-div-class">
-                <button class="counter-plus-{{id}} plusMinusBtn button" type="button">+</button>
+                <button class="btn-plus counter-plus-{{id}} plusMinusBtn button" type="button">+</button>
             </div>
             <div class="buy-button-div-class">
                 <!--{{ form.addToCart(class="btn btn-outline-info send-to-cart-button") }}-->
