@@ -1,38 +1,99 @@
-body {
-    background: #fafafa;
-    color: #4c9fb7;
-    /*margin: 2em 3em;*/
-  }
+/* Imports fonts Montserrat and Roboto */
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,900|Montserrat|Roboto");
 
-h1, h2, h3, h4, h5, h6 {
-    color: #444444;
- }
+/* !important statements are placed on none overwritable statements */
+
+/* General */
+
+body {
+    background: linear-gradient(#020000 , #aa1212);
+}
+
+h1, h3, h4, h5, h6 {
+    font-family: "Montserrat", sans-serif !important;
+}
+
+h2, p {
+    font-family: "Roboto", sans-serif !important;
+}
+
+.mb-4 {
+    font-family: "Montserrat", sans-serif;
+    color: #ff1717;
+    font-size: 2rem;
+    margin-top: 40px;
+    margin-bottom: 35px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Navbar */
+
+.layout-container { 
+    background: linear-gradient(rgb(70, 70, 70) , rgb(20, 20, 20));
+    margin: 0 auto; 
+    position: relative; 
+}
+
+/* Buttons */
+
+.btn-outline-primary, .btn-outline-info {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+    color: #ff1717 !important;
+    border-color: #ff1717 !important;
+    font-family: "Roboto", sans-serif;
+}
+
+.btn-outline-primary:hover, .btn-outline-info:hover {
+    background: #ff1717 !important;
+    color: #ffffff !important;
+    border-color: #02000000 !important;
+    font-family: "Roboto", sans-serif;
+}
+
+/* Icons */
+
+.nav-link {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+    color: #ff1717 !important;
+}
+
+.nav-link:hover {
+    color: #ffffff !important;
+}
+
+/* Content */
 
 .content-class {
     margin-left: 10px;
-    /*margin-top: 5px;*/
     margin-right: 10px;
 }
 
-.bg-steel {
-    background-color: #4c9fb7;
+/* Used by other html files */
+
+.container {
+    background: rgb(255, 255, 255);
+    width: 540px !important;
+    height: 540px;
+    margin: 0 auto; 
+    position: relative; 
+    margin-top: 2%; 
+    margin-bottom: 20%;
+    box-shadow: 2px 5px 20px rgba(65, 65, 65, 0.5);
 }
 
-.site-header .navbar-nav .nav-link {
-    color: #e4eef5;
+.box{
+    width: 70%;
+    margin: auto;
 }
 
-.site-header .navbar-nav .nav-link:hover {
-    color: #ffffff;
-}
 
-.site-header .navbar-nav .nav-link.active {
-    font-weight: 500;
-}
-
-.co{
-color: #148ffe
-}
 
 
 
