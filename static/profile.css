@@ -1,73 +1,12 @@
-
-@import url("https://fonts.googleapis.com/css?family=Nunito:400,900|Montserrat|Roboto");
-
-.container {
-    background: rgb(255, 255, 255);
-    width: 540px;
-    height: 540px;
-    margin: 0 auto; 
-    position: relative; 
-    margin-top: 2%; 
-    box-shadow: 2px 5px 20px rgba(119,119,119,.5);
-}
-
-.leftbox {
-    float: left;
-    top: -5%;   
-    left: 5%; 
-    position: absolute;
-    width: 15%;
-    height: 110%;
-    background: #2484fb;
-    box-shadow: 3px 3px 10px rgba(119,119,119,.5);
-    border: .1em solid #fff;
-}
-
-.icons nav a {
-    list-style: none;
-    padding: 35px;
-    color: #fff !important;
-    font-size: 1.1em;
-    display: block;
-    transition: all .3s ease-in-out;
-}
-
-.icons nav a:hover {
-    color: #095abd !important;
-    cursor: pointer;
-    transform: scale(1.2)
-}
-
-.icons nav a:first-child {
-    margin-top: 7px;
-}
-
-.icons nav a.active {
-    color: #095abd !important;
-}
-
-.rightbox {
-    width: 60%;
-    margin-left: 27%;
-    padding-top: 5px;
-}
-
-.tabShow {
-    transition: all .5s ease-in;
-    width: 80%;
-}
-
 h1 {
-    font-family: "Montserrat", sans-serif;
-    color: #2484fb;
+    color: #ff1717;
     font-size: 1.2rem;
     margin-top: 40px;
     margin-bottom: 35px;
 }
 
 h2 {
-    color:  #777;
-    font-family: "Roboto", sans-serif;
+    color: #777;
     text-transform: uppercase;
     font-size: 8px;
     letter-spacing: 1px;
@@ -77,33 +16,15 @@ h2 {
 
 .input, p {
     border: 0; 
-    border-bottom: 1px solid #2484fb;
+    border-bottom: 1px solid #ff1717;
     width: 80%;
-    font-family: "Montserrat", sans-serif;
     font-size: .7em;
     padding: 7px 0;
-    color: #070707;
     outline: none; 
 }
 
-span {
-    font-size: .7em; 
-    color: #777; 
+.btn {
+    float: right !important;
 }
 
-.btnProfile {
-    font-family: "Roboto", sans-serif;
-    text-transform: uppercase;
-    font-size: 15px;
-    border: 0; 
-    color: #fff;
-    background: #2484fb;
-    padding: 7px 15px;
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, .2);
-    cursor: pointer;
-    margin-top: 15px; 
-}
 
-.tabShow {
-    display: none; 
-}
