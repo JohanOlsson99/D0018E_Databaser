@@ -1,119 +1,38 @@
-.block-class{
+.block-class {
     width: 45%;
     margin-left: 27.5%;
-    /*height: 400px;
-    background-color: #61b2c9;
-    border: 3px solid black;
-    border-radius: 15px;*/
+    background: none; 
+    border: none; 
 }
 
-.image-div-class {
+.image-class {
     width: 100%;
-    margin-top: 10px;
-    /*margin-left: 30%;*/
-}
-
-.image-class{
-    width:100%;
-    /*margin-left:2.5%;*/
-    border-radius:5%;
-}
-
-.block-text-class {
-    padding-left: 2.5%;
-    padding-right: 2.5%;
-}
-.plusMinusBtn {
-    width: 25px;
-    height 25px;
-    border-radius: 6px;
-    text-align: center;
-}
-.counter-minus-div-class {
-    float: left;
-    margin-left: 5px;
-}
-.counter-div-class {
-    float:left;
-    width: 20px;
-    margin-left: 5px;
-}
-
-.send-to-cart-button {
-    border-radius: 6px;
-}
-
-.counter-display {
-    float:left;
-    width: 40px;
-    border-radius: 4px;
-}
-
-.counter-plus-div-class{
-    float:left;
-    margin-left: 25px;
-}
-
-.buy-button-div-class {
-    float:left;
-    margin-left: 5px;
+    height: 100%;
+    border-radius: 5%;
+    margin: none
 }
 
 .block-add-to-cart-class {
     width: 206px;
-    /*margin: auto;*/
     color: black;
     height: 50px;
     display: inline;
-
-}
-
-.button {
-  background-color: white;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  color: black;
-  /*border: 2px solid #4CAF50;*/
-  border: 2px solid #48D941;
-}
-
-.button:hover {
-  /*background-color: #4CAF50;*/
-  background-color: #48D941;
-  color: white;
 }
 
 .price-text {
-    float: left;
-    /*margin-left: 4px;*/
-    font-size: large;
-    font-weight: bold;
     padding-left: 2.5%;
     padding-right: 2.5%;
 }
 
 .product-left-text {
     width: 85px;
-    float: right;
-    /*margin-top: auto;
-    margin-bottom: auto;*/
-    font-size: large;
-    font-weight: bold;
     margin-left: 2.5%;
+    margin-right: 0%
 }
 .price-form-left-div {
-    width: 100%;
-    margin: auto;
-    margin-left: 18%;
     display: inline-flex;
 }
 
 .title-div {
     margin-left: 2.5%;
-    margin-top: 1%;
-    /*padding-left: 2.5%;
-    padding-right: 2.5%;*/
 }
