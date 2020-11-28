@@ -1,17 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
-<!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
-<!------ Include the above in your HEAD tag ---------->
-<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='varukorg.css') }}">-->
-<!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">-->
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='item.css') }}">
 
-<div class="itemblock-div-class-{{id}} itemblock-div-class">
-    {% with form = form, id = id, name = name, description = description, imageLink = imageLink, price=price, prodLeft=prodLeft  %}
-        {% include 'itemBlock.html' %}
-    {% endwith %}
+<div class="wrapper">
+    <div class="itemblock-div-class-{{id}} itemblock-div-class">
+        {% with form = form, id = id, name = name, description = description, imageLink = imageLink, price=price, prodLeft=prodLeft  %}
+            {% include 'itemBlock.html' %}
+        {% endwith %}
+    </div>
 </div>
 
 
