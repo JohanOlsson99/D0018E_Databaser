@@ -4,7 +4,9 @@ import sys
 import random
 
 
-def checkIfAddedToCart(form, id):
+
+
+def checkIfAddedToCart(form, id, isSignedIn):
     for i in range(len(form)):
         id[i] = str(id[i])
         #if str(id[i]) in request.form:
@@ -12,10 +14,17 @@ def checkIfAddedToCart(form, id):
         if ((form[i].validate_on_submit()) and (form[i].addToCart.data == True) and (form[i].howManyToCart.data != 0)
                 and (id[i] in request.form)):
             #print(form[i].howManyToCart.id, file=sys.stderr)
-            flash('Successfully added ' + str(form[i].howManyToCart.data) + ' of your item to your cart', 'success')
+            if (not isSignedIn[0]):
+                flash('You need to login to add items to your cart', 'danger')
+            elif (isSignedIn[1]):
+                flash('You can\'t be admin when adding items to your cart', 'danger')
+            else:
+                #flash('Successfully added ' + str(form[i].howManyToCart.data) + ' of your item to your cart', 'success')
+                return True, id[i], str(form[i].howManyToCart.data)
 
         elif (form[i].is_submitted() and (not form[i].validate_on_submit()) and (id[i] in request.form)):
             flash('There aren\'t that many items left', 'danger')
+    return False, None, None
 
 
 def checkIfAddedToCartItem(form, id):

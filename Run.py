@@ -1,5 +1,5 @@
 from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User
-from addToCartForm import *
+from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem
 import sys, random
 from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
@@ -26,8 +26,8 @@ mysql.init_app(app)
 
 USERNAMELOGIN = 0
 EMAILLOGIN = 1
-ISADMIN = 0
-ISCUSTOMER = 1
+ISADMIN ='A'
+ISCUSTOMER = 'C'
 signedInUsers = {}
 
 #signedInUsers[0] = (User([0, 'johan', 'olsson', 'johols', 'a@gmail.com', '0000000000', '2020-01-01', True]))
@@ -35,10 +35,10 @@ signedInUsers = {}
 
 def getIsSignedInAndIsAdmin():
     try:
-        if (request.cookies.get('ID')[-1] == str(ISADMIN)) and (signedInUsers.get(request.cookies.get('ID')[0:-1], False)):
+        if (request.cookies.get('ID')[-1] == str(ISADMIN)) and (signedInUsers.get(request.cookies.get('ID'), False)):
             signedIn = True
             isAdmin = True
-        elif (request.cookies.get('ID')[-1] == str(ISCUSTOMER)) and (signedInUsers.get(request.cookies.get('ID')[0:-1], False)):
+        elif (request.cookies.get('ID')[-1] == str(ISCUSTOMER)) and (signedInUsers.get(request.cookies.get('ID'), False)):
             signedIn = True
             isAdmin = False
         else:
@@ -70,7 +70,15 @@ def home():
         form[i].howManyToCart.id = 'counter-display-' + str(
             idList[i])  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
         form[i].defineMaxMin(max=int(prodLeftList[i]))
-    checkIfAddedToCart(form, idList)  # if the form was send and is correct
+
+    correctRequest, id, howManyItems = checkIfAddedToCart(form, idList, getIsSignedInAndIsAdmin())
+    if(correctRequest):  # if the form was send and is correct
+        con = mysql.connect()
+        user = signedInUsers.get(request.cookies.get('ID'))
+        if(addItemToOrder(con, id, user.getId(), howManyItems)):
+            flash('Successfully added ' + str(form[i].howManyToCart.data) + ' of your item to your cart', 'success')
+        else:
+            flash('Something went wrong', 'danger')
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('home.html', title="home", form=form, id=idList, name=nameList, price=priceList,
@@ -131,9 +139,10 @@ def login():
     return render_template('login.html', title="login", form=form, signedIn=signedIn, isAdmin=isAdmin)
 
 def setCookieAndReturnAddress(temp, adminOrCustomer):
-    signedInUsers[str(temp.getId())] = temp
+    value = str(str(temp.getId()) + str(adminOrCustomer))
+    signedInUsers[value] = temp
     res = make_response(redirect(url_for('home')))
-    res.set_cookie('ID', value=str(str(temp.getId()) + str(adminOrCustomer)), max_age=60 * 60 * 24)
+    res.set_cookie('ID', value=value, max_age=60 * 60 * 24)
     flash('logged in', 'success')
     return res
 
@@ -208,9 +217,9 @@ def item(id):
 @app.route('/logout')
 def logout():
     try:
-        if signedInUsers.get(request.cookies.get('ID')[0:-1], False):
+        if signedInUsers.get(request.cookies.get('ID'), False):
             id = request.cookies.get('ID')
-            signedInUsers.pop(id[0:-1])
+            signedInUsers.pop(id)
             res = make_response(redirect(url_for('home')))
             res.set_cookie('ID', id, max_age=0)
             flash(f'logged out', 'success')
