@@ -36,7 +36,7 @@ p {
     display: inline-flex;
     margin-top: auto;
     margin-bottom: auto;
-    width: 185px;
+    width: 200px !important;
     color: black;
 }
 
@@ -100,11 +100,12 @@ p {
     font-weight: bold;
 }
 .product-left-text {
-    width: 85px;
+    width: 70px;
     float: right;
     padding-left: 5px;
     margin-top: auto;
     margin-bottom: auto;
+    margin-right: 1px !important;
     font-size: large;
     font-weight: bold;
 }
@@ -119,7 +120,8 @@ p {
 }
 
 .price-form-left-div {
-    /*width: 670px;*/
+    float: right;
+    width: 540px;
     margin: auto;
     display: inline-flex;
 }

@@ -80,11 +80,11 @@ h2, p {
 .container {
     background: rgb(255, 255, 255);
     width: 540px !important;
-    height: 540px;
+    /*height: 540px;*/
     margin: 0 auto; 
     position: relative; 
     margin-top: 2%; 
-    margin-bottom: 20%;
+    margin-bottom: 2%;
     box-shadow: 2px 5px 20px rgba(65, 65, 65, 0.5);
 }
 

@@ -8,7 +8,7 @@
     <div class="wrapper">
     {% for i in range(id | length) %}
 
-        <div class="itemblock-div-class">
+        <div class="itemblock-div-class itemblock-div-class-{{ id[i] }}">
             {% with form = form[i], id = id[i], name = name[i], description = description[i], imageLink = imageLink[i], price=price[i], prodLeft=prodLeft[i] %}
                 {% include 'itemBlock.html' %}
             {% endwith %}
@@ -69,5 +69,38 @@
     };
 
 </script>
+
+
+<script>
+
+    let divClassElem = [];
+
+    for(let i = 0; i < id.length; i++) {
+        divClassElem[i] = document.querySelector(`.itemblock-div-class-${id[i]}`);
+        console.log(divClassElem[i]);
+    }
+
+    setHeightForAll(getMaxHeight());
+
+    function setHeightForAll(maxValue) {
+        for(let i = 0; i < id.length; i++) {
+            divClassElem[i].style.height = maxValue + "px";
+        }
+    }
+
+    function getMaxHeight() {
+        maxValue = 0;
+        for(let i = 0; i < id.length; i++) {
+            let temp = divClassElem[i].scrollHeight;
+            if (temp > maxValue){
+                maxValue = temp;
+            }
+        }
+        return maxValue;
+    }
+
+
+</script>
+
 
 {% endblock %}

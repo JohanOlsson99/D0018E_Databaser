@@ -66,16 +66,19 @@
 
                 <!-- Right -->
                 <ul class="navbar-nav ml-auto">
+                    {% if signedIn %}
                     <li class="nav-item">
                         <a href="/varukorg" class="nav-link navbar-link-2 waves-effect">
                             <i class="fas fa-shopping-cart pl-0"></i>
                         </a>
                     </li>
+
                     <li class="nav-item">
                         <a href="/profile" class="nav-link navbar-link-2 waves-effect">
                             <i class="fas fa-user"></i>
                         </a>
                     </li>
+                    {% endif %}
                     {% if isAdmin %}
                     <li class="nav-item pl-2 mb-2 mb-md-0">
                         <a href="/adminPage" type="button"
@@ -133,5 +136,23 @@
         {% block content %}
         {% endblock %}
     </div>
+
+<script>
+    setHeight();
+
+    function setHeight() {
+        /*let windowHeight = window.screen.height;*/
+        let windowHeight = document.documentElement.scrollHeight;
+        let body = document.body
+        console.log(windowHeight)
+        console.log(body.scrollHeight)
+        if(windowHeight > body.scrollHeight) {
+            body.style.height = windowHeight + "px";
+        }
+    }
+
+
+</script>
+
 </body>
 </html>
