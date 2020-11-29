@@ -1,5 +1,6 @@
 .container {
-    height: 900px !important;
+    /*height: 900px !important;*/
+    height: 100%; !important;
 }
 
 .form-control-lg { 

@@ -74,12 +74,7 @@ def adminUsernameAndPasswordCorrect(form, con):
         cur.execute("SELECT Password FROM Admin WHERE Username=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
-        if password != ():
-            password = password[0][0]
-            if password == form.password.data:
-                return True
-        else:
-            return False
+        return correctPassword(form, password)
     except:
         return False
 
@@ -90,12 +85,7 @@ def adminEmailAndPasswordCorrect(form, con):
         cur.execute("SELECT Password FROM Admin WHERE Email=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
-        if password != ():
-            password = password[0][0]
-            if password == form.password.data:
-                return True
-        else:
-            return False
+        return correctPassword(form, password)
     except:
         return False
 
@@ -103,16 +93,10 @@ def adminEmailAndPasswordCorrect(form, con):
 def customerUsernameAndPasswordCorrect(form, con):
     try:
         cur = con.cursor()
-
         cur.execute("SELECT Password FROM Customer WHERE Username=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
-        if password != ():
-            password = password[0][0]
-            if password == form.password.data:
-                return True
-        else:
-            return False
+        return correctPassword(form, password)
     except:
         return False
 
@@ -123,15 +107,17 @@ def customerEmailAndPasswordCorrect(form, con):
         cur.execute("SELECT Password FROM Customer WHERE Email=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
-        if password != ():
-            password = password[0][0]
-            if password == form.password.data:
-                return True
-        else:
-            return False
+        return correctPassword(form, password)
     except:
         return False
 
+def correctPassword(form, password):
+    if password != ():
+        password = password[0][0]
+        if password == form.password.data:
+            return True
+    else:
+        return False
 
 def getUser(form, con, value):
     cur = con.cursor()

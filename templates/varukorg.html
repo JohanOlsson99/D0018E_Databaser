@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='varukorg.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='varukorg.css') }}">
 
 <div>
     {% for i in range(id | length) %}

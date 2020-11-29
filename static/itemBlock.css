@@ -15,7 +15,7 @@ p {
 
 .block-class {
     width: 400px;
-    height: 510px;
+    height: 100%;
     background-color: #ff1717;
     border: 3px solid black;
     border-radius: 15px;
@@ -138,5 +138,6 @@ p {
     /*width: 670px;*/
     width: 100%;
     margin: auto;
-    display: inline;
+    /*display: inline;*/
+    height: 40px;
 }

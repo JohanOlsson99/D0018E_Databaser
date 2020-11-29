@@ -27,4 +27,7 @@ h2 {
     float: right !important;
 }
 
+.container {
+    height: 520px; !important
+}
 
