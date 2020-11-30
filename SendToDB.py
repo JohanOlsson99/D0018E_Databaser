@@ -74,12 +74,7 @@ def adminUsernameAndPasswordCorrect(form, con):
         cur.execute("SELECT Password FROM Admin WHERE Username=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
-        if password != ():
-            password = password[0][0]
-            if password == form.password.data:
-                return True
-        else:
-            return False
+        return correctPassword(form, password)
     except:
         return False
 
@@ -90,12 +85,7 @@ def adminEmailAndPasswordCorrect(form, con):
         cur.execute("SELECT Password FROM Admin WHERE Email=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
-        if password != ():
-            password = password[0][0]
-            if password == form.password.data:
-                return True
-        else:
-            return False
+        return correctPassword(form, password)
     except:
         return False
 
@@ -103,16 +93,10 @@ def adminEmailAndPasswordCorrect(form, con):
 def customerUsernameAndPasswordCorrect(form, con):
     try:
         cur = con.cursor()
-
         cur.execute("SELECT Password FROM Customer WHERE Username=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
-        if password != ():
-            password = password[0][0]
-            if password == form.password.data:
-                return True
-        else:
-            return False
+        return correctPassword(form, password)
     except:
         return False
 
@@ -123,15 +107,17 @@ def customerEmailAndPasswordCorrect(form, con):
         cur.execute("SELECT Password FROM Customer WHERE Email=%s;", (form.email.data))
         password = cur.fetchall()
         cur.close()
-        if password != ():
-            password = password[0][0]
-            if password == form.password.data:
-                return True
-        else:
-            return False
+        return correctPassword(form, password)
     except:
         return False
 
+def correctPassword(form, password):
+    if password != ():
+        password = password[0][0]
+        if password == form.password.data:
+            return True
+    else:
+        return False
 
 def getUser(form, con, value):
     cur = con.cursor()
@@ -206,3 +192,10 @@ def getProductFromId(con, id):
     except:
         return False, None
 
+#First check if there already excist an order_details for this customer that has status (for example) pending
+#if there excist an order_details then add a new Ordered_product_list with a product and number of items of that product
+#remove the same amount from the product which we added to the ordered_product_list.
+#if it doesn't exicist an order_details then create a new one and do the same with ordered_product_list as above.
+#return True if you successfully added the product to the list and False otherwise
+def addItemToOrder(con, productID, customerID, howManyItems):
+    return True

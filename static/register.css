@@ -1,17 +1,40 @@
-.form-control-lg{
-    padding: .5rem 1rem;
-    font-size: 1.25rem;
-    line-height: 1.5;
-    border-radius: 15rem; 
-    
+.container {
+    /*height: 900px !important;*/
+    height: 100%; !important;
+}
 
+.form-control-lg { 
+    color:  #777;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-left: 2px;
+    margin-top: 10px; 
+    padding: .5rem 1rem !important;
+    border-radius: 15rem; 
 }   
-.form-control{
-    width: 43%;
+.form-control {
+    border: 0; 
+    border: 1px solid #777;
+    width: 80%;
+    font-family: "Montserrat", sans-serif;
+    font-size: 1em;
+    padding: 7px 0;
+    color: #070707;
+    outline: none; 
+    text-align: justify;
+    margin: auto
 }
 
 .form-control-label {
-    margin-left: 30%;
+    color:  #777;
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-left: 10%;
+    margin-top: 10px;
+    text-align: center;
 }
 
 .checkbox {
@@ -27,27 +50,12 @@
     right: 0;
 }
 
-.button {
-    background-color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    transition-duration: 0.4s;
-    cursor: pointer;
-    color: black;
-    border: 2px solid #4CAF50;
-  }
-  
-  .button:hover {
-    background-color: #4CAF50;
-    color: white;
-  }
-
 .date-form {
     height: 100px;
     margin-top: 10px;
     margin-bottom: 10px;
-    margin-left: 38%;
+    margin-left: 20%;
+    margin-right: 20%;
 }
 
 .date-form-day {
