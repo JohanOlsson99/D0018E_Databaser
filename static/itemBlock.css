@@ -1,9 +1,22 @@
+.wrapper {
+    margin-bottom: 40px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
 
+h4 {
+    color: #ffffff;
+}
 
-.block-class{
+p {
+    color: #ffffff;
+    font-size: 1vw;
+}
+
+.block-class {
     width: 400px;
-    height: 510px;
-    background-color: #61b2c9;
+    height: 100%;
+    background-color: #ff1717;
     border: 3px solid black;
     border-radius: 15px;
 }
@@ -13,7 +26,7 @@
     margin-top: 10px;
 }
 
-.image-class{
+.image-class {
     width: 95%;
     height: 250px;
     margin-left: 2.5%;
@@ -26,7 +39,7 @@
 }
 .plusMinusBtn {
     width: 25px;
-    height 25px;
+    height: 25px;
     border-radius: 6px;
     text-align: center;
 }
@@ -41,7 +54,21 @@
 }
 
 .send-to-cart-button {
+    background-color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    color: #970f0f;
+    border: 2px solid #970f0f;
     border-radius: 6px;
+}
+
+.send-to-cart-button:hover {
+    color: #ffffff;
+    background-color: #970f0f;
+    border-color: #970f0f;
 }
 
 .counter-display {
@@ -61,28 +88,27 @@
 }
 
 .block-add-to-cart-class {
-    /*margin-left: 20%;*/
-    margin: auto;
     color: black;
+    width: 80% !important;
+    align-items: center;
 }
 
-
-.button {
-  background-color: white;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  color: black;
-  /*border: 2px solid #4CAF50;*/
-  border: 2px solid #48D941;
+.btn-plus, .btn-minus {
+    height: 30px;
+    width: 30px;
+    background-color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    color: #970f0f;
+    border: 2px solid #970f0f;
 }
 
-.button:hover {
-  /*background-color: #4CAF50;*/
-  background-color: #48D941;
-  color: white;
+.btn-plus:hover, .btn-minus:hover {
+    background-color: #970f0f;
+    color: white;
 }
 
 .price-text {
@@ -90,6 +116,8 @@
     margin-left: 2.5%;
     font-size: large;
     font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .title-div {
@@ -110,5 +138,6 @@
     /*width: 670px;*/
     width: 100%;
     margin: auto;
-    display: inline;
+    /*display: inline;*/
+    height: 40px;
 }
