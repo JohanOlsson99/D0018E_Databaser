@@ -88,7 +88,7 @@ def home():
                            imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
 
 
-@app.route("/varukorg", methods=['GET', 'POST'])
+@app.route("/cart", methods=['GET', 'POST'])
 def kundkorg():
     """form = [cartForm(), cartForm()]
     id = ['1', '2']
