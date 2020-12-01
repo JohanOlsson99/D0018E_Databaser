@@ -1,5 +1,5 @@
 from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, url_for, ORDERNOTSENT
-from forms import *
+from Forms import *
 import sys
 
 
