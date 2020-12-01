@@ -82,8 +82,44 @@ class AddToCart(FlaskForm):
 
 
 class cartForm(FlaskForm):
+    form = []
+    reload = SubmitField('Reload Cart')
+
+    def __init__(self, id, itemsInCart, maxValue):
+        super().__init__()
+        for i in range(len(id)):
+            self.form.append(cartIndividualForm())
+            self.form[i].defineMaxMin(max=maxValue[i])
+            self.form[i].defineStartUpValues(id[i], itemsInCart[i])
+        #self.reload.id = "button continue-button reload-button"
+    def getForm(self, index):
+        return self.form[index]
+
+    def getReload(self):
+        return self.reload
+
+    #howManyToCart = IntegerField('amount', validators=[NumberRange(min=0, max=100)])
+    #addToCart = SubmitField('Remove')
+
+    #def defineMaxMin(self, min=0, max=100):
+    #    self.howManyToCart.validators = [NumberRange(min=min, max=max)]
+
+    #def defineHowManyToCartId(self, id):
+    #    self.howManyToCart.id = 'counter-display-' + str(id)
+
+class cartIndividualForm(FlaskForm):
     howManyToCart = IntegerField('amount', validators=[NumberRange(min=0, max=100)])
     addToCart = SubmitField('Remove')
+
+    def defineMaxMin(self, min=0, max=100):
+        self.howManyToCart.validators = [NumberRange(min=min, max=max)]
+
+    def defineStartUpValues(self, id, itemsInCart):
+        self.howManyToCart.id = 'counter-display-' + str(id)
+        self.addToCart.id = 'remove-button-' + str(id)
+        self.howManyToCart.data = itemsInCart
+
+
 
 class User():
     def __init__(self, list):
