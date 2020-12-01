@@ -1,4 +1,4 @@
-from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, url_for
+from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, url_for, ORDERNOTSENT
 from forms import *
 import sys
 
@@ -199,3 +199,48 @@ def getProductFromId(con, id):
 #return True if you successfully added the product to the list and False otherwise
 def addItemToOrder(con, productID, customerID, howManyItems):
     return True
+
+
+
+def getProductsInCart(con, customerId):
+    try:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Order_details WHERE Customer_ID=%s AND status=%s;", (customerId, ORDERNOTSENT))
+        orderDetailID = cur.fetchall()
+        print(orderDetailID)
+        if orderDetailID[0] != ():
+            orderDetailID = orderDetailID[0][0]
+            print(orderDetailID)
+        else:
+            return False, [], [], [], [], [], [], [],
+        cur.execute("SELECT * FROM ordered_products_list WHERE Order_details_ID=%s", (orderDetailID))
+        data = cur.fetchall()
+        print(data)
+        cur.close()
+        productId = []
+        itemsInCart = []
+        for i in range(len(data)):
+            productId.append(data[i][1])
+            itemsInCart.append(data[i][3])
+        productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = dataCartFormating(con, productId, itemsInCart)
+        return True, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList
+
+    except:
+        print('WRONG')
+        return False, [], None, None, None, None, None, None
+
+
+def dataCartFormating(con, productId, itemsInCart):
+    descList = []
+    imageLinkList = []
+    nameList = []
+    prodLeftList = []
+    priceList = []
+    for i in range(len(productId)):
+        data = getProductFromId(con, productId[i])[1]
+        nameList.append(data[1])
+        priceList.append(data[2])
+        descList.append(data[3])
+        prodLeftList.append(data[4])
+        imageLinkList.append(url_for('static', filename=('image/' + str(productId[i]) + '.jpg')))
+    return productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList
