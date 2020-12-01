@@ -1,6 +1,9 @@
-from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, url_for, ORDERNOTSENT
+from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, ORDERNOTSENT
+from flask import url_for
 from forms import *
 import sys
+import traceback
+from datetime import date
 
 
 def customerAlreadyInDB(form, con):
@@ -185,7 +188,7 @@ def dataProductFormating(data):
 def getProductFromId(con, id):
     try:
         cur = con.cursor()
-        cur.execute("SELECT * FROM Products WHERE Products_ID=%s", id)
+        cur.execute("SELECT * FROM Products WHERE Products_ID=%s;", id)
         data = cur.fetchall()
         cur.close()
         return True, data[0]
@@ -197,8 +200,49 @@ def getProductFromId(con, id):
 #remove the same amount from the product which we added to the ordered_product_list.
 #if it doesn't exicist an order_details then create a new one and do the same with ordered_product_list as above.
 #return True if you successfully added the product to the list and False otherwise
+
 def addItemToOrder(con, productID, customerID, howManyItems):
-    return True
+    try:
+        cur = con.cursor()
+        cur.execute("SELECT status FROM Order_details WHERE Customer_ID=%s;", customerID)
+        status = cur.fetchall()[0][0]
+
+        if (status == "pending"):
+            cur.execute("SELECT Order_details_ID FROM Order_details WHERE Customer_ID=%s;", customerID)
+            orderID = cur.fetchall()[0][0]
+
+            cur.execute("SELECT MAX(ordered_products_list_ID) FROM Ordered_products_list;")
+            newID = str(int(cur.fetchall()[0][0]) + 1)
+
+            cur.execute("INSERT INTO Ordered_products_list (ordered_products_list_ID, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (newID, productID, orderID, howManyItems))
+            con.commit()
+
+            cur.execute("SELECT Products_left_in_stock FROM Products WHERE Products_ID=%s;", productID)
+            newAmount = str(int(cur.fetchall()[0][0]) - int(howManyItems))
+
+            cur.execute("UPDATE Products SET Products_left_in_stock=%s WHERE Products_ID=%s;", (newAmount, productID))
+            con.commit()
+            cur.close()
+            return True
+        elif (status == None):
+            orderID = 0
+            newID = 0
+            cur.execute("INSERT INTO Order_details (Order_details_ID, Customer_ID, status, date, name) VALUES (0, %s, pending, %s, %s);", (customerID, str(date.today().strftime("%y-%m-%d")), str('a' + 1)))
+            con.commit()
+
+            cur.execute("INSERT INTO Ordered_products_list (ordered_products_list_ID, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (newID, productID, orderID, howManyItems))
+            con.commit()
+
+            cur.execute("SELECT Products_left_in_stock FROM Products WHERE Products_ID=%s;", productID)
+            newAmount = str(int(cur.fetchall()[0][0]) - int(howManyItems))
+
+            cur.execute("UPDATE Products SET Products_left_in_stock=%s WHERE Products_ID=%s;", (newAmount, productID))
+            con.commit()
+            cur.close()
+            return True
+    except:
+        traceback.print_exc()
+        return False  
 
 
 
