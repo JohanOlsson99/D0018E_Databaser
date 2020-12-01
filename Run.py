@@ -1,5 +1,5 @@
 from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User
-from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem
+from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem, getTestCart
 import sys, random
 from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
@@ -28,7 +28,9 @@ USERNAMELOGIN = 0
 EMAILLOGIN = 1
 ISADMIN ='A'
 ISCUSTOMER = 'C'
+ORDERNOTSENT = 'pending'
 signedInUsers = {}
+
 
 #signedInUsers[0] = (User([0, 'johan', 'olsson', 'johols', 'a@gmail.com', '0000000000', '2020-01-01', True]))
 
@@ -86,7 +88,7 @@ def home():
                            imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
 
 
-@app.route("/varukorg", methods=['GET', 'POST'])
+@app.route("/cart", methods=['GET', 'POST'])
 def kundkorg():
     """form = [cartForm(), cartForm()]
     id = ['1', '2']
@@ -97,16 +99,28 @@ def kundkorg():
     form[0].addToCart.id = 'remove-button-' + str(id[0])
     form[1].addToCart.id = 'remove-button-' + str(id[1])"""
 
-    form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
+    customer = signedInUsers.get(request.cookies.get('ID'), False)
+    if customer is not False:
+        customerId = customer.getId()
+    else:
+        flash('You need to sign in before checking your cart', 'danger')
+        return redirect(url_for('home'))
+    con = mysql.connect()
+    #form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
+    trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
 
-
-    for i in range(len(form)):
-        form[i].howManyToCart.id = 'counter-display-' + str(idList[i])
-        form[i].addToCart.id = 'remove-button-' + str(idList[i])
-        form[i].howManyToCart.data = itemsInCart[i]
+    form = []
+    if trueFalse:
+        for i in range(len(productId)):
+            form.append(cartForm())
+            form[i].howManyToCart.id = 'counter-display-' + str(productId[i])
+            form[i].addToCart.id = 'remove-button-' + str(productId[i])
+            form[i].howManyToCart.data = itemsInCart[i]
+    else:
+        flash('You have nothing in your cart right now, you can add items from home', 'danger')
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('varukorg.html', title="varukorg", form=form, id=idList, name=nameList, price=priceList,
+    return render_template('varukorg.html', title="varukorg", form=form, id=productId, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
                            imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
 
