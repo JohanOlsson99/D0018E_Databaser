@@ -204,28 +204,35 @@ def getProductFromId(con, id):
 def addItemToOrder(con, productID, customerID, howManyItems):
     try:
         cur = con.cursor()
-        cur.execute("SELECT status FROM Order_details WHERE Customer_ID=%s;", customerID)
+        cur.execute("SELECT status FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
         status = cur.fetchall()[0][0]
 
         if (status == "pending"):
-            cur.execute("SELECT Order_details_ID FROM Order_details WHERE Customer_ID=%s;", customerID)
+            cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
             orderID = cur.fetchall()[0][0]
-
+            cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Product_ID`=%s;", productID)
+            check = cur.fetchall()
             cur.execute("SELECT MAX(ordered_products_list_ID) FROM Ordered_products_list;")
             newID = str(int(cur.fetchall()[0][0]) + 1)
+            if (isEmpty(check) == False):
+                newAmount = str(int(howManyItems) + int(check[0][0]))
+                cur.execute("UPDATE `Ordered_products_list` SET `Amount_ordered`=%s WHERE Product_ID=%s;", (newAmount, productID))
+                con.commit()
+            else:
+                cur.execute("INSERT INTO `Ordered_products_list` (`ordered_products_list_ID`, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (newID, productID, orderID, howManyItems))
+                con.commit()
 
-            cur.execute("INSERT INTO Ordered_products_list (ordered_products_list_ID, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (newID, productID, orderID, howManyItems))
-            con.commit()
+            cur.execute("SELECT `Products_left_in_stock` FROM Products WHERE Products_ID=%s;", productID)
+            data = int(cur.fetchall()[0][0])
+            newAmount = str(data - int(howManyItems))
 
-            cur.execute("SELECT Products_left_in_stock FROM Products WHERE Products_ID=%s;", productID)
-            newAmount = str(int(cur.fetchall()[0][0]) - int(howManyItems))
-
-            cur.execute("UPDATE Products SET Products_left_in_stock=%s WHERE Products_ID=%s;", (newAmount, productID))
+            cur.execute("UPDATE `Products` SET `Products_left_in_stock`=%s WHERE `Products_ID`=%s;", (newAmount, productID))
             con.commit()
             cur.close()
             return True
         elif (status == None):
-            orderID = 0
+            cur.execute("SELECT MAX(Order_details_ID) FROM Order_details);")
+            orderID = str(int(cur.fetchall()[0][0]) + 1)
             newID = 0
             cur.execute("INSERT INTO Order_details (Order_details_ID, Customer_ID, status, date, name) VALUES (0, %s, pending, %s, %s);", (customerID, str(date.today().strftime("%y-%m-%d")), str('a' + 1)))
             con.commit()
@@ -288,3 +295,9 @@ def dataCartFormating(con, productId, itemsInCart):
         prodLeftList.append(data[4])
         imageLinkList.append(url_for('static', filename=('image/' + str(productId[i]) + '.jpg')))
     return productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList
+
+def isEmpty(structure):
+    if structure:
+        return False
+    else:
+        return True
