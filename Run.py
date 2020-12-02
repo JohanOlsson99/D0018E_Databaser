@@ -1,4 +1,5 @@
-from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User
+#from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User, cartIndividualForm
+from Forms import *
 from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem, getTestCart
 import sys, random
 from flask_login import login_user, logout_user, LoginManager, current_user
@@ -89,16 +90,7 @@ def home():
 
 
 @app.route("/cart", methods=['GET', 'POST'])
-def kundkorg():
-    """form = [cartForm(), cartForm()]
-    id = ['1', '2']
-    form[0].howManyToCart.id = 'counter-display-' + str(id[0])
-    form[1].howManyToCart.id = 'counter-display-' + str(id[1])
-    description = ["etworkeffects platforms proactive exploit, aggregate partnerships synergies embedded optimize unleash synergize markets. Networks mindshare robust", "Test"]
-    imageLink = [url_for('static', filename='image/car.jpg'), url_for('static', filename='image/car.jpg')]
-    form[0].addToCart.id = 'remove-button-' + str(id[0])
-    form[1].addToCart.id = 'remove-button-' + str(id[1])"""
-
+def cart():
     customer = signedInUsers.get(request.cookies.get('ID'), False)
     if customer is not False:
         customerId = customer.getId()
@@ -109,14 +101,15 @@ def kundkorg():
     #form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
     trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
 
-    form = []
-    if trueFalse:
-        for i in range(len(productId)):
-            form.append(cartForm())
-            form[i].howManyToCart.id = 'counter-display-' + str(productId[i])
-            form[i].addToCart.id = 'remove-button-' + str(productId[i])
-            form[i].howManyToCart.data = itemsInCart[i]
-    else:
+    form = cartForm(productId, itemsInCart, prodLeftList)
+    #if trueFalse:
+    #    for i in range(len(productId)):
+            #form.append(cartForm())
+            #form[i].howManyToCart.id = 'counter-display-' + str(productId[i])
+            #form[i].addToCart.id = 'remove-button-' + str(productId[i])
+            #form[i].howManyToCart.data = itemsInCart[i]
+            #form[i].defineMaxMin(max=prodLeftList[i])
+    if not trueFalse:
         flash('You have nothing in your cart right now, you can add items from home', 'danger')
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
