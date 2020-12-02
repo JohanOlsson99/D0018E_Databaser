@@ -1,5 +1,5 @@
 from flask import flash, request, url_for
-from forms import AddToCart, cartForm
+from Forms import AddToCart, cartForm
 import sys
 import random
 

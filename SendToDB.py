@@ -1,6 +1,6 @@
 from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, ORDERNOTSENT
 from flask import url_for
-from forms import *
+from Forms import *
 import sys
 import traceback
 from datetime import date
@@ -249,7 +249,7 @@ def addItemToOrder(con, productID, customerID, howManyItems):
             return True
     except:
         traceback.print_exc()
-        return False  
+        return False
 
 
 

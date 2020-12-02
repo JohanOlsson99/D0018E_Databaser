@@ -58,9 +58,12 @@ p {
     width: 140px;
     border-radius: 6px;
     text-align: center;
+    border-color: #00FF00;
 }
 
 .purchase-button:hover {
+    background-color: #00FF00;
+    border-radius: 6px;
     color: black;
 }
 
@@ -124,4 +127,21 @@ p {
     width: 540px;
     margin: auto;
     display: inline-flex;
+}
+
+.reload-button {
+    width: 200px;
+    height 55px;
+    border-radius: 6px;
+    text-align: center;
+}
+.button-reload-page-class {
+    float: left;
+    margin-top: 15px;
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.reload-and-purchase-button {
+    float: right;
 }
