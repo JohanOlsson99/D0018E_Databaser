@@ -24,6 +24,7 @@ def customerAlreadyInDB(form, con):
                 return True
         return False
     except:
+        traceback.print_exc()
         return True
 
 def isAdmin(form, con):
@@ -41,6 +42,7 @@ def isAdmin(form, con):
                 return True
         return False
     except:
+        traceback.print_exc()
         return True
 
 def addCustomerInDB(form, con):
@@ -68,6 +70,7 @@ def addCustomerInDB(form, con):
         cur.close()
         return True
     except:
+        traceback.print_exc()
         return False
 
 
@@ -79,6 +82,7 @@ def adminUsernameAndPasswordCorrect(form, con):
         cur.close()
         return correctPassword(form, password)
     except:
+        traceback.print_exc()
         return False
 
 
@@ -90,6 +94,7 @@ def adminEmailAndPasswordCorrect(form, con):
         cur.close()
         return correctPassword(form, password)
     except:
+        traceback.print_exc()
         return False
 
 
@@ -101,6 +106,7 @@ def customerUsernameAndPasswordCorrect(form, con):
         cur.close()
         return correctPassword(form, password)
     except:
+        traceback.print_exc()
         return False
 
 
@@ -112,6 +118,7 @@ def customerEmailAndPasswordCorrect(form, con):
         cur.close()
         return correctPassword(form, password)
     except:
+        traceback.print_exc()
         return False
 
 def correctPassword(form, password):
@@ -193,6 +200,7 @@ def getProductFromId(con, id):
         cur.close()
         return True, data[0]
     except:
+        traceback.print_exc()
         return False, None
 
 #First check if there already excist an order_details for this customer that has status (for example) pending
@@ -208,16 +216,19 @@ def addItemToOrder(con, productID, customerID, howManyItems):
         status = cur.fetchall()
         if status != ():
             status = status[0][0]
+        else:
+            status = None
         if (status == "pending"):
             cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
             orderID = cur.fetchall()[0][0]
             cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Product_ID`=%s;", productID)
             check = cur.fetchall()
             cur.execute("SELECT MAX(ordered_products_list_ID) FROM Ordered_products_list;")
-            if(cur.fetchall()[0][0] == None):
+            newID = cur.fetchall()[0][0]
+            if(newID == None):
                 newID = 0
             else:
-                newID = str(int(cur.fetchall()[0][0]) + 1)
+                newID = str(int(newID) + 1)
             if (isEmpty(check) == False):
                 newAmount = str(int(howManyItems) + int(check[0][0]))
                 cur.execute("UPDATE `Ordered_products_list` SET `Amount_ordered`=%s WHERE Product_ID=%s;", (newAmount, productID))
@@ -236,13 +247,25 @@ def addItemToOrder(con, productID, customerID, howManyItems):
             return True
         else:
             cur.execute("SELECT MAX(Order_details_ID) FROM Order_details;")
-
-            orderID = str(int(cur.fetchall()[0][0]) + 1)
-            newID = 0
-            cur.execute("INSERT INTO Order_details (Order_details_ID, Customer_ID, status, date, name) VALUES (0, %s, pending, %s, %s);", (customerID, str(date.today().strftime("%y-%m-%d")), str('a' + 1)))
+            orderDetailId = cur.fetchall()[0][0]
+            print(orderDetailId, "orderdetail")
+            if (orderDetailId == None):
+                orderDetailId = 0
+            else:
+                orderDetailId = int(int(orderDetailId) + 1)
+            #orderID = str(int(cur.fetchall()[0][0]) + 1)
+            cur.execute("SELECT MAX(Order_details_ID) FROM Order_details;")
+            orderProdId = cur.fetchall()[0][0]
+            print(orderProdId)
+            if (orderProdId == None):
+                orderProdId = 0
+            else:
+                orderProdId = int(int(orderProdId) + 1)
+            #newID = 0
+            cur.execute("INSERT INTO Order_details (Order_details_ID, Customer_ID, status, date, name) VALUES (%s, %s, %s, %s, %s);", (orderDetailId, customerID, ORDERNOTSENT, str(date.today().strftime("%y-%m-%d")), 'a'))
             con.commit()
 
-            cur.execute("INSERT INTO Ordered_products_list (ordered_products_list_ID, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (newID, productID, orderID, howManyItems))
+            cur.execute("INSERT INTO Ordered_products_list (ordered_products_list_ID, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (orderProdId, productID, orderDetailId, howManyItems))
             con.commit()
 
             cur.execute("SELECT Products_left_in_stock FROM Products WHERE Products_ID=%s;", productID)
@@ -282,7 +305,7 @@ def getProductsInCart(con, customerId):
         return True, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList
 
     except:
-        print('WRONG')
+        traceback.print_exc()
         return False, [], None, None, None, None, None, None
 
 
@@ -336,7 +359,6 @@ def updateOrder(con, amount, prodId, userId):
                 con.commit()
                 cur.close()
                 return True
-
         cur.close()
         return False
     except:
