@@ -109,7 +109,7 @@ class cartForm(FlaskForm):
 
 class cartIndividualForm(FlaskForm):
     howManyToCart = IntegerField('amount', validators=[NumberRange(min=0, max=100)])
-    addToCart = SubmitField('Remove')
+    addToCart = SubmitField('Update')
 
     def defineMaxMin(self, min=0, max=100):
         self.howManyToCart.validators = [NumberRange(min=min, max=max)]
@@ -117,7 +117,7 @@ class cartIndividualForm(FlaskForm):
     def defineStartUpValues(self, id, itemsInCart):
         self.howManyToCart.id = 'counter-display-' + str(id)
         self.addToCart.id = 'remove-button-' + str(id)
-        self.howManyToCart.data = itemsInCart
+        #self.howManyToCart.data = itemsInCart
 
 
 

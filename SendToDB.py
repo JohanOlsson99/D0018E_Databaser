@@ -164,7 +164,7 @@ def getProducts(con):
     cur = con.cursor()
     cur.execute("SELECT * FROM Products;")
     data = cur.fetchall()
-    #print(data)
+    print(data)
     cur.close()
     return dataProductFormating(data)
 
@@ -205,15 +205,19 @@ def addItemToOrder(con, productID, customerID, howManyItems):
     try:
         cur = con.cursor()
         cur.execute("SELECT status FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
-        status = cur.fetchall()[0][0]
-
+        status = cur.fetchall()
+        if status != ():
+            status = status[0][0]
         if (status == "pending"):
             cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
             orderID = cur.fetchall()[0][0]
             cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Product_ID`=%s;", productID)
             check = cur.fetchall()
             cur.execute("SELECT MAX(ordered_products_list_ID) FROM Ordered_products_list;")
-            newID = str(int(cur.fetchall()[0][0]) + 1)
+            if(cur.fetchall()[0][0] == None):
+                newID = 0
+            else:
+                newID = str(int(cur.fetchall()[0][0]) + 1)
             if (isEmpty(check) == False):
                 newAmount = str(int(howManyItems) + int(check[0][0]))
                 cur.execute("UPDATE `Ordered_products_list` SET `Amount_ordered`=%s WHERE Product_ID=%s;", (newAmount, productID))
@@ -230,8 +234,9 @@ def addItemToOrder(con, productID, customerID, howManyItems):
             con.commit()
             cur.close()
             return True
-        elif (status == None):
-            cur.execute("SELECT MAX(Order_details_ID) FROM Order_details);")
+        else:
+            cur.execute("SELECT MAX(Order_details_ID) FROM Order_details;")
+
             orderID = str(int(cur.fetchall()[0][0]) + 1)
             newID = 0
             cur.execute("INSERT INTO Order_details (Order_details_ID, Customer_ID, status, date, name) VALUES (0, %s, pending, %s, %s);", (customerID, str(date.today().strftime("%y-%m-%d")), str('a' + 1)))
@@ -295,6 +300,48 @@ def dataCartFormating(con, productId, itemsInCart):
         prodLeftList.append(data[4])
         imageLinkList.append(url_for('static', filename=('image/' + str(productId[i]) + '.jpg')))
     return productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList
+
+
+def updateOrder(con, amount, prodId, userId):
+    try:
+        cur = con.cursor()
+        cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE Customer_ID=%s AND status=%s;", (userId, ORDERNOTSENT))
+        orderDetailsId = cur.fetchone()
+        #print('fetchone', orderDetailsId)
+
+        if orderDetailsId != None:
+            orderDetailsId = orderDetailsId[0]
+            cur.execute("SELECT * FROM `Ordered_products_list` WHERE `Order_details_ID`=%s AND `Product_ID`=%s;", (orderDetailsId, prodId))
+            data = cur.fetchone()
+            #print("data for ordered_products_list", data)
+            #print('amount and data[3]', amount, data[3])
+            if amount != data[3]:
+                if amount == 0:
+                    cur.execute("SET foreign_key_checks = 0;")
+                    cur.execute("DELETE FROM `Ordered_products_list` WHERE Order_details_ID=%s AND Product_ID=%s;", (orderDetailsId, prodId))
+                    cur.execute("SELECT * FROM `Ordered_products_list` WHERE Order_details_ID=%s;", (orderDetailsId))
+                    temp = cur.fetchall()
+                    if temp == ():
+                        cur.execute("DELETE FROM `Order_details` WHERE Order_details_ID=%s;", (orderDetailsId))
+                    cur.execute("SET foreign_key_checks = 1;")
+                else:
+                    cur.execute("UPDATE `Ordered_products_list` SET Amount_ordered=%s WHERE Order_details_ID=%s AND Product_ID=%s;", (amount, orderDetailsId, prodId))
+                    con.commit()
+                cur.execute("SELECT Products_left_in_stock FROM Products WHERE Products_ID=%s", (prodId))
+                diff = amount - int(data[3])
+                left = cur.fetchone()[0]
+                left = left - diff
+
+                cur.execute("UPDATE Products SET Products_left_in_stock=%s WHERE Products_ID=%s", (left, prodId))
+                con.commit()
+                cur.close()
+                return True
+
+        cur.close()
+        return False
+    except:
+        traceback.print_exc()
+        return False
 
 def isEmpty(structure):
     if structure:
