@@ -80,6 +80,7 @@ def home():
         user = signedInUsers.get(request.cookies.get('ID'))
         if(addItemToOrder(con, id, user.getId(), howManyItems)):
             flash('Successfully added ' + str(form[i].howManyToCart.data) + ' of your item to your cart', 'success')
+            return redirect(url_for('home'))
         else:
             flash('Something went wrong', 'danger')
 
@@ -101,21 +102,42 @@ def cart():
     #form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
     trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
 
-    form = cartForm(productId, itemsInCart, prodLeftList)
-    #if trueFalse:
-    #    for i in range(len(productId)):
-            #form.append(cartForm())
+    #form = cartForm(productId, itemsInCart, prodLeftList)
+    form = []
+    if trueFalse:
+        for i in range(len(productId)):
+            form.append(cartIndividualForm())
             #form[i].howManyToCart.id = 'counter-display-' + str(productId[i])
             #form[i].addToCart.id = 'remove-button-' + str(productId[i])
+            form[i].defineStartUpValues(productId[i], itemsInCart[i])
             #form[i].howManyToCart.data = itemsInCart[i]
-            #form[i].defineMaxMin(max=prodLeftList[i])
+            #print(itemsInCart[i])
+            form[i].defineMaxMin(max=(int(prodLeftList[i]) + int(itemsInCart[i])))
     if not trueFalse:
         flash('You have nothing in your cart right now, you can add items from home', 'danger')
+
+    if request.method == 'POST':
+        if checkCartForm(form, productId, customerId, con):
+            return redirect(url_for('cart'))
+        else:
+            flash('Couldn\'t update your item', 'warning')
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('varukorg.html', title="varukorg", form=form, id=productId, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
-                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
+                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin, itemsInCart=itemsInCart)
+
+def checkCartForm(form, productId, customerId, con):
+    print('Check')
+    for i in range(len(form)):
+        if ((form[i].validate_on_submit()) and (form[i].addToCart.data == True)
+                and (str(productId[i]) in request.form)):
+            print('cartForm correct with data', form[i].howManyToCart.data, 'and ID', productId[i])
+            if updateOrder(con, form[i].howManyToCart.data, int(productId[i]), int(customerId)):
+                return True
+            return False
+    return False
+
 
 
 @app.route("/login", methods=['GET', 'POST'])
