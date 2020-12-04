@@ -221,21 +221,25 @@ def addItemToOrder(con, productID, customerID, howManyItems):
         if (status == "pending"):
             cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
             orderID = cur.fetchall()[0][0]
-            cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Product_ID`=%s;", productID)
+            cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Product_ID`=%s AND Order_details_ID=%s;", (productID, orderID))
             check = cur.fetchall()
             cur.execute("SELECT MAX(ordered_products_list_ID) FROM Ordered_products_list;")
             newID = cur.fetchall()[0][0]
+            print('test')
+            print(newID)
+            print('test1')
+            print(check)
             if(newID == None):
                 newID = 0
             else:
-                newID = str(int(newID) + 1)
+                newID = int(newID) + 1
             if (isEmpty(check) == False):
-                newAmount = str(int(howManyItems) + int(check[0][0]))
+                newAmount = int(howManyItems) + int(check[0][0])
                 cur.execute("UPDATE `Ordered_products_list` SET `Amount_ordered`=%s WHERE Product_ID=%s;", (newAmount, productID))
-                con.commit()
+                #con.commit()
             else:
                 cur.execute("INSERT INTO `Ordered_products_list` (`ordered_products_list_ID`, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (newID, productID, orderID, howManyItems))
-                con.commit()
+                #con.commit()
 
             cur.execute("SELECT `Products_left_in_stock` FROM Products WHERE Products_ID=%s;", productID)
             data = int(cur.fetchall()[0][0])
@@ -263,10 +267,10 @@ def addItemToOrder(con, productID, customerID, howManyItems):
                 orderProdId = int(int(orderProdId) + 1)
             #newID = 0
             cur.execute("INSERT INTO Order_details (Order_details_ID, Customer_ID, status, date, name) VALUES (%s, %s, %s, %s, %s);", (orderDetailId, customerID, ORDERNOTSENT, str(date.today().strftime("%y-%m-%d")), 'a'))
-            con.commit()
+            #con.commit()
 
             cur.execute("INSERT INTO Ordered_products_list (ordered_products_list_ID, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (orderProdId, productID, orderDetailId, howManyItems))
-            con.commit()
+            #con.commit()
 
             cur.execute("SELECT Products_left_in_stock FROM Products WHERE Products_ID=%s;", productID)
             newAmount = str(int(cur.fetchall()[0][0]) - int(howManyItems))
@@ -287,7 +291,7 @@ def getProductsInCart(con, customerId):
         cur.execute("SELECT * FROM Order_details WHERE Customer_ID=%s AND status=%s;", (customerId, ORDERNOTSENT))
         orderDetailID = cur.fetchall()
         print(orderDetailID)
-        if orderDetailID[0] != ():
+        if orderDetailID != ():
             orderDetailID = orderDetailID[0][0]
             print(orderDetailID)
         else:
@@ -349,7 +353,7 @@ def updateOrder(con, amount, prodId, userId):
                     cur.execute("SET foreign_key_checks = 1;")
                 else:
                     cur.execute("UPDATE `Ordered_products_list` SET Amount_ordered=%s WHERE Order_details_ID=%s AND Product_ID=%s;", (amount, orderDetailsId, prodId))
-                    con.commit()
+                    #con.commit()
                 cur.execute("SELECT Products_left_in_stock FROM Products WHERE Products_ID=%s", (prodId))
                 diff = amount - int(data[3])
                 left = cur.fetchone()[0]
