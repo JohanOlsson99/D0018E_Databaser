@@ -258,8 +258,8 @@ def addItemToOrder(con, productID, customerID, howManyItems):
             else:
                 orderDetailId = int(int(orderDetailId) + 1)
             #orderID = str(int(cur.fetchall()[0][0]) + 1)
-            cur.execute("SELECT MAX(Order_details_ID) FROM Order_details;")
-            orderProdId = cur.fetchall()[0][0]
+            cur.execute("SELECT MAX(ordered_products_list_ID) FROM Ordered_products_list;")
+            orderProdId = cur.fetchall()
             print(orderProdId)
             if (orderProdId == None):
                 orderProdId = 0
@@ -267,10 +267,10 @@ def addItemToOrder(con, productID, customerID, howManyItems):
                 orderProdId = int(int(orderProdId) + 1)
             #newID = 0
             cur.execute("INSERT INTO Order_details (Order_details_ID, Customer_ID, status, date, name) VALUES (%s, %s, %s, %s, %s);", (orderDetailId, customerID, ORDERNOTSENT, str(date.today().strftime("%y-%m-%d")), 'a'))
-            #con.commit()
+            con.commit()
 
             cur.execute("INSERT INTO Ordered_products_list (ordered_products_list_ID, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (orderProdId, productID, orderDetailId, howManyItems))
-            #con.commit()
+            con.commit()
 
             cur.execute("SELECT Products_left_in_stock FROM Products WHERE Products_ID=%s;", productID)
             newAmount = str(int(cur.fetchall()[0][0]) - int(howManyItems))
@@ -359,7 +359,7 @@ def updateOrder(con, amount, prodId, userId):
                 left = cur.fetchone()[0]
                 left = left - diff
 
-                cur.execute("UPDATE Products SET Products_left_in_stock=%s WHERE Products_ID=%s", (left, prodId))
+                cur.execute("UPDATE Products SET Products_left_in_stock=%s WHERE Products_ID=%s;", (left, prodId))
                 con.commit()
                 cur.close()
                 return True
