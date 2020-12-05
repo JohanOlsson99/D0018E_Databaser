@@ -296,7 +296,7 @@ def getProductsInCart(con, customerId):
             print(orderDetailID)
         else:
             return False, [], [], [], [], [], [], [],
-        cur.execute("SELECT * FROM ordered_products_list WHERE Order_details_ID=%s", (orderDetailID))
+        cur.execute("SELECT * FROM Ordered_products_list WHERE Order_details_ID=%s", (orderDetailID))
         data = cur.fetchall()
         print(data)
         cur.close()
