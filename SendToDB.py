@@ -264,7 +264,7 @@ def addItemToOrder(con, productID, customerID, howManyItems):
             if (orderProdId == None):
                 orderProdId = 0
             else:
-                orderProdId = int(int(orderProdId) + 1)
+                orderProdId = int(int(orderProdId[0][0]) + 1)
             #newID = 0
             cur.execute("INSERT INTO Order_details (Order_details_ID, Customer_ID, status, date, name) VALUES (%s, %s, %s, %s, %s);", (orderDetailId, customerID, ORDERNOTSENT, str(date.today().strftime("%y-%m-%d")), 'a'))
             con.commit()
