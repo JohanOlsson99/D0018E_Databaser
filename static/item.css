@@ -8,6 +8,7 @@
 .image-class {
     width: 100%;
     margin-top: 10px;
+    height: auto;
     /*margin-left: 30%;*/
 }
 
@@ -21,13 +22,13 @@
     padding-left: 2.5%;
     padding-right: 2.5%;
 }
-.plusMinusBtn {
+/*.plusMinusBtn {
     width: 25px;
     height: 25px;
     border-radius: 6px;
     text-align: center;
-}
-.counter-minus-div-class {
+}*/
+/*.counter-minus-div-class {
     float: left;
     margin-left: 5px;
 }
@@ -35,22 +36,22 @@
     float:left;
     width: 20px;
     margin-left: 5px;
-}
+}*/
 
-.send-to-cart-button {
+/*.send-to-cart-button {
     border-radius: 6px;
-}
+}*/
 
-.counter-display {
+/*.counter-display {
     float:left;
     width: 40px;
     border-radius: 4px;
-}
+}*/
 
-.counter-plus-div-class{
+/*.counter-plus-div-class{
     float:left;
     margin-left: 25px;
-}
+}*/
 
 .buy-button-div-class {
     float:left;

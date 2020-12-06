@@ -27,18 +27,27 @@ def checkIfAddedToCart(form, id, isSignedIn):
     return False, None, None
 
 
-def checkIfAddedToCartItem(form, id):
+def checkIfAddedToCartItem(form, id, isSignedIn):
     id = str(id)
-    if id in request.form:
-        print(id, file=sys.stderr)
+    #if id in request.form:
+        #print(id, file=sys.stderr)
     if ((form.validate_on_submit()) and (form.addToCart.data == True) and (form.howManyToCart.data != 0)
             and (id in request.form)):
-        print(form.howManyToCart.id, file=sys.stderr)
-        flash('Successfully added ' + str(form.howManyToCart.data) + ' of your items to your cart with ID ' +
-              str(id), 'success')
+
+        if (not isSignedIn[0]):
+            flash('You need to login to add items to your cart', 'danger')
+        elif (isSignedIn[1]):
+            flash('You can\'t be admin when adding items to your cart', 'danger')
+        else:
+            #flash('Successfully added ' + str(form.howManyToCart.data) + ' of your item to your cart', 'success')
+            return True, str(form.howManyToCart.data)
+        #print(form.howManyToCart.id, file=sys.stderr)
+        #flash('Successfully added ' + str(form.howManyToCart.data) + ' of your items to your cart with ID ' +
+        #      str(id), 'success')
 
     elif (form.is_submitted() and (not form.validate_on_submit()) and (id in request.form)):
         flash('There aren\'t that many items left', 'danger')
+    return False, None
 
 def getTest(length):
     url = url_for('static', filename='image/0.jpg')

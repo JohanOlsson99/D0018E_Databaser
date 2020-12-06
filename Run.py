@@ -228,13 +228,27 @@ def item(id):
         return redirect(url_for('error.html'))
 
     form = AddToCart()
-    form.defineHowManyToCartId(id)
+
+    #form.defineHowManyToCartId(id)
     form.defineMaxMin(max=int(prodLeft))
-    checkIfAddedToCartItem(form, id)  # if the form was send and is correct
+    form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
+    #checkIfAddedToCartItem(form, id)  # if the form was send and is correct
 
     #form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
     #price = []
     #price.append(random.randint(1, 9999))
+
+    correctRequest, howManyItems = checkIfAddedToCartItem(form, id, getIsSignedInAndIsAdmin())
+    if (correctRequest):  # if the form was send and is correct
+        con = mysql.connect()
+        user = signedInUsers.get(request.cookies.get('ID'))
+        if (addItemToOrder(con, id, user.getId(), howManyItems)):
+            flash('Successfully added ' + str(form.howManyToCart.data) + ' of your item to your cart', 'success')
+            return redirect(url_for('item', id=id))
+        else:
+            flash('Something went wrong', 'danger')
+
+
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,

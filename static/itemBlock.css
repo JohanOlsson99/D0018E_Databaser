@@ -60,21 +60,23 @@ p {
     display: inline-block;
     transition-duration: 0.4s;
     cursor: pointer;
-    color: #970f0f;
-    border: 2px solid #970f0f;
+    /*color: #970f0f;*/
+    color: black;
+    border: 2px solid #00ff00;
     border-radius: 6px;
 }
 
 .send-to-cart-button:hover {
-    color: #ffffff;
-    background-color: #970f0f;
-    border-color: #970f0f;
+    color: black;
+    background-color: #00ff00;
+    border-color: #00ff00;
 }
 
 .counter-display {
     float:left;
     width: 40px;
     border-radius: 4px;
+    border-color: #00ff00;
 }
 
 .counter-plus-div-class{
@@ -103,12 +105,12 @@ p {
     transition-duration: 0.4s;
     cursor: pointer;
     color: #970f0f;
-    border: 2px solid #970f0f;
+    border: 2px solid #00ff00;
 }
 
 .btn-plus:hover, .btn-minus:hover {
-    background-color: #970f0f;
-    color: white;
+    background-color: #00ff00;
+    color: black;
 }
 
 .price-text {
