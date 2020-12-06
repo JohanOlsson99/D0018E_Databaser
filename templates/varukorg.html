@@ -24,9 +24,12 @@
     <div class="reload-and-purchase-button">
 
         <div class="button-purchase-to-store-class">
-            <a href="betalning">
+            <form method="POST" action="">
+                <button class="button purchase-button" name="payment" type="submit" value="payment">Payment</button>
+            </form>
+            <!--<a href="betalning">
                 <button class="button purchase-button">Payment</button>
-            </a>
+            </a>-->
         </div>
     </div>
 </div>
@@ -97,7 +100,6 @@
     function updateDisplay(i){
         counterDisplayElem[i].value = count[i];
     };
-
 
 </script>
 

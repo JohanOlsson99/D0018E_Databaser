@@ -1,4 +1,4 @@
-from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, ORDERNOTSENT
+from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, ORDERNOTSENT, ORDERRESERVED
 from flask import url_for
 from Forms import *
 import sys
@@ -214,14 +214,22 @@ def addItemToOrder(con, productID, customerID, howManyItems):
         cur = con.cursor()
         cur.execute("SELECT status FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
         status = cur.fetchall()
-        if status != ():
-            status = status[0][0]
-        else:
-            status = None
-        if (status == "pending"):
-            cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
-            orderID = cur.fetchall()[0][0]
-            cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Product_ID`=%s AND Order_details_ID=%s;", (productID, orderID))
+
+        cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE `Customer_ID`=%s AND status=%s;", (customerID, ORDERNOTSENT))
+        orderDetailsId = cur.fetchone()
+        if orderDetailsId is not None:
+        #print(orderDetailsId)
+        #print(status, 'status')
+        #if status != ():
+        #    status = status[0][0]
+        #else:
+        #    status = None
+        #print(status, 'status')
+
+        #if (status == "pending"):
+            #cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE `Customer_ID`=%s;", customerID)
+            #orderID = cur.fetchall()[0][0]
+            cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Product_ID`=%s AND Order_details_ID=%s;", (productID, orderDetailsId))
             check = cur.fetchall()
             cur.execute("SELECT MAX(ordered_products_list_ID) FROM Ordered_products_list;")
             newID = cur.fetchall()[0][0]
@@ -238,7 +246,7 @@ def addItemToOrder(con, productID, customerID, howManyItems):
                 cur.execute("UPDATE `Ordered_products_list` SET `Amount_ordered`=%s WHERE Product_ID=%s;", (newAmount, productID))
                 #con.commit()
             else:
-                cur.execute("INSERT INTO `Ordered_products_list` (`ordered_products_list_ID`, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (newID, productID, orderID, howManyItems))
+                cur.execute("INSERT INTO `Ordered_products_list` (`ordered_products_list_ID`, Product_ID, Order_details_ID, Amount_ordered) VALUES (%s, %s, %s, %s);", (newID, productID, orderDetailsId, howManyItems))
                 #con.commit()
 
             cur.execute("SELECT `Products_left_in_stock` FROM Products WHERE Products_ID=%s;", productID)
@@ -251,17 +259,17 @@ def addItemToOrder(con, productID, customerID, howManyItems):
             return True
         else:
             cur.execute("SELECT MAX(Order_details_ID) FROM Order_details;")
-            orderDetailId = cur.fetchall()[0][0]
-            print(orderDetailId, "orderdetail")
-            if (orderDetailId == None):
+            orderDetailIdmax = cur.fetchone()[0]
+            print(orderDetailIdmax, "orderdetail")
+            if (orderDetailIdmax == None):
                 orderDetailId = 0
             else:
-                orderDetailId = int(int(orderDetailId) + 1)
+                orderDetailId = int(int(orderDetailIdmax) + 1)
             #orderID = str(int(cur.fetchall()[0][0]) + 1)
             cur.execute("SELECT MAX(ordered_products_list_ID) FROM Ordered_products_list;")
             orderProdId = cur.fetchall()
             print(orderProdId)
-            if (orderProdId == None):
+            if (orderProdId[0][0] == None):
                 orderProdId = 0
             else:
                 orderProdId = int(int(orderProdId[0][0]) + 1)
@@ -374,3 +382,20 @@ def isEmpty(structure):
         return False
     else:
         return True
+
+
+def setReservedOrder(con, customerId):
+    cur = con.cursor()
+    cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE Customer_ID=%s AND status=%s;",
+                (customerId, ORDERNOTSENT))
+    orderDetailsId = cur.fetchone()
+    # print('fetchone', orderDetailsId)
+
+    if orderDetailsId != None:
+        orderDetailsId = orderDetailsId[0]
+    else:
+        return False
+    cur.execute("UPDATE `Order_details` SET status=%s WHERE Order_details_ID=%s", (ORDERRESERVED, orderDetailsId))
+    con.commit()
+    cur.close()
+    return True
