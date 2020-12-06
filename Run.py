@@ -30,10 +30,8 @@ EMAILLOGIN = 1
 ISADMIN ='A'
 ISCUSTOMER = 'C'
 ORDERNOTSENT = 'pending'
+ORDERRESERVED = 'reserved'
 signedInUsers = {}
-
-
-#signedInUsers[0] = (User([0, 'johan', 'olsson', 'johols', 'a@gmail.com', '0000000000', '2020-01-01', True]))
 
 
 def getIsSignedInAndIsAdmin():
@@ -119,8 +117,14 @@ def cart():
     if request.method == 'POST':
         if checkCartForm(form, productId, customerId, con):
             return redirect(url_for('cart'))
-        else:
-            flash('Couldn\'t update your item', 'warning')
+        elif request.form.get('payment') == 'payment':
+            checkIfReservedSuccessfull = setReservedOrder(con, customerId)
+            if checkIfReservedSuccessfull:
+                flash('Successfully ordered your products', 'success')
+                return redirect(url_for('cart'))
+            else:
+                flash('Couldn\'t order your products', 'danger')
+
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('varukorg.html', title="varukorg", form=form, id=productId, name=nameList, price=priceList,
