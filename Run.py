@@ -1,4 +1,6 @@
 #from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User, cartIndividualForm
+import os
+
 from Forms import *
 from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem, getTestCart
 import sys, random
@@ -6,7 +8,7 @@ from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
 from SendToDB import *
 from flask import Flask, render_template, flash, request, url_for, redirect, make_response
-
+from PIL import Image
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -17,8 +19,12 @@ app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
+app.config['UPLOAD_FOLDER'] = os.getcwd() + "/static/image"
 mysql.init_app(app)
 
+
+#file = Image.open(os.getcwd() + "/static/image/car.jpg")
+#file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.jpg'))
 
 #con = mysql.connect()
 
@@ -32,6 +38,7 @@ ISCUSTOMER = 'C'
 ORDERNOTSENT = 'pending'
 ORDERRESERVED = 'reserved'
 signedInUsers = {}
+ALLOWED_EXTENSIONS = {'jpg'}
 
 
 def getIsSignedInAndIsAdmin():
@@ -279,6 +286,41 @@ def logout():
 def profile():
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('profile.html', title='profile', signedIn=signedIn, isAdmin=isAdmin)
+
+@app.route('/admin', methods=['GET', 'POST'])
+def adminPage():
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    if isAdmin:
+        form = addProductsForm()
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                if 'file' not in request.files:
+                    flash('No selected file', 'danger')
+                    return redirect(request.url)
+                file = request.files['file']
+                if file.filename == '':
+                    flash('No selected file', 'danger')
+                    return redirect(request.url)
+                con = mysql.connect()
+                id = addNewProductAndGetNewId(con, form)
+                if file and allowed_file(file.filename):
+                    filename = str(id) + ".jpg"
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    flash('successfully added your item', 'success')
+                    return redirect(url_for('home'))
+            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.jpg'))
+            #if img.lower().endswith('.jpg'):
+            #    print('True')
+            #print(request.files['file'])
+
+        return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
+    else:
+        flash('You are not an admin, therefore you do not have access to admin page', 'danger')
+        return redirect(url_for('home'))
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 

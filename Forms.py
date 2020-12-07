@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, DateField, SelectField, validators
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, DateField, SelectField, validators, FloatField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 from flask_login import UserMixin
 
@@ -55,7 +55,7 @@ class LoginForm(FlaskForm):
 
 
 class PaymentForm(FlaskForm):
-    name = StringField('Full Name*', validators=[DataRequired()])
+    name = StringField('Full Name', validators=[DataRequired()])
 
     cardnumber = StringField('Card', validators=[DataRequired()])
 
@@ -120,6 +120,12 @@ class cartIndividualForm(FlaskForm):
         #self.howManyToCart.data = itemsInCart
 
 
+class addProductsForm(FlaskForm):
+    productName = StringField('Product name', validators=[DataRequired()])
+    productDescription = StringField('Product description', validators=[DataRequired()])
+    productPrice = FloatField('Product price', validators=[DataRequired()])
+    productLeft = IntegerField('Product left', validators=[DataRequired()])
+    upload = SubmitField('Upload')
 
 class User():
     def __init__(self, list):

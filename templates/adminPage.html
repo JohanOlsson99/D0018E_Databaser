@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='adminPage.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
+
+<div class="container">
+    <div class="box form-group" >
+        <legend class="border-bottom mb-4">Add product</legend>
+        <form method="POST" name="addItems" class="addItems" action="" enctype = "multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.productName.label(class="form-control-label") }}
+                {{ form.productName(class="input form-control form-control-lg") }}
+            </div>
+            <div>
+                {{ form.productDescription.label(class="form-control-label") }}
+                {{ form.productDescription(class="input form-control form-control-lg") }}
+            </div>
+            <div>
+                {{ form.productPrice.label(class="form-control-label") }}
+                {{ form.productPrice(class="input form-control form-control-lg") }}
+            </div>
+            <div>
+                {{ form.productLeft.label(class="form-control-label") }}
+                {{ form.productLeft(class="input form-control form-control-lg") }}
+            </div>
+            <div class="form-control-lg">
+                <input type="file" name="file" class="btn btn-file"/>
+            </div>
+            <div class="button-upload-div">
+                {{ form.upload(class="btn btn-outline-info btn-upload") }}
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

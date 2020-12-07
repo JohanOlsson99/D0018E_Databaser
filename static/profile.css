@@ -26,6 +26,9 @@ h2 {
 .btn {
     float: right !important;
 }
+.admin-button {
+    float: left !important;
+}
 
 .container {
     height: 520px; !important
