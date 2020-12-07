@@ -2,9 +2,8 @@
 
 import os
 
-=======
 from datetime import datetime
-master
+
 from Forms import *
 from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem, getTestCart
 import sys, random
