@@ -6,7 +6,7 @@
 <div>
     {% for i in range(id | length) %}
     <div class="itemblock-div-class-{{id[i]}} itemblock-div-class">
-        {% with form = form.getForm(i), id = id[i], name = name[i], price=price[i], description = description[i], imageLink = imageLink[i], prodLeft=prodLeft[i] %}
+        {% with form = form[i], id = id[i], name = name[i], price=price[i], description = description[i], imageLink = imageLink[i], prodLeft=prodLeft[i] %}
         {% include 'itemBlock.html' %}
         {% endwith %}
     </div>
@@ -22,19 +22,21 @@
         </a>
     </div>
     <div class="reload-and-purchase-button">
-        <div class="button-reload-page-class">
-            {{ form.reload(class="button continue-button reload-button") }}
-        </div>
+
         <div class="button-purchase-to-store-class">
-            <a href="betalning">
+            <form method="POST" action="">
+                <button class="button purchase-button" name="payment" type="submit" value="payment">Payment</button>
+            </form>
+            <!--<a href="betalning">
                 <button class="button purchase-button">Payment</button>
-            </a>
+            </a>-->
         </div>
     </div>
 </div>
 
 
 <script>
+    let itemsInCart = {{ itemsInCart|safe }}
     let id = {{ id|safe }}
     let counterDisplayElem = [];
     let counterMinusElem = [];
@@ -53,13 +55,15 @@
         counterDisplayElem[i] = document.querySelector(`#counter-display-${id[i]}`);
         counterMinusElem[i] = document.querySelector(`.counter-minus-${id[i]}`);
         counterPlusElem[i] = document.querySelector(`.counter-plus-${id[i]}`);
-        count[i] = counterDisplayElem[i].value;
+        //count[i] = counterDisplayElem[i].value;
+        count[i] = itemsInCart[i];
 
         console.log(document.querySelector(`#itemblock-div-class-${id[i]}`));
 		console.log(document.querySelector(`#remove-button-${id[i]}`));
         console.log(document.getElementById(`counter-display-${id[i]}`));
         console.log(counterMinusElem[i]);
         console.log(counterPlusElem[i]);
+        console.log(count[i])
         updateDisplay(i);
     }
 
@@ -84,11 +88,11 @@
             }
         });
 
-        btnRemove[i].addEventListener("click",()=>{
-            //form[i].submit()
+        /*btnRemove[i].addEventListener("click",()=>{
+            form[i].submit()
             alert("Item will get removed, you can add it again in home");
             products[i].remove();
-        });
+        });*/
 
     }
 
@@ -96,7 +100,6 @@
     function updateDisplay(i){
         counterDisplayElem[i].value = count[i];
     };
-
 
 </script>
 

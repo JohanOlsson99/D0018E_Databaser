@@ -30,10 +30,8 @@ EMAILLOGIN = 1
 ISADMIN ='A'
 ISCUSTOMER = 'C'
 ORDERNOTSENT = 'pending'
+ORDERRESERVED = 'reserved'
 signedInUsers = {}
-
-
-#signedInUsers[0] = (User([0, 'johan', 'olsson', 'johols', 'a@gmail.com', '0000000000', '2020-01-01', True]))
 
 
 def getIsSignedInAndIsAdmin():
@@ -80,6 +78,7 @@ def home():
         user = signedInUsers.get(request.cookies.get('ID'))
         if(addItemToOrder(con, id, user.getId(), howManyItems)):
             flash('Successfully added ' + str(form[i].howManyToCart.data) + ' of your item to your cart', 'success')
+            return redirect(url_for('home'))
         else:
             flash('Something went wrong', 'danger')
 
@@ -101,21 +100,48 @@ def cart():
     #form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
     trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
 
-    form = cartForm(productId, itemsInCart, prodLeftList)
-    #if trueFalse:
-    #    for i in range(len(productId)):
-            #form.append(cartForm())
+    #form = cartForm(productId, itemsInCart, prodLeftList)
+    form = []
+    if trueFalse:
+        for i in range(len(productId)):
+            form.append(cartIndividualForm())
             #form[i].howManyToCart.id = 'counter-display-' + str(productId[i])
             #form[i].addToCart.id = 'remove-button-' + str(productId[i])
+            form[i].defineStartUpValues(productId[i], itemsInCart[i])
             #form[i].howManyToCart.data = itemsInCart[i]
-            #form[i].defineMaxMin(max=prodLeftList[i])
+            #print(itemsInCart[i])
+            form[i].defineMaxMin(max=(int(prodLeftList[i]) + int(itemsInCart[i])))
     if not trueFalse:
         flash('You have nothing in your cart right now, you can add items from home', 'danger')
+
+    if request.method == 'POST':
+        if checkCartForm(form, productId, customerId, con):
+            return redirect(url_for('cart'))
+        elif request.form.get('payment') == 'payment':
+            checkIfReservedSuccessfull = setReservedOrder(con, customerId)
+            if checkIfReservedSuccessfull:
+                flash('Successfully ordered your products', 'success')
+                return redirect(url_for('cart'))
+            else:
+                flash('Couldn\'t order your products', 'danger')
+
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('varukorg.html', title="varukorg", form=form, id=productId, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
-                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
+                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin, itemsInCart=itemsInCart)
+
+def checkCartForm(form, productId, customerId, con):
+    print('Check')
+    for i in range(len(form)):
+        if ((form[i].validate_on_submit()) and (form[i].addToCart.data == True)
+                and (str(productId[i]) in request.form)):
+            print('cartForm correct with data', form[i].howManyToCart.data, 'and ID', productId[i])
+            if updateOrder(con, form[i].howManyToCart.data, int(productId[i]), int(customerId)):
+                return True
+            return False
+    return False
+
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -206,13 +232,27 @@ def item(id):
         return redirect(url_for('error.html'))
 
     form = AddToCart()
-    form.defineHowManyToCartId(id)
+
+    #form.defineHowManyToCartId(id)
     form.defineMaxMin(max=int(prodLeft))
-    checkIfAddedToCartItem(form, id)  # if the form was send and is correct
+    form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
+    #checkIfAddedToCartItem(form, id)  # if the form was send and is correct
 
     #form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
     #price = []
     #price.append(random.randint(1, 9999))
+
+    correctRequest, howManyItems = checkIfAddedToCartItem(form, id, getIsSignedInAndIsAdmin())
+    if (correctRequest):  # if the form was send and is correct
+        con = mysql.connect()
+        user = signedInUsers.get(request.cookies.get('ID'))
+        if (addItemToOrder(con, id, user.getId(), howManyItems)):
+            flash('Successfully added ' + str(form.howManyToCart.data) + ' of your item to your cart', 'success')
+            return redirect(url_for('item', id=id))
+        else:
+            flash('Something went wrong', 'danger')
+
+
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
@@ -243,4 +283,4 @@ def profile():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1')
+    app.run(debug=True, host='0.0.0.0')
