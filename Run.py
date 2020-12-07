@@ -1,4 +1,5 @@
 #from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User, cartIndividualForm
+from datetime import datetime
 from Forms import *
 from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem, getTestCart
 import sys, random
@@ -275,10 +276,26 @@ def logout():
         pass
     return redirect(url_for('home'))
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    form = ProfileForm()
+    user = signedInUsers.get(request.cookies.get('ID'), False)
+    if user is  False:
+        flash('Not Logged in!', 'danger')
+        return redirect(url_for('home'))
+    firstName = str(user.getFirstname())
+    surName = str(user.getLastname())
+    username = str(user.getUsername())
+    email = str(user.getEmail())
+    phone = str(user.getPhone())
+    birthday = user.getBirthday()
+    birthdayDay = str(birthday.day)
+    birthdayMonth = str(birthday.month)
+    birthdayYear = str(birthday.year)
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('profile.html', title='profile', signedIn=signedIn, isAdmin=isAdmin)
+    return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
+                            username=username, email=email, phone=phone, birthdayDay=birthdayDay, birthdayMonth=birthdayMonth, 
+                            birthdayYear=birthdayYear, signedIn=signedIn, isAdmin=isAdmin)
 
 
 
