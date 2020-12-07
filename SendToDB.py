@@ -399,3 +399,35 @@ def setReservedOrder(con, customerId):
     con.commit()
     cur.close()
     return True
+
+
+def getAllCommentsForOneItem(con, productId):
+    cur = con.cursor()
+    cur.execute("SELECT * FROM `comments` WHERE `Product_ID`=%s;", (productId))
+    data = cur.fetchall()
+    print('comment data', data)
+    if data != ():
+        customerList = []
+        adminList = []
+        comment = []
+        print(len(data))
+        for i in range(len(data)):
+            if((data[i][1] == None) and (data[i][2] != None)):
+                print('Admin Data')
+                customerList.append(None)
+                adminList.append(data[i][2])
+            elif((data[i][1] != None) and (data[i][2] == None)):
+                print('customer data')
+                customerList.append(data[i][1])
+                adminList.append(None)
+            else:
+                print('both None')
+                continue
+            comment.append(data[i][4])
+        print('customerList', customerList)
+        print('adminList', adminList)
+        print('comments', comment)
+        return adminList, customerList, comment
+    else:
+        print('no data')
+        return [], [], []
