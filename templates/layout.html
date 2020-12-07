@@ -81,8 +81,8 @@
                     {% endif %}
                     {% if isAdmin %}
                     <li class="nav-item pl-2 mb-2 mb-md-0">
-                        <a href="/adminPage" type="button"
-                           class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
+                        <a href="/admin" type="button"
+                           class="admin-button btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">
                             Admin page
                         </a>
                         <a href="/logout" type="button"
@@ -147,7 +147,7 @@
         console.log(windowHeight)
         console.log(body.scrollHeight)
         if(windowHeight > body.scrollHeight) {
-            body.style.height = windowHeight + "px";
+            body.style.height = (windowHeight) + "px";
         }
     }
 </script>

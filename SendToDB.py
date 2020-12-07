@@ -431,3 +431,21 @@ def getAllCommentsForOneItem(con, productId):
     else:
         print('no data')
         return [], [], []
+
+
+def addNewProductAndGetNewId(con, form):
+    cur = con.cursor()
+    cur.execute("SELECT MAX(Products_ID) FROM Products;")
+    maxId = cur.fetchone()
+    print(maxId)
+    if maxId is not None:
+        newId = int(maxId[0]) + 1
+    else:
+        newId = 0
+
+    cur.execute("INSERT INTO `Products`"
+                "(`Products_ID`, `Product_name`, `Product_price`, `Product_description`, `Products_left_in_stock`)"
+                "VALUES (%s, %s, %s, %s, %s);", (newId, str(form.productName.data), form.productPrice.data,
+                                     str(form.productDescription.data), form.productLeft.data))
+    con.commit()
+    return newId
