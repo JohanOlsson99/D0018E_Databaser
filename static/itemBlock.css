@@ -16,7 +16,8 @@ p {
 .block-class {
     width: 400px;
     height: 100%;
-    background-color: #ff1717;
+    /*background-color: #ff1717;*/
+    background-color: #a50111c4;
     border: 3px solid black;
     border-radius: 15px;
 }

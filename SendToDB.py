@@ -291,19 +291,65 @@ def addItemToOrder(con, productID, customerID, howManyItems):
         traceback.print_exc()
         return False
 
+def getProductsInCartNew(con, customerId):
+    #print("CORRECT METHOD")
+    query = "SELECT " \
+    "Product_ID, Product_name, Product_price, Product_description, Products_left_in_stock, " \
+            "Amount_ordered FROM Ordered_products_list " \
+            "INNER JOIN Products ON Ordered_products_list.Order_details_ID = %s AND " \
+            "Products.Products_ID = Ordered_products_list.Product_ID;"
+
+    cur = con.cursor()
+    cur.execute("SELECT Order_details_ID FROM Order_details WHERE Customer_ID=%s AND status=%s;", (customerId, ORDERNOTSENT))
+    orderDetailID = cur.fetchone()
+    #print(orderDetailID)
+    if orderDetailID != ():
+        orderDetailID = orderDetailID[0]
+        #print(orderDetailID)
+    else:
+        return False, [], [], [], [], [], [], []
+
+    cur.execute(query, (orderDetailID))
+    data = cur.fetchall()
+    cur.close()
+    #print(data)
+    #print(dataCartFormatingNew(data))
+    return dataCartFormatingNew(data)
+
+def dataCartFormatingNew(data):
+    #print("CORRECT METHOD")
+    productId = []
+    descList = []
+    imageLinkList = []
+    itemsInCart = []
+    nameList = []
+    prodLeftList = []
+    priceList = []
+
+    for i in range(len(data)):
+        productId.append(data[i][0])
+        nameList.append(data[i][1])
+        priceList.append(data[i][2])
+        descList.append(data[i][3])
+        prodLeftList.append(data[i][4])
+        itemsInCart.append(data[i][5])
+        imageLinkList.append(url_for('static', filename=('image/' + str(productId[i]) + '.jpg')))
+
+    return True, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList
 
 
 def getProductsInCart(con, customerId):
+    #print("WRONG METHOD")
     try:
         cur = con.cursor()
         cur.execute("SELECT * FROM Order_details WHERE Customer_ID=%s AND status=%s;", (customerId, ORDERNOTSENT))
         orderDetailID = cur.fetchall()
-        print(orderDetailID)
+        #print(orderDetailID)
         if orderDetailID != ():
             orderDetailID = orderDetailID[0][0]
-            print(orderDetailID)
+            #print(orderDetailID)
         else:
-            return False, [], [], [], [], [], [], [],
+            return False, [], [], [], [], [], [], []
         cur.execute("SELECT * FROM Ordered_products_list WHERE Order_details_ID=%s", (orderDetailID))
         data = cur.fetchall()
         print(data)

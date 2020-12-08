@@ -108,7 +108,9 @@ def cart():
         return redirect(url_for('home'))
     con = mysql.connect()
     #form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
-    trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
+    #trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
+    trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCartNew(
+        con, customerId)
 
     #form = cartForm(productId, itemsInCart, prodLeftList)
     form = []
