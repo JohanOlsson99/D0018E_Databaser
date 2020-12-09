@@ -15,9 +15,10 @@ p {
 
 .block-class {
     width: 400px;
-    height: 100%;
+    height: auto;
     /*background-color: #ff1717;*/
-    background-color: #a50111c4;
+    /*background-color: #a50111c4;*/
+    background: linear-gradient(rgb(20, 20, 20), rgb(70, 70, 70));
     border: 3px solid black;
     border-radius: 15px;
 }
@@ -92,7 +93,7 @@ p {
 
 .block-add-to-cart-class {
     color: black;
-    width: 80% !important;
+    /*width: 80% !important;*/
     align-items: center;
 }
 
