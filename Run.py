@@ -113,6 +113,7 @@ def cart():
         con, customerId)
 
     #form = cartForm(productId, itemsInCart, prodLeftList)
+    totalCost = 0
     form = []
     if trueFalse:
         for i in range(len(productId)):
@@ -123,6 +124,7 @@ def cart():
             #form[i].howManyToCart.data = itemsInCart[i]
             #print(itemsInCart[i])
             form[i].defineMaxMin(max=(int(prodLeftList[i]) + int(itemsInCart[i])))
+            totalCost += (itemsInCart[i] * priceList[i])
     if not trueFalse:
         flash('You have nothing in your cart right now, you can add items from home', 'danger')
 
@@ -139,9 +141,9 @@ def cart():
 
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('varukorg.html', title="varukorg", form=form, id=productId, name=nameList, price=priceList,
+    return render_template('varukorg.html', title="Cart", form=form, id=productId, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
-                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin, itemsInCart=itemsInCart)
+                           imageLink=imageLinkList, signedIn=signedIn, totalCost=totalCost, isAdmin=isAdmin, itemsInCart=itemsInCart)
 
 def checkCartForm(form, productId, customerId, con):
     print('Check')
