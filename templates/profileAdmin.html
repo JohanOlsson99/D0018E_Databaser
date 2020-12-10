@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+<script src="https://kit.fontawesome.com/b50b0ebbf9.js" crossorigin="anonymous"></script>
+
+<div class="container"> 
+
+    <div class="box">
+        <legend class="border-bottom mb-4">Profile</legend>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <h2>Name</h2>
+                    {% if form.name.errors %}
+                        {{ form.name(class="input name-form") }}
+                        <class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </class=>
+                    {% else %}
+                        {{ form.name(class="input name-form") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <h2>Username</h2>
+                    {% if form.username.errors %}   
+                        {{ form.username(class="input username-form") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="input username-form") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <h2>Email</h2>
+                    {% if form.email.errors %}
+                        {{ form.email(class="input email-form") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="input email-form") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                <h2>Password</h2>
+                    {% if form.password.errors %}
+                        {{ form.password(class="input password-form") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="input password-form") }}
+                    {% endif %}
+                </div>
+            <button class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">Update</button>
+    </div>
+
+</div>
+
+<script>
+    let name = {{ name|tojson }};
+    let username = {{ username|tojson }};
+    let email = {{ email|tojson }};
+    document.querySelector('.name-form').value = name;
+    document.querySelector('.username-form').value = username;
+    document.querySelector('.email-form').value = email;
+</script>
+
+{% endblock content %}
+

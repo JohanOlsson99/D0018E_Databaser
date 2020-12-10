@@ -75,6 +75,7 @@ p {
     margin-top: 15px;
     margin-right: 10px;
     font-size: 20px;
+    display: inline-flex;
 }
 
 .button-continue-to-shop-class{
@@ -127,7 +128,8 @@ p {
 
 .price-form-left-div {
     float: right;
-    width: 540px;
+    /*width: 540px;*/
+    width: auto;
     margin: auto;
     display: inline-flex;
 }
@@ -147,4 +149,16 @@ p {
 
 .reload-and-purchase-button {
     float: right;
+}
+
+.total-cost-price {
+    font-size: large;
+    font-weight: bold;
+    color: white;
+}
+
+.total-cost-price-div {
+    float: left;
+    margin-top: auto;
+    margin-right: 15px;
 }
