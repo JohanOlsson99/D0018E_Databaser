@@ -7,31 +7,151 @@
 <div class="container"> 
 
     <div class="box">
-        <div class="profile tabShow">
-            <legend class="border-bottom mb-4">Profile</legend>
-
-            <h2>Full Name</h2>
-            <input type="text" class="input" value="Johan Minion Olsson">
-
-            <h2>Username</h2>
-            <input type="text" class="input" value="MinionBoy99">
-
-            <h2>Email</h2>
-            <input type="text" class="input" value="johols-8@student.ltu.se">
-
-            <h2>Phone Number</h2>
-            <input type="text" class="input" value="123192719123">
-
-            <h2>Birthday</h2>
-            <input type="text" class="input" value="2020-07-15">
-
-            <h2>Password</h2>
-            <input type="password" class="input" value="Minions2!">
+        <legend class="border-bottom mb-4">Profile</legend>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <h2>First Name</h2>
+                    {% if form.firstName.errors %}
+                        {{ form.firstName(class="input first-name-form") }}
+                        <class="invalid-feedback">
+                            {% for error in form.firstName.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </class=>
+                    {% else %}
+                        {{ form.firstName(class="input first-name-form") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <h2>Last Name</h2>
+                    {% if form.surName.errors %}
+                        {{ form.surName(class="input last-name-form") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.surName.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.surName(class="input last-name-form") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <h2>Username</h2>
+                    {% if form.username.errors %}   
+                        {{ form.username(class="input username-form") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="input username-form") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <h2>Email</h2>
+                    {% if form.email.errors %}
+                        {{ form.email(class="input email-form") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="input email-form") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <h2>Phone Number</h2>
+                    {% if form.phone.errors %}
+                        {{ form.phone(class="input phone-form") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.phone.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.phone(class="input phone-form") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <h2>Birthday</h2>
+                    <div class "date-form">
+                        <div class="date-form-day">
+                            {% if form.birthdayDay.errors %}
+                                {{ form.birthdayDay(class="input birthday-day-form") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.birthdayDay.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.birthdayDay(class="input birthday-day-form") }}
+                            {% endif %}
+                        </div>
+                        <div class="date-form-month">
+                            {% if form.birthdayMonth.errors %}
+                                {{ form.birthdayMonth(class="input birthday-month-form") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.birthdayMonth.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.birthdayMonth(class="input birthday-month-form") }}
+                            {% endif %}
+                        </div>
+                        <div class="date-form-year">
+                            {% if form.birthdayYear.errors %}
+                                {{ form.birthdayYear(class="input birthday-year-form") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.birthdayYear.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.birthdayYear(class="input birthday-year-form") }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                <h2>Password</h2>
+                    {% if form.password.errors %}
+                        {{ form.password(class="input password-form") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="input password-form") }}
+                    {% endif %}
+                </div>
             <button class="btn btn-outline-primary btn-md btn-rounded btn-navbar waves-effect waves-light">Update</button>
-        </div>
     </div>
 
 </div>
+
+<script>
+    let firstName = {{ firstName|tojson }};
+    let surName = {{ surName|tojson }};
+    let username = {{ username|tojson }};
+    let email = {{ email|tojson }};
+    let phone = {{ phone|tojson }};
+    let birthdayDay = {{ birthdayDay|tojson }};
+    let birthdayMonth = {{ birthdayMonth|tojson }};
+    let birthdayYear = {{ birthdayYear|tojson }};
+    document.querySelector('.first-name-form').value = firstName;
+    document.querySelector('.last-name-form').value = surName;
+    document.querySelector('.username-form').value = username;
+    document.querySelector('.email-form').value = email;
+    document.querySelector('.phone-form').value = phone;
+    document.querySelector('.birthday-day-form').value = birthdayDay;
+    document.querySelector('.birthday-month-form').value = birthdayMonth;
+    document.querySelector('.birthday-year-form').value = birthdayYear;
+</script>
 
 {% endblock content %}
 

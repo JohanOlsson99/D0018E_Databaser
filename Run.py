@@ -1,4 +1,10 @@
 #from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User, cartIndividualForm
+
+import os
+
+from datetime import datetime
+
+import re
 from Forms import *
 from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem, getTestCart
 import sys, random
@@ -6,7 +12,7 @@ from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
 from SendToDB import *
 from flask import Flask, render_template, flash, request, url_for, redirect, make_response
-
+from PIL import Image
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -17,8 +23,12 @@ app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
+app.config['UPLOAD_FOLDER'] = os.getcwd() + "/static/image"
 mysql.init_app(app)
 
+
+#file = Image.open(os.getcwd() + "/static/image/car.jpg")
+#file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.jpg'))
 
 #con = mysql.connect()
 
@@ -32,6 +42,7 @@ ISCUSTOMER = 'C'
 ORDERNOTSENT = 'pending'
 ORDERRESERVED = 'reserved'
 signedInUsers = {}
+ALLOWED_EXTENSIONS = {'jpg'}
 
 
 def getIsSignedInAndIsAdmin():
@@ -98,9 +109,12 @@ def cart():
         return redirect(url_for('home'))
     con = mysql.connect()
     #form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
-    trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
+    #trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
+    trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCartNew(
+        con, customerId)
 
     #form = cartForm(productId, itemsInCart, prodLeftList)
+    totalCost = 0
     form = []
     if trueFalse:
         for i in range(len(productId)):
@@ -111,6 +125,7 @@ def cart():
             #form[i].howManyToCart.data = itemsInCart[i]
             #print(itemsInCart[i])
             form[i].defineMaxMin(max=(int(prodLeftList[i]) + int(itemsInCart[i])))
+            totalCost += (itemsInCart[i] * priceList[i])
     if not trueFalse:
         flash('You have nothing in your cart right now, you can add items from home', 'danger')
 
@@ -127,9 +142,9 @@ def cart():
 
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('varukorg.html', title="varukorg", form=form, id=productId, name=nameList, price=priceList,
+    return render_template('varukorg.html', title="Cart", form=form, id=productId, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
-                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin, itemsInCart=itemsInCart)
+                           imageLink=imageLinkList, signedIn=signedIn, totalCost=totalCost, isAdmin=isAdmin, itemsInCart=itemsInCart)
 
 def checkCartForm(form, productId, customerId, con):
     print('Check')
@@ -275,10 +290,84 @@ def logout():
         pass
     return redirect(url_for('home'))
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    form = ProfileForm()
+    user = signedInUsers.get(request.cookies.get('ID'), False)
+    if user is not False:
+        userId = user.getId()
+    else:
+        flash('Not Logged in!', 'danger')
+        return redirect(url_for('home'))
+
+    con = mysql.connect()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('profile.html', title='profile', signedIn=signedIn, isAdmin=isAdmin)
+    
+    if request.method == 'POST':
+        user = updateUserInDB(form, con, userId, isAdmin)
+        if signedInUsers.get(request.cookies.get('ID'), False):
+            signedInUsers.update({request.cookies.get('ID'):user})
+        return redirect(url_for('profile'))
+
+    if isAdmin:
+        name = str(user.getName())
+        username = str(user.getUsername())
+        email = str(user.getEmail())
+
+        return render_template('profileAdmin.html', title='profile', 
+                                form=form, name=name, 
+                                username=username, email=email, 
+                                signedIn=signedIn, isAdmin=isAdmin)
+    else:
+        firstName = str(user.getFirstname())
+        surName = str(user.getLastname())
+        username = str(user.getUsername())
+        email = str(user.getEmail())
+        phone = str(user.getPhone())
+        birthday = user.getBirthday()
+        birthdayDay = str(birthday.day)
+        birthdayMonth = str(birthday.month)
+        birthdayYear = str(birthday.year)
+        
+        return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
+                                username=username, email=email, phone=phone, birthdayDay=birthdayDay, 
+                                birthdayMonth=birthdayMonth, birthdayYear=birthdayYear, signedIn=signedIn, 
+                                isAdmin=isAdmin)
+
+@app.route('/admin', methods=['GET', 'POST'])
+def adminPage():
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    if isAdmin:
+        form = addProductsForm()
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                if 'file' not in request.files:
+                    flash('No selected file', 'danger')
+                    return redirect(request.url)
+                file = request.files['file']
+                if file.filename == '':
+                    flash('No selected file', 'danger')
+                    return redirect(request.url)
+                con = mysql.connect()
+                id = addNewProductAndGetNewId(con, form)
+                if file and allowed_file(file.filename):
+                    filename = str(id) + ".jpg"
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    flash('successfully added your item', 'success')
+                    return redirect(url_for('home'))
+            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.jpg'))
+            #if img.lower().endswith('.jpg'):
+            #    print('True')
+            #print(request.files['file'])
+
+        return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
+    else:
+        flash('You are not an admin, therefore you do not have access to admin page', 'danger')
+        return redirect(url_for('home'))
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 

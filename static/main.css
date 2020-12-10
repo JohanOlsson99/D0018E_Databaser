@@ -6,7 +6,8 @@
 /* General */
 
 body {
-    background: linear-gradient(#020000 , #aa1212);
+    /*background: linear-gradient(#020000 , #aa1212);*/
+    background: linear-gradient(#020000 , #5c0303);
 }
 
 h1, h3, h4, h5, h6 {
@@ -92,8 +93,6 @@ h2, p {
     width: 70%;
     margin: auto;
 }
-
-
 
 
 
