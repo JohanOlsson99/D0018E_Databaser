@@ -219,3 +219,5 @@ class Admin():
     def getEmail(self):
         return self.Email
 
+class searchForm(FlaskForm):
+    productName = StringField('Search product', validators=[Length(max=60)])
