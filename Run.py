@@ -280,7 +280,9 @@ def profile():
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('profile.html', title='profile', signedIn=signedIn, isAdmin=isAdmin)
 
-
+@app.route('/error')
+def error():
+    return render_template('error.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='127.0.0.1')
