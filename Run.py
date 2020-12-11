@@ -12,7 +12,7 @@ from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
 from SendToDB import *
 from flask import Flask, render_template, flash, request, url_for, redirect, make_response
-from PIL import Image
+#from PIL import Image
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -302,6 +302,24 @@ def profile():
     else:
         flash('Not Logged in!', 'danger')
         return redirect(url_for('home'))
+    firstName = str(user.getFirstname())
+    surName = str(user.getLastname())
+    username = str(user.getUsername())
+    email = str(user.getEmail())
+
+    if user.getPhone() is None:
+        phone = ''
+    else:
+        phone = str(user.getPhone())
+    birthday = user.getBirthday()
+    try:
+        birthdayDay = str(birthday.day)
+        birthdayMonth = str(birthday.month)
+        birthdayYear = str(birthday.year)
+    except:
+        birthdayDay = '-'
+        birthdayMonth = '-'
+        birthdayYear = '-'
 
     con = mysql.connect()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
@@ -326,11 +344,25 @@ def profile():
         surName = str(user.getLastname())
         username = str(user.getUsername())
         email = str(user.getEmail())
-        phone = str(user.getPhone())
+        if user.getPhone() is None:
+            phone = ''
+        else:
+            phone = str(user.getPhone())
         birthday = user.getBirthday()
-        birthdayDay = str(birthday.day)
-        birthdayMonth = str(birthday.month)
-        birthdayYear = str(birthday.year)
+        try:
+            birthdayDay = str(birthday.day)
+            birthdayMonth = str(birthday.month)
+            birthdayYear = str(birthday.year)
+        except:
+            birthdayDay = '-'
+            birthdayMonth = '-'
+            birthdayYear = '-'
+
+        #phone = str(user.getPhone())
+        #birthday = user.getBirthday()
+        #birthdayDay = str(birthday.day)
+        #birthdayMonth = str(birthday.month)
+        #birthdayYear = str(birthday.year)
         
         return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
                                 username=username, email=email, phone=phone, birthdayDay=birthdayDay, 
@@ -346,12 +378,15 @@ def adminPage():
             if form.validate_on_submit():
                 if 'file' not in request.files:
                     flash('No selected file', 'danger')
-                    return redirect(request.url)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 file = request.files['file']
                 if file.filename == '':
                     flash('No selected file', 'danger')
-                    return redirect(request.url)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 con = mysql.connect()
+                if len(form.productDescription.data) > 255:
+                    flash('To long description', 'danger')
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 id = addNewProductAndGetNewId(con, form)
                 if file and allowed_file(file.filename):
                     filename = str(id) + ".jpg"
