@@ -12,7 +12,7 @@ from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
 from SendToDB import *
 from flask import Flask, render_template, flash, request, url_for, redirect, make_response
-from PIL import Image
+#from PIL import Image
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -343,12 +343,15 @@ def adminPage():
             if form.validate_on_submit():
                 if 'file' not in request.files:
                     flash('No selected file', 'danger')
-                    return redirect(request.url)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 file = request.files['file']
                 if file.filename == '':
                     flash('No selected file', 'danger')
-                    return redirect(request.url)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 con = mysql.connect()
+                if len(form.productDescription.data) > 255:
+                    flash('To long description', 'danger')
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 id = addNewProductAndGetNewId(con, form)
                 if file and allowed_file(file.filename):
                     filename = str(id) + ".jpg"
