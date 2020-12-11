@@ -300,11 +300,20 @@ def profile():
     surName = str(user.getLastname())
     username = str(user.getUsername())
     email = str(user.getEmail())
-    phone = str(user.getPhone())
+
+    if user.getPhone() is None:
+        phone = ''
+    else:
+        phone = str(user.getPhone())
     birthday = user.getBirthday()
-    birthdayDay = str(birthday.day)
-    birthdayMonth = str(birthday.month)
-    birthdayYear = str(birthday.year)
+    try:
+        birthdayDay = str(birthday.day)
+        birthdayMonth = str(birthday.month)
+        birthdayYear = str(birthday.year)
+    except:
+        birthdayDay = '-'
+        birthdayMonth = '-'
+        birthdayYear = '-'
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
                             username=username, email=email, phone=phone, birthdayDay=birthdayDay, birthdayMonth=birthdayMonth, 

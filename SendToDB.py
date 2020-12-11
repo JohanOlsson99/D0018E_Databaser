@@ -303,18 +303,15 @@ def getProductsInCartNew(con, customerId):
     cur.execute("SELECT Order_details_ID FROM Order_details WHERE Customer_ID=%s AND status=%s;", (customerId, ORDERNOTSENT))
     orderDetailID = cur.fetchone()
     #print(orderDetailID)
-    if orderDetailID != ():
-        orderDetailID = orderDetailID[0]
-        #print(orderDetailID)
-    else:
+    if orderDetailID == None:
         return False, [], [], [], [], [], [], []
-
-    cur.execute(query, (orderDetailID))
-    data = cur.fetchall()
-    cur.close()
-    #print(data)
-    #print(dataCartFormatingNew(data))
-    return dataCartFormatingNew(data)
+    else:
+        cur.execute(query, (orderDetailID))
+        data = cur.fetchall()
+        cur.close()
+        #print(data)
+        #print(dataCartFormatingNew(data))
+        return dataCartFormatingNew(data)
 
 def dataCartFormatingNew(data):
     #print("CORRECT METHOD")
@@ -391,7 +388,7 @@ def updateOrder(con, amount, prodId, userId):
         #print('fetchone', orderDetailsId)
 
         if orderDetailsId != None:
-            orderDetailsId = orderDetailsId[0]
+            orderDetailsId = orderDetailsId
             cur.execute("SELECT * FROM `Ordered_products_list` WHERE `Order_details_ID`=%s AND `Product_ID`=%s;", (orderDetailsId, prodId))
             data = cur.fetchone()
             #print("data for ordered_products_list", data)
