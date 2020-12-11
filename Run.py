@@ -299,6 +299,24 @@ def profile():
     else:
         flash('Not Logged in!', 'danger')
         return redirect(url_for('home'))
+    firstName = str(user.getFirstname())
+    surName = str(user.getLastname())
+    username = str(user.getUsername())
+    email = str(user.getEmail())
+
+    if user.getPhone() is None:
+        phone = ''
+    else:
+        phone = str(user.getPhone())
+    birthday = user.getBirthday()
+    try:
+        birthdayDay = str(birthday.day)
+        birthdayMonth = str(birthday.month)
+        birthdayYear = str(birthday.year)
+    except:
+        birthdayDay = '-'
+        birthdayMonth = '-'
+        birthdayYear = '-'
 
     con = mysql.connect()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
