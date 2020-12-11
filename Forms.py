@@ -164,7 +164,7 @@ class cartIndividualForm(FlaskForm):
 
 class addProductsForm(FlaskForm):
     productName = StringField('Product name', validators=[DataRequired()])
-    productDescription = StringField('Product description', widget=TextArea() , validators=[DataRequired()])
+    productDescription = StringField('Product description', widget=TextArea(), validators=[DataRequired()])
     productPrice = FloatField('Product price', validators=[DataRequired()])
     productLeft = IntegerField('Product left', validators=[DataRequired()])
     upload = SubmitField('Upload')
