@@ -4,6 +4,7 @@ import os
 
 from datetime import datetime
 
+import re
 from Forms import *
 from addToCartForm import checkIfAddedToCart, checkIfAddedToCartItem, getTestCart
 import sys, random
@@ -293,7 +294,9 @@ def logout():
 def profile():
     form = ProfileForm()
     user = signedInUsers.get(request.cookies.get('ID'), False)
-    if user is  False:
+    if user is not False:
+        userId = user.getId()
+    else:
         flash('Not Logged in!', 'danger')
         return redirect(url_for('home'))
     firstName = str(user.getFirstname())
@@ -314,10 +317,40 @@ def profile():
         birthdayDay = '-'
         birthdayMonth = '-'
         birthdayYear = '-'
+
+    con = mysql.connect()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
-                            username=username, email=email, phone=phone, birthdayDay=birthdayDay, birthdayMonth=birthdayMonth, 
-                            birthdayYear=birthdayYear, signedIn=signedIn, isAdmin=isAdmin)
+    
+    if request.method == 'POST':
+        user = updateUserInDB(form, con, userId, isAdmin)
+        if signedInUsers.get(request.cookies.get('ID'), False):
+            signedInUsers.update({request.cookies.get('ID'):user})
+        return redirect(url_for('profile'))
+
+    if isAdmin:
+        name = str(user.getName())
+        username = str(user.getUsername())
+        email = str(user.getEmail())
+
+        return render_template('profileAdmin.html', title='profile', 
+                                form=form, name=name, 
+                                username=username, email=email, 
+                                signedIn=signedIn, isAdmin=isAdmin)
+    else:
+        firstName = str(user.getFirstname())
+        surName = str(user.getLastname())
+        username = str(user.getUsername())
+        email = str(user.getEmail())
+        phone = str(user.getPhone())
+        birthday = user.getBirthday()
+        birthdayDay = str(birthday.day)
+        birthdayMonth = str(birthday.month)
+        birthdayYear = str(birthday.year)
+        
+        return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
+                                username=username, email=email, phone=phone, birthdayDay=birthdayDay, 
+                                birthdayMonth=birthdayMonth, birthdayYear=birthdayYear, signedIn=signedIn, 
+                                isAdmin=isAdmin)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def adminPage():
@@ -357,7 +390,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+@app.route('/error')
+def error():
+    return render_template('error.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='127.0.0.1')

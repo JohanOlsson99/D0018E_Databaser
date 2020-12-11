@@ -55,6 +55,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class ProfileForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(max=20)])
     firstName = StringField('First Name', validators=[DataRequired(), Length(max=20)])
     surName = StringField('Last Name', validators=[DataRequired(), Length(max=20)])
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20)])
@@ -219,3 +220,5 @@ class Admin():
     def getEmail(self):
         return self.Email
 
+class searchForm(FlaskForm):
+    productName = StringField('Search product', validators=[Length(max=60)])
