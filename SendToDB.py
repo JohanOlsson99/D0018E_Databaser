@@ -6,110 +6,108 @@ import traceback
 from datetime import date
 
 def updateUserInDB(form, con, userId, isAdmin):
-    try:
-        cur = con.cursor()
-        if isAdmin: 
-            cur.execute("SELECT * FROM Admin WHERE Admin_ID=%s", userId)
-        else:
-            cur.execute("SELECT * FROM Customer WHERE Customer_ID=%s", userId)
-        data = cur.fetchall()
-        data = dataUserFormating(data, 0)
-        userInDB = customerAlreadyInDB(form, con)
+    cur = con.cursor()
+    if isAdmin: 
+        cur.execute("SELECT * FROM Admin WHERE Admin_ID=%s", userId)
+    else:
+        cur.execute("SELECT * FROM Customer WHERE Customer_ID=%s", userId)
+    data = cur.fetchall()
+    data = dataUserFormating(data, 0)
+    userInDB = customerAlreadyInDB(form, con)
 
-        if isAdmin: 
-            strDB = (
-                'Name',
-                'Username',
-                'Email',
-                'Password'
-            )
-            formList = [
-                form.name.data,
-                form.username.data,
-                form.email.data,
-                form.password.data
-            ]
-        else:
-            strDB = (
-                'First_name', 
-                'Last_name', 
-                'Username', 
-                'Email', 
-                'Password', 
-                'Phone_number', 
-                'Birthday'
-            )
+    if isAdmin: 
+        strDB = (
+            'Name',
+            'Username',
+            'Email',
+            'Password'
+        )
+        formList = [
+            form.name.data,
+            form.username.data,
+            form.email.data,
+            form.password.data
+        ]
+    else:
+        strDB = (
+            'First_name', 
+            'Last_name', 
+            'Username', 
+            'Email', 
+            'Password', 
+            'Phone_number', 
+            'Birthday'
+        )
+        try:
             formDate = date(
                 int(form.birthdayYear.data), 
                 int(form.birthdayMonth.data), 
                 int(form.birthdayDay.data)
             )
-            formList = [
-                form.firstName.data, 
-                form.surName.data, 
-                form.username.data, 
-                form.email.data, 
-                form.password.data, 
-                form.phone.data, 
-                formDate
-            ]
+        except:
+            formDate = None
+        formList = [
+            form.firstName.data, 
+            form.surName.data, 
+            form.username.data, 
+            form.email.data, 
+            form.password.data, 
+            form.phone.data, 
+            formDate
+        ]
 
-        changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
-        if len(changed) > 0 and not userInDB:
-            changedForms = [formList[i] for i in changed]
-            changedStrDB = [(strDB[i]) for i in changed]
+    changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
+    if len(changed) > 0 and not userInDB:
+        changedForms = [formList[i] for i in changed]
+        changedStrDB = [(strDB[i]) for i in changed]
 
-            if isAdmin:
-                sqlCommand = "UPDATE `Admin` SET "
-            else:
-                sqlCommand = "UPDATE `Customer` SET "
-            for i in enumerate(changed):
-                i = i[0]
-                if i != 0: 
-                    sqlCommand += ", "
-                if type(changedForms[i]) is int:
-                    sqlCommand += ("`" + changedStrDB[i] + "`=%s" % changedForms[i])
-                else: 
-                    sqlCommand += ("`" + changedStrDB[i] + "`='%s'" % changedForms[i]) 
-            if isAdmin:
-                sqlCommand += " WHERE `Admin_ID`=%s;" % userId
-            else:
-                sqlCommand += " WHERE `Customer_ID`=%s;" % userId
-            cur.execute(sqlCommand)
-            con.commit()
-            
-        if isAdmin: 
-            user = Admin([
-                userId,
-                form.name.data, 
-                form.username.data,
-                form.email.data
-            ])
-        elif userInDB:
-            user = User([
-                userId,
-                data[0],
-                data[1],
-                data[2],
-                data[3],
-                data[4],
-                formDate
-            ])
+        if isAdmin:
+            sqlCommand = "UPDATE `Admin` SET "
         else:
-            user = User([
-                userId, 
-                form.firstName.data, 
-                form.surName.data, 
-                form.username.data, 
-                form.email.data, 
-                form.phone.data, 
-                formDate
-            ])
-        return user
-            
-    except:
-        traceback.print_exc()
-        return True
+            sqlCommand = "UPDATE `Customer` SET "
+        for i in enumerate(changed):
+            i = i[0]
+            if i != 0: 
+                sqlCommand += ", "
+            if type(changedForms[i]) is int:
+                sqlCommand += ("`" + changedStrDB[i] + "`=%s" % changedForms[i])
+            else: 
+                sqlCommand += ("`" + changedStrDB[i] + "`='%s'" % changedForms[i]) 
+        if isAdmin:
+            sqlCommand += " WHERE `Admin_ID`=%s;" % userId
+        else:
+            sqlCommand += " WHERE `Customer_ID`=%s;" % userId
+        cur.execute(sqlCommand)
+        con.commit()
+        
+    if isAdmin: 
+        user = Admin([
+            userId,
+            form.name.data, 
+            form.username.data,
+            form.email.data
+        ])
+    elif userInDB:
+        user = User([
+            userId,
+            data[0],
+            data[1],
+            data[2],
+            data[3],
+            data[4],
+            formDate
+        ])
+    else:
+        user = User([
+            userId, 
+            form.firstName.data, 
+            form.surName.data, 
+            form.username.data, 
+            form.email.data, 
+            form.phone.data, 
+            formDate
+        ])
+    return user
 
 def customerAlreadyInDB(form, con):
     try:
