@@ -14,6 +14,7 @@ def updateUserInDB(form, con, userId, isAdmin):
             cur.execute("SELECT * FROM Customer WHERE Customer_ID=%s", userId)
         data = cur.fetchall()
         data = dataUserFormating(data, 0)
+        userInDB = customerAlreadyInDB(form, con)
 
         if isAdmin: 
             strDB = (
@@ -54,7 +55,7 @@ def updateUserInDB(form, con, userId, isAdmin):
             ]
 
         changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
-        if len(changed) > 0: 
+        if len(changed) > 0 and not userInDB:
             changedForms = [formList[i] for i in changed]
             changedStrDB = [(strDB[i]) for i in changed]
 
@@ -83,6 +84,16 @@ def updateUserInDB(form, con, userId, isAdmin):
                 form.name.data, 
                 form.username.data,
                 form.email.data
+            ])
+        elif userInDB:
+            user = User([
+                userId,
+                data[0],
+                data[1],
+                data[2],
+                data[3],
+                data[4],
+                formDate
             ])
         else:
             user = User([
