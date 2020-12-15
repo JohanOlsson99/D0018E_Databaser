@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'rootroot'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/static/image"
 mysql.init_app(app)
@@ -65,6 +65,9 @@ def getIsSignedInAndIsAdmin():
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
+    con = mysql.connect()
+    #addCommentToAProduct(con, 0, None, 0, "Test test")
+    print("comments list", getAllCommentsForOneItem(con, 0))
     #form, id, description, imageLink = getTest(30)  # get test data
     #checkIfAddedToCart(form, id)  # if the form was send and is correct
 
@@ -272,10 +275,10 @@ def item(id):
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
                            description=desc, prodLeft=prodLeft,
-                           imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin, 
+                           imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin,
                            formcomment=formcomment)
 
-                
+
 
 
 
@@ -339,7 +342,7 @@ def profile():
             birthdayDay = '-'
             birthdayMonth = '-'
             birthdayYear = '-'
-            
+
         if request.method == 'POST':
             user = updateUserInDB(form, con, userId)
             if signedInUsers.get(request.cookies.get('ID'), False):
