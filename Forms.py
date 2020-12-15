@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Integ
 from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 from wtforms.widgets import TextArea
 from flask_login import UserMixin
+from wtforms.widgets import TextArea
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
@@ -201,6 +202,7 @@ class User():
         return self.birthday
 
 
+
 class Admin():
     def __init__(self, list):
         self.id = list[0]
@@ -222,3 +224,8 @@ class Admin():
 
 class searchForm(FlaskForm):
     productName = StringField('Search product', validators=[Length(max=60)])
+
+
+class Comment(FlaskForm):
+    comment = StringField('comment', validators=[DataRequired()], widget=TextArea())
+    submit = SubmitField('POST')

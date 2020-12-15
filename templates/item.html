@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
+
 {% block content %}
+
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='itemBlock.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='item.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='commentSection.css') }}">
 
 <div class="wrapper">
     <div class="itemblock-div-class-{{id}} itemblock-div-class">
@@ -52,7 +55,9 @@
 </script>
 
 
-
+{% with form=formcomment %}
+{% include "commentSection.html" %}
+{% endwith %}
 
 
 {% endblock %}

@@ -5,97 +5,156 @@ import sys
 import traceback
 from datetime import date
 
-def updateUserInDB(form, con, userId, isAdmin):
+def mergeSqlCommand(commandStart, commandEnd, changedStrDB, changedForms):
+    sqlCommand = commandStart
+    for i in enumerate(changedStrDB):
+        i = i[0]
+        if i != 0: 
+            sqlCommand += ", "
+        if type(changedForms[i]) is int:
+            sqlCommand += ("`" + changedStrDB[i] + "`=%s" % changedForms[i])
+        else: 
+            sqlCommand += ("`" + changedStrDB[i] + "`='%s'" % changedForms[i]) 
+    sqlCommand += commandEnd
+    return sqlCommand
+
+def updateAdminInDB(form, con, userId):
+    cur = con.cursor()
+    cur.execute("SELECT * FROM Admin WHERE Admin_ID=%s", userId)
+    data = cur.fetchall()
+    data = dataUserFormating(data, 0)
+
+    strDB = (
+        'Name',
+        'Username',
+        'Email',
+        'Password'
+    )
+    formList = [
+        form.name.data,
+        form.username.data,
+        form.email.data,
+        form.password.data
+    ]
+
+    changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
+    if form.username.data != data[1] and usernameAlreadyAssigned(form, con):
+        changed = [i for i in changed if (i != 1)]
+        form.username.data = data[1]
+    if form.email.data != data[2] and emailAlreadyAssigned(form, con):
+        changed = [i for i in changed if (i != 2)]
+        form.email.data = data[2]
+    if len(changed) > 0:
+        changedForms = [formList[i] for i in changed]
+        changedStrDB = [(strDB[i]) for i in changed]
+        sqlCommand = mergeSqlCommand("UPDATE `Admin` SET ", " WHERE `Admin_ID`=%s;" % userId, changedStrDB, changedForms)
+        cur.execute(sqlCommand)
+        cur.close()
+        con.commit()
+
+    user = Admin([
+        userId,
+        form.name.data, 
+        form.username.data,
+        form.email.data
+    ])
+
+    return user
+
+def updateUserInDB(form, con, userId):
+    cur = con.cursor()
+    cur.execute("SELECT * FROM Customer WHERE Customer_ID=%s", userId)
+    data = cur.fetchall()
+    data = dataUserFormating(data, 0)
+
+    strDB = (
+        'First_name', 
+        'Last_name', 
+        'Username', 
+        'Email', 
+        'Password', 
+        'Phone_number', 
+        'Birthday'
+    )
     try:
+        formDate = date(
+            int(form.birthdayYear.data), 
+            int(form.birthdayMonth.data), 
+            int(form.birthdayDay.data)
+        )
+    except:
+        formDate = None
+    formList = [
+        form.firstName.data, 
+        form.surName.data, 
+        form.username.data, 
+        form.email.data, 
+        form.password.data, 
+        form.phone.data, 
+        formDate
+    ]
+
+    changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
+    if form.username.data != data[2] and usernameAlreadyAssigned(form, con):
+        changed = [i for i in changed if (i != 2)]
+        form.username.data = data[2]
+    if form.email.data != data[3] and emailAlreadyAssigned(form, con):
+        changed = [i for i in changed if (i != 3)]
+        form.email.data = data[3]
+    if len(changed) > 0:
+        changedForms = [formList[i] for i in changed]
+        changedStrDB = [(strDB[i]) for i in changed]
+        sqlCommand = mergeSqlCommand("UPDATE `Customer` SET ", " WHERE `Customer_ID`=%s;" % userId, changedStrDB, changedForms)
+        cur.execute(sqlCommand)
+        cur.close()
+        con.commit()
+        
+    user = User([
+        userId, 
+        form.firstName.data, 
+        form.surName.data, 
+        form.username.data, 
+        form.email.data, 
+        form.phone.data, 
+        formDate
+    ])
+
+    return user
+
+def usernameAlreadyAssigned(form, con):
+    try:
+        if isAdmin(form, con):
+            return True
+        value = []
         cur = con.cursor()
-        if isAdmin: 
-            cur.execute("SELECT * FROM Admin WHERE Admin_ID=%s", userId)
-        else:
-            cur.execute("SELECT * FROM Customer WHERE Customer_ID=%s", userId)
-        data = cur.fetchall()
-        data = dataUserFormating(data, 0)
+        cur.execute("SELECT * FROM Customer WHERE Username=%s;", (form.username.data))
+        value.append(cur.fetchall())
+        cur.close()
 
-        if isAdmin: 
-            strDB = (
-                'Name',
-                'Username',
-                'Email',
-                'Password'
-            )
-            formList = [
-                form.name.data,
-                form.username.data,
-                form.email.data,
-                form.password.data
-            ]
-        else:
-            strDB = (
-                'First_name', 
-                'Last_name', 
-                'Username', 
-                'Email', 
-                'Password', 
-                'Phone_number', 
-                'Birthday'
-            )
-            formDate = date(
-                int(form.birthdayYear.data), 
-                int(form.birthdayMonth.data), 
-                int(form.birthdayDay.data)
-            )
-            formList = [
-                form.firstName.data, 
-                form.surName.data, 
-                form.username.data, 
-                form.email.data, 
-                form.password.data, 
-                form.phone.data, 
-                formDate
-            ]
+        print(value, file=sys.stderr)
+        for i in range(len(value)):
+            if (value[i] != ()):
+                return True
+        return False
+    except:
+        traceback.print_exc()
+        return True
 
-        changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
-        if len(changed) > 0: 
-            changedForms = [formList[i] for i in changed]
-            changedStrDB = [(strDB[i]) for i in changed]
+def emailAlreadyAssigned(form, con):
+    try:
+        if isAdmin(form, con):
+            return True
+        value = []
+        cur = con.cursor()
+        cur.execute("SELECT * FROM Customer WHERE Email=%s;", (form.email.data))
+        value.append(cur.fetchall())
+        cur.close()
 
-            if isAdmin:
-                sqlCommand = "UPDATE `Admin` SET "
-            else:
-                sqlCommand = "UPDATE `Customer` SET "
-            for i in enumerate(changed):
-                i = i[0]
-                if i != 0: 
-                    sqlCommand += ", "
-                if type(changedForms[i]) is int:
-                    sqlCommand += ("`" + changedStrDB[i] + "`=%s" % changedForms[i])
-                else: 
-                    sqlCommand += ("`" + changedStrDB[i] + "`='%s'" % changedForms[i]) 
-            if isAdmin:
-                sqlCommand += " WHERE `Admin_ID`=%s;" % userId
-            else:
-                sqlCommand += " WHERE `Customer_ID`=%s;" % userId
-            cur.execute(sqlCommand)
-            con.commit()
-            
-        if isAdmin: 
-            user = Admin([
-                userId,
-                form.name.data, 
-                form.username.data,
-                form.email.data
-            ])
-        else:
-            user = User([
-                userId, 
-                form.firstName.data, 
-                form.surName.data, 
-                form.username.data, 
-                form.email.data, 
-                form.phone.data, 
-                formDate
-            ])
-        return user
-            
+        print(value, file=sys.stderr)
+        for i in range(len(value)):
+            if (value[i] != ()):
+                return True
+        return False
     except:
         traceback.print_exc()
         return True

@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'rootroot'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/static/image"
 mysql.init_app(app)
@@ -224,7 +224,7 @@ def betalning():
     return render_template('betalning.html', title='betalning', form=form, signedIn=signedIn, isAdmin=isAdmin)
 
 
-@app.route("/com")
+@app.route("/com", methods =['GET', 'POST'])
 def comment():
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('commentSection.html', title='comment', signedIn=signedIn, isAdmin=isAdmin)
@@ -268,11 +268,14 @@ def item(id):
             flash('Something went wrong', 'danger')
 
 
-
+    formcomment=Comment()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
                            description=desc, prodLeft=prodLeft,
-                           imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin)
+                           imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin, 
+                           formcomment=formcomment)
+
+                
 
 
 
@@ -299,38 +302,20 @@ def profile():
     else:
         flash('Not Logged in!', 'danger')
         return redirect(url_for('home'))
-    firstName = str(user.getFirstname())
-    surName = str(user.getLastname())
-    username = str(user.getUsername())
-    email = str(user.getEmail())
-
-    if user.getPhone() is None:
-        phone = ''
-    else:
-        phone = str(user.getPhone())
-    birthday = user.getBirthday()
-    try:
-        birthdayDay = str(birthday.day)
-        birthdayMonth = str(birthday.month)
-        birthdayYear = str(birthday.year)
-    except:
-        birthdayDay = '-'
-        birthdayMonth = '-'
-        birthdayYear = '-'
 
     con = mysql.connect()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    
-    if request.method == 'POST':
-        user = updateUserInDB(form, con, userId, isAdmin)
-        if signedInUsers.get(request.cookies.get('ID'), False):
-            signedInUsers.update({request.cookies.get('ID'):user})
-        return redirect(url_for('profile'))
 
     if isAdmin:
         name = str(user.getName())
         username = str(user.getUsername())
         email = str(user.getEmail())
+
+        if request.method == 'POST':
+            user = updateAdminInDB(form, con, userId)
+            if signedInUsers.get(request.cookies.get('ID'), False):
+                signedInUsers.update({request.cookies.get('ID'):user})
+            return redirect(url_for('profile'))
 
         return render_template('profileAdmin.html', title='profile', 
                                 form=form, name=name, 
@@ -354,12 +339,12 @@ def profile():
             birthdayDay = '-'
             birthdayMonth = '-'
             birthdayYear = '-'
-
-        #phone = str(user.getPhone())
-        #birthday = user.getBirthday()
-        #birthdayDay = str(birthday.day)
-        #birthdayMonth = str(birthday.month)
-        #birthdayYear = str(birthday.year)
+            
+        if request.method == 'POST':
+            user = updateUserInDB(form, con, userId)
+            if signedInUsers.get(request.cookies.get('ID'), False):
+                signedInUsers.update({request.cookies.get('ID'):user})
+            return redirect(url_for('profile'))
         
         return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
                                 username=username, email=email, phone=phone, birthdayDay=birthdayDay, 
