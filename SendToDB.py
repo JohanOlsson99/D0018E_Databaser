@@ -639,8 +639,8 @@ def addCommentToAProduct(con, productId, customerId, adminId, form):
         newId = int(newId) + 1
     else:
         newId = 0
-    #comment = form.comment.data
-    comment = form
+    comment = form.comment.data
+    #comment = form
     currentDate = date.today().strftime("%y-%m-%d")
     cur.execute("INSERT INTO `Comments` VALUES (%s, %s, %s, %s, %s, %s);", (newId, customerId,
                                                                             adminId, productId, comment, currentDate))
