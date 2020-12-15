@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'rootroot'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/static/image"
 mysql.init_app(app)
@@ -273,30 +273,51 @@ def item(id):
 
     formcomment=Comment()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    if ((request.method == "POST") and (formcomment.validate_on_submit()) and
+            ('comments' in request.form) and (formcomment.comment.data != None)):
+        if signedIn:
+            user = signedInUsers.get(request.cookies.get('ID'))
+            if isAdmin:
+                customerId = None
+                adminId = user.getId()
+            else:
+                customerId = user.getId()
+                adminId = None
+
+            addCommentToAProduct(con, id, customerId, adminId, formcomment)
+            return redirect(url_for('item', id=id))
+        else:
+            print("at correct place")
+            flash("You need to sign in before adding a comment", "danger")
+            return redirect(url_for('item', id=id))
+
+
+
     con=mysql.connect()
-    customerList, adminList, comment, dateList = getAllCommentsForOneItem(con, id)
-    
-   
+    customerList, adminList, comment, dateList, isAdminList = getAllCommentsForOneItem(con, id)
     whosComment=[]
-    i=0
-    while i < len(customerList):
+    for i in range(len(customerList)):
+    #while i < len(customerList):
         if customerList[i] is None:
            whosComment.append(adminList[i])
         else:
             whosComment.append(customerList[i])
-        i=i+1
+        #i=i+1
 
     print(whosComment)
 
-
-
+    #signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
                            description=desc, prodLeft=prodLeft,
                            imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin,
-                           formcomment=formcomment, comment=comment, namecomment=whosComment, date=dateList )
+                           formcomment=formcomment, comment=comment, namecomment=whosComment, date=dateList, isAdminList=isAdminList)
 
 
-
+def checkIfAddedComment(form):
+    print(form.comment.data)
+    print('comments' in request.form)
+    if ((form.validate_on_submit()) and ('comments' in request.form) and (form.comment.data != None)):
+        return True
 
 
 @app.route('/logout')

@@ -607,6 +607,7 @@ def getAllCommentsForOneItem(con, productId):
         adminList = []
         comment = []
         dateList = []
+        isAdminList = []
         print(len(data))
         for i in range(len(data)):
             if((data[i][1] == None) and (data[i][2] != None)):
@@ -614,6 +615,7 @@ def getAllCommentsForOneItem(con, productId):
                 cur.execute("SELECT Name FROM `Admin` WHERE Admin_ID=%s", (data[i][2]))
                 customerList.append(None)
                 adminList.append(cur.fetchone()[0])
+                isAdminList.append(True)
             elif((data[i][1] != None) and (data[i][2] == None)):
                 #print('customer data')
                 cur.execute("SELECT First_name, Last_name FROM `Customer` WHERE Customer_ID=%s", (data[i][1]))
@@ -621,15 +623,16 @@ def getAllCommentsForOneItem(con, productId):
                 name = str(name[0][0]) + " " + str(name[0][1])
                 customerList.append(name)
                 adminList.append(None)
+                isAdminList.append(False)
             else:
                 #print('both None')
                 continue
             comment.append(data[i][4])
             dateList.append(data[i][5])
-        return customerList, adminList, comment, dateList
+        return customerList, adminList, comment, dateList, isAdminList
     else:
         #print('no data')
-        return [], [], [], []
+        return [], [], [], [], []
 
 def addCommentToAProduct(con, productId, customerId, adminId, form):
     cur = con.cursor()
