@@ -601,33 +601,47 @@ def getAllCommentsForOneItem(con, productId):
     cur = con.cursor()
     cur.execute("SELECT * FROM `comments` WHERE `Product_ID`=%s;", (productId))
     data = cur.fetchall()
-    print('comment data', data)
+    #print('comment data', data)
     if data != ():
         customerList = []
         adminList = []
         comment = []
+        dateList = []
         print(len(data))
         for i in range(len(data)):
             if((data[i][1] == None) and (data[i][2] != None)):
-                print('Admin Data')
+                #print('Admin Data')
                 customerList.append(None)
                 adminList.append(data[i][2])
             elif((data[i][1] != None) and (data[i][2] == None)):
-                print('customer data')
+                #print('customer data')
                 customerList.append(data[i][1])
                 adminList.append(None)
             else:
-                print('both None')
+                #print('both None')
                 continue
             comment.append(data[i][4])
-        print('customerList', customerList)
-        print('adminList', adminList)
-        print('comments', comment)
-        return adminList, customerList, comment
+            dateList.append(data[i][5])
+        return customerList, adminList, comment, dateList
     else:
-        print('no data')
-        return [], [], []
+        #print('no data')
+        return [], [], [], []
 
+def addCommentToAProduct(con, productId, customerId, adminId, form):
+    cur = con.cursor()
+    cur.execute("SELECT MAX(Comments_ID) FROM `Comments`;")
+    newId = cur.fetchone()[0]
+    if newId != None:
+        newId = int(newId) + 1
+    else:
+        newId = 0
+    #comment = form.comment.data
+    comment = form
+    currentDate = date.today().strftime("%y-%m-%d")
+    cur.execute("INSERT INTO `Comments` VALUES (%s, %s, %s, %s, %s, %s);", (newId, customerId,
+                                                                            adminId, productId, comment, currentDate))
+    con.commit()
+    #Comments_ID, Customer_ID, Admin_ID, Product_ID, Comment, date
 
 def addNewProductAndGetNewId(con, form):
     cur = con.cursor()
