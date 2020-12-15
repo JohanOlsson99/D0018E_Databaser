@@ -11,7 +11,9 @@
                         Comment panel
                     </div>
                     <div class="panel-body">
-                        <form method="POST" name="PostComment" class="comments" action="">
+                        <form method="POST" name="comments" class="comments" action="">
+                            <input type="hidden" value="comments" name="comments">
+                            {{ form.hidden_tag() }}
                         <!--<textarea class="form-control" placeholder="write a comment..." rows="3"></textarea>
                         <br>
                         <button type="button" class="btn btn-info pull-right">Post</button>-->
@@ -29,10 +31,20 @@
                                     <span class="text-muted pull-right">
                                         <small class="text-muted">{{date[i]}}</small>
                                     </span>
-                                    <strong class="text-success">{{name[i]}}</strong>
-                                    <p class="textColor">
-                                        {{ comment[i] }}
-                                    </p>
+                                    {% if isAdminList[i] %}
+                                        <strong class="text-success textColorAdmin">{{name[i]}}</strong>
+                                    {% else %}
+                                        <strong class="text-success">{{name[i]}}</strong>
+                                    {% endif %}
+                                    {% if isAdminList[i] %}
+                                        <p class="textColor textColorAdmin">
+                                            {{ comment[i] }}
+                                        </p>
+                                    {% else %}
+                                        <p class="textColor">
+                                            {{ comment[i] }}
+                                        </p>
+                                    {% endif %}
                                 </div>
                             </li>
                             <hr>

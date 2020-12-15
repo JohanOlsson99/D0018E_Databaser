@@ -89,3 +89,7 @@
 .textColor {
     color: black;
 }
+
+.textColorAdmin {
+    color: gold !important;
+}
