@@ -67,7 +67,7 @@ def getIsSignedInAndIsAdmin():
 def home():
     con = mysql.connect()
     #addCommentToAProduct(con, 0, None, 0, "Test test")
-    #print("comments list", getAllCommentsForOneItem(con, 0))
+    print("comments list", getAllCommentsForOneItem(con, 0))
     #form, id, description, imageLink = getTest(30)  # get test data
     #checkIfAddedToCart(form, id)  # if the form was send and is correct
 
