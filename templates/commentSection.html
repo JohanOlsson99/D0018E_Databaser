@@ -21,20 +21,24 @@
                         <div class="clearfix"></div>
                         <hr>
                         <ul class="media-list">
+                        {% for i in range(name|length) %}
                             <li class="media">
                                 <a href="#" class="pull-left">
                                 </a>
                                 <div class="media-body">
                                     <span class="text-muted pull-right">
-                                        <small class="text-muted">30 min ago</small>
+                                        <small class="text-muted">{{date[i]}}</small>
                                     </span>
-                                    <strong class="text-success">@MartinoMont</strong>
+                                    <strong class="text-success">{{name[i]}}</strong>
                                     <p class="textColor">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Lorem ipsum dolor sit amet, <a href="#">#consecteturadipiscing </a>.
+                                        {{ comment[i] }}
                                     </p>
                                 </div>
                             </li>
+                            <hr>
+                        {% endfor %}
+
+
                             
                             
                         </ul>

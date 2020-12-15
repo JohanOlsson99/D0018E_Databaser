@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'rootroot'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/static/image"
 mysql.init_app(app)
@@ -273,10 +273,27 @@ def item(id):
 
     formcomment=Comment()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    con=mysql.connect()
+    customerList, adminList, comment, dateList = getAllCommentsForOneItem(con, id)
+    
+   
+    whosComment=[]
+    i=0
+    while i < len(customerList):
+        if customerList[i] is None:
+           whosComment.append(adminList[i])
+        else:
+            whosComment.append(customerList[i])
+        i=i+1
+
+    print(whosComment)
+
+
+
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
                            description=desc, prodLeft=prodLeft,
                            imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin,
-                           formcomment=formcomment)
+                           formcomment=formcomment, comment=comment, namecomment=whosComment, date=dateList )
 
 
 
