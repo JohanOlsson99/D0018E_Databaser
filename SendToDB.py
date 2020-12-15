@@ -611,11 +611,15 @@ def getAllCommentsForOneItem(con, productId):
         for i in range(len(data)):
             if((data[i][1] == None) and (data[i][2] != None)):
                 #print('Admin Data')
+                cur.execute("SELECT Name FROM `Admin` WHERE Admin_ID=%s", (data[i][2]))
                 customerList.append(None)
-                adminList.append(data[i][2])
+                adminList.append(cur.fetchone()[0])
             elif((data[i][1] != None) and (data[i][2] == None)):
                 #print('customer data')
-                customerList.append(data[i][1])
+                cur.execute("SELECT First_name, Last_name FROM `Customer` WHERE Customer_ID=%s", (data[i][1]))
+                name = cur.fetchall()
+                name = str(name[0][0]) + " " + str(name[0][1])
+                customerList.append(name)
                 adminList.append(None)
             else:
                 #print('both None')
