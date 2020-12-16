@@ -47,7 +47,8 @@ CREATE TABLE `Comments` (
   `Customer_ID` int(11) DEFAULT NULL,
   `Admin_ID` int(11) DEFAULT NULL,
   `Product_ID` int(11) NOT NULL,
-  `Comment` VARCHAR(255) NOT NULL
+  `Comment` VARCHAR(255) NOT NULL,
+  `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------

@@ -85,3 +85,11 @@
 .title-div {
     margin-left: 2.5%;
 }
+
+.textColor {
+    color: black;
+}
+
+.textColorAdmin {
+    color: gold !important;
+}

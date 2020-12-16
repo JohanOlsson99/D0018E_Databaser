@@ -1,64 +1,58 @@
-{% extends "layout.html" %}
-{% block content %}
+
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='commentSection.css') }}">
 
-<div class="container">
+<div class="container" >
     <div class="row bootstrap snippets bootdeys">
-        <div class="col-md-8 col-sm-12">
+        <div class="col-md-8 col-sm-12" >
             <div class="comment-wrapper">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         Comment panel
                     </div>
                     <div class="panel-body">
-                        <textarea class="form-control" placeholder="write a comment..." rows="3"></textarea>
+                        <form method="POST" name="comments" class="comments" action="">
+                            <input type="hidden" value="comments" name="comments">
+                            {{ form.hidden_tag() }}
+                        <!--<textarea class="form-control" placeholder="write a comment..." rows="3"></textarea>
                         <br>
-                        <button type="button" class="btn btn-info pull-right">Post</button>
+                        <button type="button" class="btn btn-info pull-right">Post</button>-->
+                        {{ form.comment(class="form-control", placeholder="Write a comment...")}}
+                        {{form.submit(class="btn btn-info pull-right")}}
+                        </form>
                         <div class="clearfix"></div>
                         <hr>
                         <ul class="media-list">
+                        {% for i in range(name|length) %}
                             <li class="media">
                                 <a href="#" class="pull-left">
                                 </a>
                                 <div class="media-body">
                                     <span class="text-muted pull-right">
-                                        <small class="text-muted">30 min ago</small>
+                                        <small class="text-muted">{{date[i]}}</small>
                                     </span>
-                                    <strong class="text-success">@MartinoMont</strong>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Lorem ipsum dolor sit amet, <a href="#">#consecteturadipiscing </a>.
-                                    </p>
+                                    {% if isAdminList[i] %}
+                                        <strong class="text-success textColorAdmin">{{name[i]}}</strong>
+                                    {% else %}
+                                        <strong class="text-success">{{name[i]}}</strong>
+                                    {% endif %}
+                                    {% if isAdminList[i] %}
+                                        <p class="textColor textColorAdmin">
+                                            {{ comment[i] }}
+                                        </p>
+                                    {% else %}
+                                        <p class="textColor">
+                                            {{ comment[i] }}
+                                        </p>
+                                    {% endif %}
                                 </div>
                             </li>
-                            <li class="media">
-                                <a href="#" class="pull-left">
-                                </a>
-                                <div class="media-body">
-                                    <span class="text-muted pull-right">
-                                        <small class="text-muted">30 min ago</small>
-                                    </span>
-                                    <strong class="text-success">@LaurenceCorreil</strong>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Lorem ipsum dolor <a href="#">#ipsumdolor </a>adipiscing elit.
-                                    </p>
-                                </div>
-                            </li>
-                            <li class="media">
-                                <a href="#" class="pull-left">
-                                </a>
-                                <div class="media-body">
-                                    <span class="text-muted pull-right">
-                                        <small class="text-muted">30 min ago</small>
-                                    </span>
-                                    <strong class="text-success">@JohnNida</strong>
-                                    <p>
-                                        Lorem ipsum dolor <a href="#">#sitamet</a> sit amet, consectetur adipiscing elit.
-                                    </p>
-                                </div>
-                            </li>
+                            <hr>
+                        {% endfor %}
+
+
+                            
+                            
                         </ul>
                     </div>
                 </div>
@@ -70,4 +64,3 @@
 
 
 
-    {% endblock content %}

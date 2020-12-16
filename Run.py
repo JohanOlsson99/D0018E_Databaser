@@ -12,7 +12,7 @@ from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
 from SendToDB import *
 from flask import Flask, render_template, flash, request, url_for, redirect, make_response
-from PIL import Image
+#from PIL import Image
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -65,6 +65,9 @@ def getIsSignedInAndIsAdmin():
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
+    con = mysql.connect()
+    #addCommentToAProduct(con, 0, None, 0, "Test test")
+    print("comments list", getAllCommentsForOneItem(con, 0))
     #form, id, description, imageLink = getTest(30)  # get test data
     #checkIfAddedToCart(form, id)  # if the form was send and is correct
 
@@ -224,7 +227,7 @@ def betalning():
     return render_template('betalning.html', title='betalning', form=form, signedIn=signedIn, isAdmin=isAdmin)
 
 
-@app.route("/com")
+@app.route("/com", methods =['GET', 'POST'])
 def comment():
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('commentSection.html', title='comment', signedIn=signedIn, isAdmin=isAdmin)
@@ -268,12 +271,53 @@ def item(id):
             flash('Something went wrong', 'danger')
 
 
-
+    formcomment=Comment()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    if ((request.method == "POST") and (formcomment.validate_on_submit()) and
+            ('comments' in request.form) and (formcomment.comment.data != None)):
+        if signedIn:
+            user = signedInUsers.get(request.cookies.get('ID'))
+            if isAdmin:
+                customerId = None
+                adminId = user.getId()
+            else:
+                customerId = user.getId()
+                adminId = None
+
+            addCommentToAProduct(con, id, customerId, adminId, formcomment)
+            return redirect(url_for('item', id=id))
+        else:
+            print("at correct place")
+            flash("You need to sign in before adding a comment", "danger")
+            return redirect(url_for('item', id=id))
+
+
+
+    con=mysql.connect()
+    customerList, adminList, comment, dateList, isAdminList = getAllCommentsForOneItem(con, id)
+    whosComment=[]
+    for i in range(len(customerList)):
+    #while i < len(customerList):
+        if customerList[i] is None:
+           whosComment.append(adminList[i])
+        else:
+            whosComment.append(customerList[i])
+        #i=i+1
+
+    print(whosComment)
+
+    #signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
                            description=desc, prodLeft=prodLeft,
-                           imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin)
+                           imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin,
+                           formcomment=formcomment, comment=comment, namecomment=whosComment, date=dateList, isAdminList=isAdminList)
 
+
+def checkIfAddedComment(form):
+    print(form.comment.data)
+    print('comments' in request.form)
+    if ((form.validate_on_submit()) and ('comments' in request.form) and (form.comment.data != None)):
+        return True
 
 
 @app.route('/logout')
@@ -302,17 +346,17 @@ def profile():
 
     con = mysql.connect()
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    
-    if request.method == 'POST':
-        user = updateUserInDB(form, con, userId, isAdmin)
-        if signedInUsers.get(request.cookies.get('ID'), False):
-            signedInUsers.update({request.cookies.get('ID'):user})
-        return redirect(url_for('profile'))
 
     if isAdmin:
         name = str(user.getName())
         username = str(user.getUsername())
         email = str(user.getEmail())
+
+        if request.method == 'POST':
+            user = updateAdminInDB(form, con, userId)
+            if signedInUsers.get(request.cookies.get('ID'), False):
+                signedInUsers.update({request.cookies.get('ID'):user})
+            return redirect(url_for('profile'))
 
         return render_template('profileAdmin.html', title='profile', 
                                 form=form, name=name, 
@@ -323,11 +367,25 @@ def profile():
         surName = str(user.getLastname())
         username = str(user.getUsername())
         email = str(user.getEmail())
-        phone = str(user.getPhone())
+        if user.getPhone() is None:
+            phone = ''
+        else:
+            phone = str(user.getPhone())
         birthday = user.getBirthday()
-        birthdayDay = str(birthday.day)
-        birthdayMonth = str(birthday.month)
-        birthdayYear = str(birthday.year)
+        try:
+            birthdayDay = str(birthday.day)
+            birthdayMonth = str(birthday.month)
+            birthdayYear = str(birthday.year)
+        except:
+            birthdayDay = '-'
+            birthdayMonth = '-'
+            birthdayYear = '-'
+
+        if request.method == 'POST':
+            user = updateUserInDB(form, con, userId)
+            if signedInUsers.get(request.cookies.get('ID'), False):
+                signedInUsers.update({request.cookies.get('ID'):user})
+            return redirect(url_for('profile'))
         
         return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
                                 username=username, email=email, phone=phone, birthdayDay=birthdayDay, 
@@ -343,12 +401,15 @@ def adminPage():
             if form.validate_on_submit():
                 if 'file' not in request.files:
                     flash('No selected file', 'danger')
-                    return redirect(request.url)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 file = request.files['file']
                 if file.filename == '':
                     flash('No selected file', 'danger')
-                    return redirect(request.url)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 con = mysql.connect()
+                if len(form.productDescription.data) > 255:
+                    flash('To long description', 'danger')
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
                 id = addNewProductAndGetNewId(con, form)
                 if file and allowed_file(file.filename):
                     filename = str(id) + ".jpg"
@@ -374,4 +435,4 @@ def error():
     return render_template('error.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1')
+    app.run(debug=True, host='0.0.0.0')
