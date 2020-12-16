@@ -436,7 +436,8 @@ def allowed_file(filename):
 
 @app.route('/error')
 def error():
-    return render_template('error.html')
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    return render_template('error.html', title="error", signedIn=signedIn, isAdmin=isAdmin)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
