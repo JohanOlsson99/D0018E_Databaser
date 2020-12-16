@@ -127,8 +127,6 @@ def usernameAlreadyAssigned(form, con):
         cur = con.cursor()
         cur.execute("SELECT * FROM Customer WHERE Username=%s;", (form.username.data))
         value.append(cur.fetchall())
-        cur.execute("SELECT * FROM Admin WHERE Username=%s;", (form.username.data))
-        value.append(cur.fetchall())
         cur.close()
 
         print(value, file=sys.stderr)
@@ -145,8 +143,6 @@ def emailAlreadyAssigned(form, con):
         value = []
         cur = con.cursor()
         cur.execute("SELECT * FROM Customer WHERE Email=%s;", (form.email.data))
-        value.append(cur.fetchall())
-        cur.execute("SELECT * FROM Admin WHERE Email=%s;", (form.username.data))
         value.append(cur.fetchall())
         cur.close()
 
