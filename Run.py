@@ -104,6 +104,10 @@ def home():
 
 @app.route("/cart", methods=['GET', 'POST'])
 def cart():
+    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    if isAdmin:
+        flash("You can\'t be admin when checking your cart", "danger")
+        return redirect(url_for('home'))
     customer = signedInUsers.get(request.cookies.get('ID'), False)
     if customer is not False:
         customerId = customer.getId()
@@ -144,7 +148,7 @@ def cart():
                 flash('Couldn\'t order your products', 'danger')
 
 
-    signedIn, isAdmin = getIsSignedInAndIsAdmin()
+
     return render_template('varukorg.html', title="Cart", form=form, id=productId, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
                            imageLink=imageLinkList, signedIn=signedIn, totalCost=totalCost, isAdmin=isAdmin, itemsInCart=itemsInCart)
