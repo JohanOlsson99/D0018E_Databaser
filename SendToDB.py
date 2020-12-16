@@ -123,8 +123,6 @@ def updateUserInDB(form, con, userId):
 
 def usernameAlreadyAssigned(form, con):
     try:
-        if isAdmin(form, con):
-            return True
         value = []
         cur = con.cursor()
         cur.execute("SELECT * FROM Customer WHERE Username=%s;", (form.username.data))
@@ -142,8 +140,6 @@ def usernameAlreadyAssigned(form, con):
 
 def emailAlreadyAssigned(form, con):
     try:
-        if isAdmin(form, con):
-            return True
         value = []
         cur = con.cursor()
         cur.execute("SELECT * FROM Customer WHERE Email=%s;", (form.email.data))
