@@ -140,7 +140,7 @@ class ProfileForm(FlaskForm):
                  (1903, '1903'),
                  (1902, '1902'), (1901, '1901'), (1900, '1900')]
     )
-    password = PasswordField('Password', validators=[validators.optional()])
+    password = PasswordField('Password', validators=[DataRequired()])
 
 
 class PaymentForm(FlaskForm):
