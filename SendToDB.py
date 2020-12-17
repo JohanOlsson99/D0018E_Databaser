@@ -62,7 +62,7 @@ def updateUserInDB(form, con, userId):
         return dataUserFormating(data, 0)
 
     def getFormChanges(form, formList, data):
-        changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and ((i != '' or i is not None) or (idx == 5 or idx == 6)))]
+        changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and ((i != '' and i is not None) or (idx == 5 or idx == 6)))]
         if form.username.data != data[2] and usernameAlreadyAssigned(form, con):
             changed = [i for i in changed if (i != 2)]
             form.username.data = data[2]
