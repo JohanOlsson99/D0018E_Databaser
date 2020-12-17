@@ -9,7 +9,7 @@
 
 <div class="wrapper">
     <div class="itemblock-div-class-{{id}} itemblock-div-class">
-        {% with form = form, id = id, name = name, description = description, imageLink = imageLink, price=price, prodLeft=prodLeft, isAdminList=isAdminList %}
+        {% with form = form, id = id, name = name, description = description, imageLink = imageLink, price=price, prodLeft=prodLeft, isAdminList=isAdminList, rating=rating %}
             {% include 'itemBlock.html' %}
         {% endwith %}
     </div>

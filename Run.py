@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'rootroot'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/static/image"
 mysql.init_app(app)
@@ -43,6 +43,7 @@ ORDERNOTSENT = 'pending'
 ORDERRESERVED = 'reserved'
 signedInUsers = {}
 ALLOWED_EXTENSIONS = {'jpg'}
+RATINGMULTIPLAIER = 1000 
 
 
 def getIsSignedInAndIsAdmin():
@@ -65,9 +66,9 @@ def getIsSignedInAndIsAdmin():
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    con = mysql.connect()
+    #con = mysql.connect()
     #addCommentToAProduct(con, 0, None, 0, "Test test")
-    print("comments list", getAllCommentsForOneItem(con, 0))
+    #print("comments list", getAllCommentsForOneItem(con, 0))
     #form, id, description, imageLink = getTest(30)  # get test data
     #checkIfAddedToCart(form, id)  # if the form was send and is correct
 
@@ -78,7 +79,7 @@ def home():
     #        id[i])  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
     #    price.append(random.randint(1,9999))
     con = mysql.connect()
-    idList, nameList, priceList, descList, prodLeftList, imageLinkList = getProducts(con)
+    idList, nameList, priceList, descList, prodLeftList, imageLinkList, rating = getProducts(con)
     form = []
     for i in range(len(idList)):
         form.append(AddToCart())
@@ -97,9 +98,10 @@ def home():
             flash('Something went wrong', 'danger')
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    
     return render_template('home.html', title="home", form=form, id=idList, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
-                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin)
+                           imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin, rating=rating)
 
 
 @app.route("/cart", methods=['GET', 'POST'])
@@ -236,7 +238,6 @@ def comment():
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('commentSection.html', title='comment', signedIn=signedIn, isAdmin=isAdmin)
 
-
 @app.route('/item-<int:id>', methods=['GET', 'POST'])
 def item(id):
     con = mysql.connect()
@@ -253,8 +254,15 @@ def item(id):
     else:
         return redirect(url_for('error.html'))
 
-    form = AddToCart()
+    if rating is None:
+        rating="-"
+    else:
+        rating=round(rating/RATINGMULTIPLAIER,2)
+    print("lol")
+    print(rating)
 
+    form = AddToCart()
+    
     #form.defineHowManyToCartId(id)
     form.defineMaxMin(max=int(prodLeft))
     form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
@@ -276,9 +284,11 @@ def item(id):
 
 
     formcomment=Comment()
+    
+
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    if ((request.method == "POST") and (formcomment.validate_on_submit()) and
-            ('comments' in request.form) and (formcomment.comment.data != None)):
+    if ((request.method == "POST") and (formcomment.is_submitted()) and
+            ('comments' in request.form) and (formcomment.comment.data != None and formcomment.comment.data != "")):
         if signedIn:
             user = signedInUsers.get(request.cookies.get('ID'))
             if isAdmin:
@@ -287,13 +297,21 @@ def item(id):
             else:
                 customerId = user.getId()
                 adminId = None
-
             addCommentToAProduct(con, id, customerId, adminId, formcomment)
             return redirect(url_for('item', id=id))
         else:
             print("at correct place")
             flash("You need to sign in before adding a comment", "danger")
             return redirect(url_for('item', id=id))
+
+    if ((request.method == "POST") and (formcomment.is_submitted()) and
+        ('comments' in request.form) and (formcomment.rating.data != "-")):
+        print("rating")
+
+        
+        addRatingToAProduct(con, id, int(formcomment.rating.data) )
+
+    
 
 
 
@@ -310,11 +328,12 @@ def item(id):
 
     print(whosComment)
 
+
     #signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
                            description=desc, prodLeft=prodLeft,
                            imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin,
-                           formcomment=formcomment, comment=comment, namecomment=whosComment, date=dateList, isAdminList=isAdminList)
+                           formcomment=formcomment, comment=comment, namecomment=whosComment, date=dateList, isAdminList=isAdminList, rating=rating)
 
 
 def checkIfAddedComment(form):
