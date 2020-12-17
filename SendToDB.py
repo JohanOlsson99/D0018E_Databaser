@@ -610,7 +610,7 @@ def setReservedOrder(con, customerId):
 
 def getAllCommentsForOneItem(con, productId):
     cur = con.cursor()
-    cur.execute("SELECT * FROM `comments` WHERE `Product_ID`=%s;", (productId))
+    cur.execute("SELECT * FROM `Comments` WHERE `Product_ID`=%s;", (productId))
     data = cur.fetchall()
     #print('comment data', data)
     if data != ():
