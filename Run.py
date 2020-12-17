@@ -1,4 +1,4 @@
-#from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User, cartIndividualForm
+# from forms import RegistrationForm, LoginForm, PaymentForm, AddToCart, cartForm, User, cartIndividualForm
 
 import os
 
@@ -12,7 +12,8 @@ from flask_login import login_user, logout_user, LoginManager, current_user
 from flaskext.mysql import MySQL
 from SendToDB import *
 from flask import Flask, render_template, flash, request, url_for, redirect, make_response
-#from PIL import Image
+
+# from PIL import Image
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -21,29 +22,28 @@ app.config['SECRET_KEY'] = 'd986e15d678b0a18d2ea47ccfc47e1ad'
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'rootroot'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_DB'] = 'db990715'
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/static/image"
 mysql.init_app(app)
 
+# file = Image.open(os.getcwd() + "/static/image/car.jpg")
+# file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.jpg'))
 
-#file = Image.open(os.getcwd() + "/static/image/car.jpg")
-#file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.jpg'))
+# con = mysql.connect()
 
-#con = mysql.connect()
-
-#login_manager = LoginManager()
-#login_manager.init_app(app)
+# login_manager = LoginManager()
+# login_manager.init_app(app)
 
 USERNAMELOGIN = 0
 EMAILLOGIN = 1
-ISADMIN ='A'
+ISADMIN = 'A'
 ISCUSTOMER = 'C'
 ORDERNOTSENT = 'pending'
 ORDERRESERVED = 'reserved'
 signedInUsers = {}
 ALLOWED_EXTENSIONS = {'jpg'}
-RATINGMULTIPLAIER = 1000 
+RATINGMULTIPLAIER = 1000
 
 
 def getIsSignedInAndIsAdmin():
@@ -51,7 +51,8 @@ def getIsSignedInAndIsAdmin():
         if (request.cookies.get('ID')[-1] == str(ISADMIN)) and (signedInUsers.get(request.cookies.get('ID'), False)):
             signedIn = True
             isAdmin = True
-        elif (request.cookies.get('ID')[-1] == str(ISCUSTOMER)) and (signedInUsers.get(request.cookies.get('ID'), False)):
+        elif (request.cookies.get('ID')[-1] == str(ISCUSTOMER)) and (
+        signedInUsers.get(request.cookies.get('ID'), False)):
             signedIn = True
             isAdmin = False
         else:
@@ -66,13 +67,13 @@ def getIsSignedInAndIsAdmin():
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    #con = mysql.connect()
-    #addCommentToAProduct(con, 0, None, 0, "Test test")
-    #print("comments list", getAllCommentsForOneItem(con, 0))
-    #form, id, description, imageLink = getTest(30)  # get test data
-    #checkIfAddedToCart(form, id)  # if the form was send and is correct
+    # con = mysql.connect()
+    # addCommentToAProduct(con, 0, None, 0, "Test test")
+    # print("comments list", getAllCommentsForOneItem(con, 0))
+    # form, id, description, imageLink = getTest(30)  # get test data
+    # checkIfAddedToCart(form, id)  # if the form was send and is correct
 
-    #price = []
+    # price = []
 
     # for i in range(len(form)):
     #    form[i].howManyToCart.id = 'counter-display-' + str(
@@ -88,17 +89,17 @@ def home():
         form[i].defineMaxMin(max=int(prodLeftList[i]))
 
     correctRequest, id, howManyItems = checkIfAddedToCart(form, idList, getIsSignedInAndIsAdmin())
-    if(correctRequest):  # if the form was send and is correct
+    if (correctRequest):  # if the form was send and is correct
         con = mysql.connect()
         user = signedInUsers.get(request.cookies.get('ID'))
-        if(addItemToOrder(con, id, user.getId(), howManyItems)):
+        if (addItemToOrder(con, id, user.getId(), howManyItems)):
             flash('Successfully added ' + str(form[i].howManyToCart.data) + ' of your item to your cart', 'success')
             return redirect(url_for('home'))
         else:
             flash('Something went wrong', 'danger')
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
-    
+
     return render_template('home.html', title="home", form=form, id=idList, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
                            imageLink=imageLinkList, signedIn=signedIn, isAdmin=isAdmin, rating=rating)
@@ -117,22 +118,22 @@ def cart():
         flash('You need to sign in before checking your cart', 'danger')
         return redirect(url_for('home'))
     con = mysql.connect()
-    #form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
-    #trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
-    trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCartNew(
-        con, customerId)
+    # form, idList, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getTestCart(3)
+    # trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList = getProductsInCart(con, customerId)
+    trueFalse, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList, rating = \
+        getProductsInCartNew(con, customerId)
 
-    #form = cartForm(productId, itemsInCart, prodLeftList)
+    # form = cartForm(productId, itemsInCart, prodLeftList)
     totalCost = 0
     form = []
     if trueFalse:
         for i in range(len(productId)):
             form.append(cartIndividualForm())
-            #form[i].howManyToCart.id = 'counter-display-' + str(productId[i])
-            #form[i].addToCart.id = 'remove-button-' + str(productId[i])
+            # form[i].howManyToCart.id = 'counter-display-' + str(productId[i])
+            # form[i].addToCart.id = 'remove-button-' + str(productId[i])
             form[i].defineStartUpValues(productId[i], itemsInCart[i])
-            #form[i].howManyToCart.data = itemsInCart[i]
-            #print(itemsInCart[i])
+            # form[i].howManyToCart.data = itemsInCart[i]
+            # print(itemsInCart[i])
             form[i].defineMaxMin(max=(int(prodLeftList[i]) + int(itemsInCart[i])))
             totalCost += (itemsInCart[i] * priceList[i])
     if not trueFalse:
@@ -149,11 +150,11 @@ def cart():
             else:
                 flash('Couldn\'t order your products', 'danger')
 
-
-
     return render_template('varukorg.html', title="Cart", form=form, id=productId, name=nameList, price=priceList,
                            description=descList, prodLeft=prodLeftList,
-                           imageLink=imageLinkList, signedIn=signedIn, totalCost=totalCost, isAdmin=isAdmin, itemsInCart=itemsInCart)
+                           imageLink=imageLinkList, signedIn=signedIn, totalCost=totalCost, isAdmin=isAdmin,
+                           itemsInCart=itemsInCart, rating=rating)
+
 
 def checkCartForm(form, productId, customerId, con):
     print('Check')
@@ -165,7 +166,6 @@ def checkCartForm(form, productId, customerId, con):
                 return True
             return False
     return False
-
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -194,6 +194,7 @@ def login():
 
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('login.html', title="login", form=form, signedIn=signedIn, isAdmin=isAdmin)
+
 
 def setCookieAndReturnAddress(temp, adminOrCustomer):
     value = str(str(temp.getId()) + str(adminOrCustomer))
@@ -233,10 +234,11 @@ def betalning():
     return render_template('betalning.html', title='betalning', form=form, signedIn=signedIn, isAdmin=isAdmin)
 
 
-@app.route("/com", methods =['GET', 'POST'])
+@app.route("/com", methods=['GET', 'POST'])
 def comment():
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('commentSection.html', title='comment', signedIn=signedIn, isAdmin=isAdmin)
+
 
 @app.route('/item-<int:id>', methods=['GET', 'POST'])
 def item(id):
@@ -255,22 +257,23 @@ def item(id):
         return redirect(url_for('error.html'))
 
     if rating is None:
-        rating="-"
+        rating = "-"
     else:
-        rating=round(rating/RATINGMULTIPLAIER,2)
+        rating = round(rating / RATINGMULTIPLAIER, 2)
     print("lol")
     print(rating)
 
     form = AddToCart()
-    
-    #form.defineHowManyToCartId(id)
-    form.defineMaxMin(max=int(prodLeft))
-    form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
-    #checkIfAddedToCartItem(form, id)  # if the form was send and is correct
 
-    #form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
-    #price = []
-    #price.append(random.randint(1, 9999))
+    # form.defineHowManyToCartId(id)
+    form.defineMaxMin(max=int(prodLeft))
+    form.howManyToCart.id = 'counter-display-' + str(
+        id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
+    # checkIfAddedToCartItem(form, id)  # if the form was send and is correct
+
+    # form.howManyToCart.id = 'counter-display-' + str(id)  # IMPORTANT!!!! The + and - buttons won't work if this isn't here
+    # price = []
+    # price.append(random.randint(1, 9999))
 
     correctRequest, howManyItems = checkIfAddedToCartItem(form, id, getIsSignedInAndIsAdmin())
     if (correctRequest):  # if the form was send and is correct
@@ -282,10 +285,9 @@ def item(id):
         else:
             flash('Something went wrong', 'danger')
 
+    formcomment = Comment()
 
-    formcomment=Comment()
-    
-
+    haveCommentOrRated = False
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     if ((request.method == "POST") and (formcomment.is_submitted()) and
             ('comments' in request.form) and (formcomment.comment.data != None and formcomment.comment.data != "")):
@@ -298,42 +300,43 @@ def item(id):
                 customerId = user.getId()
                 adminId = None
             addCommentToAProduct(con, id, customerId, adminId, formcomment)
-            return redirect(url_for('item', id=id))
+            haveCommentOrRated = True
+            # return redirect(url_for('item', id=id))
         else:
             print("at correct place")
             flash("You need to sign in before adding a comment", "danger")
             return redirect(url_for('item', id=id))
 
     if ((request.method == "POST") and (formcomment.is_submitted()) and
-        ('comments' in request.form) and (formcomment.rating.data != "-")):
-        print("rating")
+            ('comments' in request.form) and (formcomment.rating.data != "-")):
+        if signedIn and not isAdmin:
+            addRatingToAProduct(con, id, int(formcomment.rating.data))
+        else:
+            flash("You need to sign in before adding a comment", "danger")
+        haveCommentOrRated = True
 
-        
-        addRatingToAProduct(con, id, int(formcomment.rating.data) )
+    if haveCommentOrRated:
+        return redirect(url_for('item', id=id))
 
-    
-
-
-
-    con=mysql.connect()
+    con = mysql.connect()
     customerList, adminList, comment, dateList, isAdminList = getAllCommentsForOneItem(con, id)
-    whosComment=[]
+    whosComment = []
     for i in range(len(customerList)):
-    #while i < len(customerList):
+        # while i < len(customerList):
         if customerList[i] is None:
-           whosComment.append(adminList[i])
+            whosComment.append(adminList[i])
         else:
             whosComment.append(customerList[i])
-        #i=i+1
+    # i=i+1
 
     print(whosComment)
 
-
-    #signedIn, isAdmin = getIsSignedInAndIsAdmin()
+    # signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('item.html', title='item', form=form, id=id, name=name, price=price,
                            description=desc, prodLeft=prodLeft,
                            imageLink=imageLink, signedIn=signedIn, isAdmin=isAdmin,
-                           formcomment=formcomment, comment=comment, namecomment=whosComment, date=dateList, isAdminList=isAdminList, rating=rating)
+                           formcomment=formcomment, comment=comment, namecomment=whosComment, date=dateList,
+                           isAdminList=isAdminList, rating=rating)
 
 
 def checkIfAddedComment(form):
@@ -357,6 +360,7 @@ def logout():
         pass
     return redirect(url_for('home'))
 
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     form = ProfileForm()
@@ -378,13 +382,13 @@ def profile():
         if request.method == 'POST':
             user = updateAdminInDB(form, con, userId)
             if signedInUsers.get(request.cookies.get('ID'), False):
-                signedInUsers.update({request.cookies.get('ID'):user})
+                signedInUsers.update({request.cookies.get('ID'): user})
             return redirect(url_for('profile'))
 
-        return render_template('profileAdmin.html', title='profile', 
-                                form=form, name=name, 
-                                username=username, email=email, 
-                                signedIn=signedIn, isAdmin=isAdmin)
+        return render_template('profileAdmin.html', title='profile',
+                               form=form, name=name,
+                               username=username, email=email,
+                               signedIn=signedIn, isAdmin=isAdmin)
     else:
         firstName = str(user.getFirstname())
         surName = str(user.getLastname())
@@ -407,13 +411,14 @@ def profile():
         if request.method == 'POST':
             user = updateUserInDB(form, con, userId)
             if signedInUsers.get(request.cookies.get('ID'), False):
-                signedInUsers.update({request.cookies.get('ID'):user})
+                signedInUsers.update({request.cookies.get('ID'): user})
             return redirect(url_for('profile'))
-        
-        return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName, 
-                                username=username, email=email, phone=phone, birthdayDay=birthdayDay, 
-                                birthdayMonth=birthdayMonth, birthdayYear=birthdayYear, signedIn=signedIn, 
-                                isAdmin=isAdmin)
+
+        return render_template('profile.html', title='profile', form=form, firstName=firstName, surName=surName,
+                               username=username, email=email, phone=phone, birthdayDay=birthdayDay,
+                               birthdayMonth=birthdayMonth, birthdayYear=birthdayYear, signedIn=signedIn,
+                               isAdmin=isAdmin)
+
 
 @app.route('/admin', methods=['GET', 'POST'])
 def adminPage():
@@ -424,39 +429,45 @@ def adminPage():
             if form.validate_on_submit():
                 if 'file' not in request.files:
                     flash('No selected file', 'danger')
-                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn,
+                                           isAdmin=isAdmin)
                 file = request.files['file']
                 if file.filename == '':
                     flash('No selected file', 'danger')
-                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn,
+                                           isAdmin=isAdmin)
                 con = mysql.connect()
                 if len(form.productDescription.data) > 255:
                     flash('To long description', 'danger')
-                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
+                    return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn,
+                                           isAdmin=isAdmin)
                 id = addNewProductAndGetNewId(con, form)
                 if file and allowed_file(file.filename):
                     filename = str(id) + ".jpg"
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                     flash('successfully added your item', 'success')
                     return redirect(url_for('home'))
-            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.jpg'))
-            #if img.lower().endswith('.jpg'):
+            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'temp.jpg'))
+            # if img.lower().endswith('.jpg'):
             #    print('True')
-            #print(request.files['file'])
+            # print(request.files['file'])
 
         return render_template('adminPage.html', title='admin', form=form, signedIn=signedIn, isAdmin=isAdmin)
     else:
         flash('You are not an admin, therefore you do not have access to admin page', 'danger')
         return redirect(url_for('home'))
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/error')
 def error():
     signedIn, isAdmin = getIsSignedInAndIsAdmin()
     return render_template('error.html', title="error", signedIn=signedIn, isAdmin=isAdmin)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

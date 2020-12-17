@@ -93,3 +93,13 @@
 .textColorAdmin {
     color: gold !important;
 }
+
+.panel-body {
+    margin-top: 15px;
+}
+
+.rating-text {
+    margin-left: 2.5%;
+    margin-bottom: -3px;
+    margin-top: -5px;
+}
