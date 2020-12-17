@@ -5,121 +5,119 @@ import sys
 import traceback
 from datetime import date
 
-def mergeSqlCommand(commandStart, commandEnd, changedStrDB, changedForms):
-    sqlCommand = commandStart
-    for i in enumerate(changedStrDB):
-        i = i[0]
-        if i != 0: 
-            sqlCommand += ", "
-        if type(changedForms[i]) is int:
-            sqlCommand += ("`" + changedStrDB[i] + "`=%s" % changedForms[i])
-        else: 
-            sqlCommand += ("`" + changedStrDB[i] + "`='%s'" % changedForms[i]) 
-    sqlCommand += commandEnd
-    return sqlCommand
-
 def updateAdminInDB(form, con, userId):
+    def getDBData(cur, userId):
+        cur.execute("SELECT * FROM Admin WHERE Admin_ID=%s", (userId))
+        data = cur.fetchall()
+        return dataUserFormating(data, 0)
+
+    def getFormChanges(form, formList, data):
+        changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
+        if form.username.data != data[1] and usernameAlreadyAssigned(form, con):
+            changed = [i for i in changed if (i != 1)]
+            form.username.data = data[1]
+        if form.email.data != data[2] and emailAlreadyAssigned(form, con):
+            changed = [i for i in changed if (i != 2)]
+            form.email.data = data[2]
+        return changed
+
+    def update(con, cur, userId, formList, changed):
+        def name(cur, name, userId):
+            cur.execute("UPDATE `Admin` SET `Name`=%s WHERE `Admin_ID`=%s;", (name, userId))
+        def username(cur, username, userId):
+            cur.execute("UPDATE `Admin` SET `Username`=%s WHERE `Admin_ID`=%s;", (username, userId))
+        def email(cur, email, userId):
+            cur.execute("UPDATE `Admin` SET `Email`=%s WHERE `Admin_ID`=%s;", (email, userId))
+        def password(cur, password, userId):
+            cur.execute("UPDATE `Admin` SET `Password`=%s WHERE `Admin_ID`=%s;", (password, userId))
+
+        if len(changed) > 0: 
+            for change in changed:
+                if change == 0:
+                    name(cur, formList[0], userId)
+                elif change == 1: 
+                    username(cur, formList[1], userId)
+                elif change == 2: 
+                    email(cur, formList[2], userId)
+                elif change == 3: 
+                    password(cur, formList[3], userId)
+            cur.close()
+            con.commit()
+        else:
+            cur.close()
+
+    formList = [form.name.data, form.username.data, form.email.data, form.password.data]
     cur = con.cursor()
-    cur.execute("SELECT * FROM Admin WHERE Admin_ID=%s", userId)
-    data = cur.fetchall()
-    data = dataUserFormating(data, 0)
+    data = getDBData(cur, userId)
+    changed = getFormChanges(form, formList, data)
+    update(con, cur, userId, formList, changed)
 
-    strDB = (
-        'Name',
-        'Username',
-        'Email',
-        'Password'
-    )
-    formList = [
-        form.name.data,
-        form.username.data,
-        form.email.data,
-        form.password.data
-    ]
-
-    changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
-    if form.username.data != data[1] and usernameAlreadyAssigned(form, con):
-        changed = [i for i in changed if (i != 1)]
-        form.username.data = data[1]
-    if form.email.data != data[2] and emailAlreadyAssigned(form, con):
-        changed = [i for i in changed if (i != 2)]
-        form.email.data = data[2]
-    if len(changed) > 0:
-        changedForms = [formList[i] for i in changed]
-        changedStrDB = [(strDB[i]) for i in changed]
-        sqlCommand = mergeSqlCommand("UPDATE `Admin` SET ", " WHERE `Admin_ID`=%s;" % userId, changedStrDB, changedForms)
-        cur.execute(sqlCommand)
-        cur.close()
-        con.commit()
-
-    user = Admin([
-        userId,
-        form.name.data, 
-        form.username.data,
-        form.email.data
-    ])
-
-    return user
+    return Admin([userId, form.name.data, form.username.data, form.email.data])
 
 def updateUserInDB(form, con, userId):
-    cur = con.cursor()
-    cur.execute("SELECT * FROM Customer WHERE Customer_ID=%s", userId)
-    data = cur.fetchall()
-    data = dataUserFormating(data, 0)
 
-    strDB = (
-        'First_name', 
-        'Last_name', 
-        'Username', 
-        'Email', 
-        'Password', 
-        'Phone_number', 
-        'Birthday'
-    )
+    def getDBData(cur, userId):
+        cur.execute("SELECT * FROM Customer WHERE Customer_ID=%s", (userId))
+        data = cur.fetchall()
+        return dataUserFormating(data, 0)
+
+    def getFormChanges(form, formList, data):
+        changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and ((i != '' or i is not None) or (idx == 5 or idx == 6)))]
+        if form.username.data != data[2] and usernameAlreadyAssigned(form, con):
+            changed = [i for i in changed if (i != 2)]
+            form.username.data = data[2]
+        if form.email.data != data[3] and emailAlreadyAssigned(form, con):
+            changed = [i for i in changed if (i != 3)]
+            form.email.data = data[3]
+        return changed
+
+    def update(con, cur, userId, formList, changed):
+        def firstName(cur, firstName, userId):
+            cur.execute("UPDATE `Customer` SET `First_name`=%s WHERE `Customer_ID`=%s;", (firstName, userId))
+        def lastName(cur, lastName, userId):
+            cur.execute("UPDATE `Customer` SET `Last_name`=%s WHERE `Customer_ID`=%s;", (lastName, userId))
+        def username(cur, username, userId):
+            cur.execute("UPDATE `Customer` SET `Username`=%s WHERE `Customer_ID`=%s;", (username, userId))
+        def email(cur, email, userId):
+            cur.execute("UPDATE `Customer` SET `Email`=%s WHERE `Customer_ID`=%s;", (email, userId))
+        def password(cur, password, userId):
+            cur.execute("UPDATE `Customer` SET `Password`=%s WHERE `Customer_ID`=%s;", (password, userId))
+        def phone(cur, phone, userId):
+            cur.execute("UPDATE `Customer` SET `Phone_number`=%s WHERE `Customer_ID`=%s;", (phone, userId))
+        def birthday(cur, birthday, userId):
+            cur.execute("UPDATE `Customer` SET `Birthday`=%s WHERE `Customer_ID`=%s;", (birthday, userId))
+
+        if len(changed) > 0: 
+            for change in changed:
+                if change == 0:
+                    firstName(cur, formList[0], userId)
+                elif change == 1: 
+                    lastName(cur, formList[1], userId)
+                elif change == 2: 
+                    username(cur, formList[2], userId)
+                elif change == 3: 
+                    email(cur, formList[3], userId)
+                elif change == 4: 
+                    password(cur, formList[4], userId)
+                elif change == 5: 
+                    phone(cur, formList[5], userId)
+                elif change == 6: 
+                    birthday(cur, formList[6], userId)
+            cur.close()
+            con.commit()
+        else:
+            cur.close()
+
     try:
-        formDate = date(
-            int(form.birthdayYear.data), 
-            int(form.birthdayMonth.data), 
-            int(form.birthdayDay.data)
-        )
+        formDate = date(int(form.birthdayYear.data), int(form.birthdayMonth.data), int(form.birthdayDay.data))
     except:
         formDate = None
-    formList = [
-        form.firstName.data, 
-        form.surName.data, 
-        form.username.data, 
-        form.email.data, 
-        form.password.data, 
-        form.phone.data, 
-        formDate
-    ]
-
-    changed = [idx for idx, i in enumerate(formList) if (i != data[idx] and i != '')]
-    if form.username.data != data[2] and usernameAlreadyAssigned(form, con):
-        changed = [i for i in changed if (i != 2)]
-        form.username.data = data[2]
-    if form.email.data != data[3] and emailAlreadyAssigned(form, con):
-        changed = [i for i in changed if (i != 3)]
-        form.email.data = data[3]
-    if len(changed) > 0:
-        changedForms = [formList[i] for i in changed]
-        changedStrDB = [(strDB[i]) for i in changed]
-        sqlCommand = mergeSqlCommand("UPDATE `Customer` SET ", " WHERE `Customer_ID`=%s;" % userId, changedStrDB, changedForms)
-        cur.execute(sqlCommand)
-        cur.close()
-        con.commit()
-        
-    user = User([
-        userId, 
-        form.firstName.data, 
-        form.surName.data, 
-        form.username.data, 
-        form.email.data, 
-        form.phone.data, 
-        formDate
-    ])
-
-    return user
+    formList = [form.firstName.data, form.surName.data, form.username.data, form.email.data, form.password.data, form.phone.data, formDate]
+    cur = con.cursor()
+    data = getDBData(cur, userId)
+    changed = getFormChanges(form, formList, data)
+    update(con, cur, userId, formList, changed)
+    return User([userId, form.firstName.data, form.surName.data, form.username.data, form.email.data, form.phone.data, formDate])
 
 def usernameAlreadyAssigned(form, con):
     try:
