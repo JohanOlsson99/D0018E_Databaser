@@ -277,5 +277,12 @@ class searchForm(FlaskForm):
 
 
 class Comment(FlaskForm):
-    comment = StringField('comment', validators=[DataRequired()], widget=TextArea())
+    comment = StringField('comment', widget=TextArea())       
+    rating = SelectField(
+        'Rate',
+        choices=[('-', '-'), (1, '1'), (2, '2'), (3, '3'), (4, '4'),
+                 (5, '5')])     
     submit = SubmitField('POST')
+   
+
+   

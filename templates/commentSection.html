@@ -7,13 +7,34 @@
         <div class="col-md-8 col-sm-12" >
             <div class="comment-wrapper">
                 <div class="panel panel-info">
-                    <div class="panel-heading">
-                        Comment panel
+                    <div class="date-form-year form-group">
+                        <!--
+                            
+                        
+                        {{ form.rating.label(class="form-control-label") }}
+                        {% if form.rating.errors %}
+                            {{ form.rating(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro  in form.rating.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                        {% endif %}
                     </div>
+                    -->
+
+                    
+            
                     <div class="panel-body">
                         <form method="POST" name="comments" class="comments" action="">
+                            {{ form.rating(class="form-control form-control-lg") }}
+
                             <input type="hidden" value="comments" name="comments">
                             {{ form.hidden_tag() }}
+                            <div class="panel-heading">
+                                Comment panel
+                            </div>
                         <!--<textarea class="form-control" placeholder="write a comment..." rows="3"></textarea>
                         <br>
                         <button type="button" class="btn btn-info pull-right">Post</button>-->
