@@ -6,7 +6,7 @@
 <div>
     {% for i in range(id | length) %}
     <div class="itemblock-div-class-{{id[i]}} itemblock-div-class">
-        {% with form = form[i], id = id[i], name = name[i], price=price[i], description = description[i], imageLink = imageLink[i], prodLeft=prodLeft[i] %}
+        {% with form = form[i], id = id[i], name = name[i], price=price[i], description = description[i], imageLink = imageLink[i], prodLeft=prodLeft[i], rating=rating[i] %}
         {% include 'itemBlock.html' %}
         {% endwith %}
     </div>

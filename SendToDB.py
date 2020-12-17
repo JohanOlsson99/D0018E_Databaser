@@ -345,7 +345,10 @@ def dataProductFormating(data):
         descList.append(data[i][3])
         prodLeftList.append(data[i][4])
         imageLinkList.append(url_for('static', filename=('image/' + str(idList[i]) + '.jpg')))
-        ratingList.append(round(int(data[i][5])/RATINGMULTIPLAIER,2))
+        if data[i][5] == None:
+            ratingList.append("-")
+        else:
+            ratingList.append(round(int(data[i][5])/RATINGMULTIPLAIER,2))
     return idList, nameList, priceList, descList, prodLeftList, imageLinkList, ratingList
 
 def getProductFromId(con, id):
@@ -451,7 +454,7 @@ def getProductsInCartNew(con, customerId):
     #print("CORRECT METHOD")
     query = "SELECT " \
     "Product_ID, Product_name, Product_price, Product_description, Products_left_in_stock, " \
-            "Amount_ordered FROM Ordered_products_list " \
+            "Amount_ordered, Rating FROM Ordered_products_list " \
             "INNER JOIN Products ON Ordered_products_list.Order_details_ID = %s AND " \
             "Products.Products_ID = Ordered_products_list.Product_ID;"
 
@@ -460,7 +463,7 @@ def getProductsInCartNew(con, customerId):
     orderDetailID = cur.fetchone()
     #print(orderDetailID)
     if orderDetailID == None:
-        return False, [], [], [], [], [], [], []
+        return False, [], [], [], [], [], [], [], []
     else:
         cur.execute(query, (orderDetailID))
         data = cur.fetchall()
@@ -478,6 +481,7 @@ def dataCartFormatingNew(data):
     nameList = []
     prodLeftList = []
     priceList = []
+    ratingList = []
 
     for i in range(len(data)):
         productId.append(data[i][0])
@@ -487,8 +491,12 @@ def dataCartFormatingNew(data):
         prodLeftList.append(data[i][4])
         itemsInCart.append(data[i][5])
         imageLinkList.append(url_for('static', filename=('image/' + str(productId[i]) + '.jpg')))
+        if data[i][6] != None:
+            ratingList.append(round(int(data[i][6])/RATINGMULTIPLAIER,2))
+        else:
+            ratingList.append('-')
 
-    return True, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList
+    return True, productId, descList, imageLinkList, itemsInCart, nameList, prodLeftList, priceList, ratingList
 
 
 def getProductsInCart(con, customerId):
