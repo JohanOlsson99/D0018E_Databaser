@@ -4,9 +4,11 @@
     margin-right: 6%;
 }
 
-h4 {
+h4, h6 {
     color: #ffffff;
 }
+
+
 
 p {
     color: #ffffff;
@@ -145,3 +147,4 @@ p {
     /*display: inline;*/
     height: 40px;
 }
+

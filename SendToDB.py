@@ -1,9 +1,10 @@
-from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, ORDERNOTSENT, ORDERRESERVED
+from Run import MySQL, USERNAMELOGIN, EMAILLOGIN, ORDERNOTSENT, ORDERRESERVED, RATINGMULTIPLAIER
 from flask import url_for
 from Forms import *
 import sys
 import traceback
 from datetime import date
+
 
 def mergeSqlCommand(commandStart, commandEnd, changedStrDB, changedForms):
     sqlCommand = commandStart
@@ -335,6 +336,7 @@ def dataProductFormating(data):
     descList = []
     prodLeftList = []
     imageLinkList = []
+    ratingList = []
 
     for i in range(len(data)):
         idList.append(data[i][0])
@@ -343,7 +345,8 @@ def dataProductFormating(data):
         descList.append(data[i][3])
         prodLeftList.append(data[i][4])
         imageLinkList.append(url_for('static', filename=('image/' + str(idList[i]) + '.jpg')))
-    return idList, nameList, priceList, descList, prodLeftList, imageLinkList
+        ratingList.append(round(int(data[i][5])/RATINGMULTIPLAIER,2))
+    return idList, nameList, priceList, descList, prodLeftList, imageLinkList, ratingList
 
 def getProductFromId(con, id):
     try:
@@ -634,6 +637,28 @@ def getAllCommentsForOneItem(con, productId):
         #print('no data')
         return [], [], [], [], []
 
+
+
+def addRatingToAProduct(con,productId, ratingData):
+    cur = con.cursor()
+    cur.execute("SELECT Rating, HowManyHaveRated FROM Products WHERE Products_ID=%s", (productId))
+    data= cur.fetchone()
+
+    if data[0] is None or data[1] is None:
+        rating = int(ratingData)* RATINGMULTIPLAIER
+        #rating=3 * RATINGMULTIPLAIER
+        HowManyHaveRated=1
+    else:
+        rating= float(data[0]) / RATINGMULTIPLAIER
+        HowManyHaveRated = int(data[1]) + 1
+        rating = ((rating * (HowManyHaveRated - 1 ) + ratingData) / HowManyHaveRated) * RATINGMULTIPLAIER
+        #rating = ((rating * (HowManyHaveRated - 1 ) + 5) / HowManyHaveRated) * RATINGMULTIPLAIER
+    print(data)
+    print(rating)
+    
+    cur.execute("UPDATE `Products` SET `Rating`=%s, `HowManyHaveRated`=%s WHERE Products_ID=%s;", (rating, HowManyHaveRated, productId ))
+    con.commit()
+    #rating = int(form.rating.data)
 def addCommentToAProduct(con, productId, customerId, adminId, form):
     cur = con.cursor()
     cur.execute("SELECT MAX(Comments_ID) FROM `Comments`;")
