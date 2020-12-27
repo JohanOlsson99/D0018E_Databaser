@@ -12,7 +12,7 @@ class RegistrationForm(FlaskForm):
                            validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[validators.optional()])
     firstName = StringField('First Name', validators=[DataRequired(), Length(max=20)])
     surName = StringField('Last Name', validators=[DataRequired(), Length(max=20)])
     phone = IntegerField('Phone Number', validators=[validators.optional()])
@@ -140,7 +140,7 @@ class ProfileForm(FlaskForm):
                  (1903, '1903'),
                  (1902, '1902'), (1901, '1901'), (1900, '1900')]
     )
-    password = PasswordField('Password', validators=[validators.optional()])
+    password = PasswordField('Password', validators=[DataRequired()])
 
 
 class PaymentForm(FlaskForm):
@@ -277,5 +277,12 @@ class searchForm(FlaskForm):
 
 
 class Comment(FlaskForm):
-    comment = StringField('comment', validators=[DataRequired()], widget=TextArea())
+    comment = StringField('comment', widget=TextArea())       
+    rating = SelectField(
+        'Rate',
+        choices=[('-', '-'), (1, '1'), (2, '2'), (3, '3'), (4, '4'),
+                 (5, '5')])     
     submit = SubmitField('POST')
+   
+
+   

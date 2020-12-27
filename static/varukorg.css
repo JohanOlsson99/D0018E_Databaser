@@ -162,3 +162,9 @@ p {
     margin-top: auto;
     margin-right: 15px;
 }
+
+.rating-text {
+    margin-left: 6px;
+    margin-bottom: -10px;
+    margin-top: -8px;
+}
