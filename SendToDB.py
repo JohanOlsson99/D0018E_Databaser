@@ -590,6 +590,7 @@ def isEmpty(structure):
 
 def setReservedOrder(con, customerId):
     cur = con.cursor()
+    price = 0
     cur.execute("SELECT `Order_details_ID` FROM `Order_details` WHERE Customer_ID=%s AND status=%s;",
                 (customerId, ORDERNOTSENT))
     orderDetailsId = cur.fetchone()
@@ -599,10 +600,26 @@ def setReservedOrder(con, customerId):
         orderDetailsId = orderDetailsId[0]
     else:
         return False
-    cur.execute("UPDATE `Order_details` SET status=%s WHERE Order_details_ID=%s", (ORDERRESERVED, orderDetailsId))
-    con.commit()
-    cur.close()
-    return True
+    cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Order_details_ID`=%s", (orderDetailsId))
+    amountList = cur.fetchall()
+    cur.execute("SELECT `Product_ID` FROM `Ordered_products_list` WHERE `Order_details_ID`=%s", (orderDetailsId))
+    productList = cur.fetchall()
+    print("amount[0], ", amountList[0])
+    print("products ", productList)
+    each = 0
+    try: #This try-except will catch the indexerror. Sort of a quick-fix solution for now
+        while (amountList[each][0] != None):
+            print("EACH, ", each)
+            cur.execute("SELECT `Product_price` FROM `Products` WHERE `Products_ID`=%s", (productList[each][0]))
+            productPrice = cur.fetchall()[0][0]
+            price += amountList[each][0]*productPrice
+            each+=1
+    except:
+        print("PRICE! ", price)
+        cur.execute("UPDATE `Order_details` SET status=%s, price=%s WHERE Order_details_ID=%s", (ORDERRESERVED, price, orderDetailsId))
+        con.commit()
+        cur.close()
+        return True
 
 
 def getAllCommentsForOneItem(con, productId):
