@@ -600,9 +600,9 @@ def setReservedOrder(con, customerId):
         orderDetailsId = orderDetailsId[0]
     else:
         return False
-    cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Order_details_ID`=%s", (orderDetailsId))
+    cur.execute("SELECT `Amount_ordered` FROM `Ordered_products_list` WHERE `Order_details_ID`=%s;", (orderDetailsId))
     amountList = cur.fetchall()
-    cur.execute("SELECT `Product_ID` FROM `Ordered_products_list` WHERE `Order_details_ID`=%s", (orderDetailsId))
+    cur.execute("SELECT `Product_ID` FROM `Ordered_products_list` WHERE `Order_details_ID`=%s;", (orderDetailsId))
     productList = cur.fetchall()
     print("amount[0], ", amountList[0])
     print("products ", productList)
@@ -610,13 +610,16 @@ def setReservedOrder(con, customerId):
     try: #This try-except will catch the indexerror. Sort of a quick-fix solution for now
         while (amountList[each][0] != None):
             print("EACH, ", each)
-            cur.execute("SELECT `Product_price` FROM `Products` WHERE `Products_ID`=%s", (productList[each][0]))
+            cur.execute("SELECT `Product_price` FROM `Products` WHERE `Products_ID`=%s;", (productList[each][0]))
             productPrice = cur.fetchall()[0][0]
             price += amountList[each][0]*productPrice
-            each+=1
+            print(productPrice, orderDetailsId, productList[each][0])
+            cur.execute("UPDATE `Ordered_products_list` SET price=%s WHERE `Order_details_ID`=%s AND `Product_ID`=%s;", (productPrice, orderDetailsId, productList[each][0]))
+            each += 1
     except:
+        traceback
         print("PRICE! ", price)
-        cur.execute("UPDATE `Order_details` SET status=%s, price=%s WHERE Order_details_ID=%s", (ORDERRESERVED, price, orderDetailsId))
+        cur.execute("UPDATE `Order_details` SET status=%s, price=%s WHERE Order_details_ID=%s;", (ORDERRESERVED, price, orderDetailsId))
         con.commit()
         cur.close()
         return True
