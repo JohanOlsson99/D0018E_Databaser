@@ -79,7 +79,8 @@ CREATE TABLE `Order_details` (
   `Customer_ID` int(11) NOT NULL,
   `status` VARCHAR(255) NOT NULL,
   `date` date NOT NULL,
-  `name` VARCHAR(255) NOT NULL
+  `name` VARCHAR(255) NOT NULL,
+  `price` double(9,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------
@@ -92,7 +93,8 @@ CREATE TABLE `Ordered_products_list` (
   `ordered_products_list_ID` int(11) NOT NULL,
   `Product_ID` int(11) NOT NULL,
   `Order_details_ID` int(11) NOT NULL,
-  `Amount_ordered` int(11) NOT NULL
+  `Amount_ordered` int(11) NOT NULL,
+  `price` double(9,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 -- --------------------------------------------------------
