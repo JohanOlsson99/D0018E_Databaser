@@ -254,7 +254,7 @@ def item(id):
         howManyRated = data[6]
         imageLink = url_for('static', filename=('image/' + str(id) + '.jpg'))
     else:
-        return redirect(url_for('error.html'))
+        return redirect(url_for('error'))
 
     if rating is None:
         rating = "-"
